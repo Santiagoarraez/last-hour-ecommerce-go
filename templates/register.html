@@ -1,0 +1,34 @@
+{{define "content"}}
+<section class="contact page-section">
+  <div class="container">
+    <h1 class="section-title">Create Account</h1>
+
+    <div class="contact__panel">
+      {{if .Error}}
+      <p class="about__paragraph"><strong>Error:</strong> {{.Error}}</p>
+      {{end}}
+
+      <form class="contact-form" action="/register" method="POST">
+        <div class="contact-form__group">
+          <label for="name" class="contact-form__label">Full Name</label>
+          <input type="text" id="name" name="name" required class="contact-form__control">
+        </div>
+
+        <div class="contact-form__group">
+          <label for="email" class="contact-form__label">Email Address</label>
+          <input type="email" id="email" name="email" required class="contact-form__control">
+        </div>
+
+        <div class="contact-form__group">
+          <label for="password" class="contact-form__label">Password</label>
+          <input type="password" id="password" name="password" required class="contact-form__control">
+        </div>
+
+        <button type="submit" class="btn btn-primary contact-form__submit">Register</button>
+      </form>
+
+      <p class="app-note"><a href="/login">Already have an account?</a></p>
+    </div>
+  </div>
+</section>
+{{end}}

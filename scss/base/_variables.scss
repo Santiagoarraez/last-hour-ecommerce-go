@@ -1,0 +1,28 @@
+/* Brand colors */
+$color-dark-1: #0D0D0D; 
+$color-dark-2: #292929;
+$color-red: #DA4D5A;
+$color-red-glow: rgba(218, 77, 90, 0.4);
+$color-blue: #286AF6;
+$color-light: #F5F5F5;
+$color-white: #FFFFFF;
+$color-gray-soft: #C2C2C2;
+
+/* Typography */
+$font-heading: 'Anton', sans-serif;
+$font-body: 'Montserrat', sans-serif;
+
+/* Layout */
+$container-width: 1200px;
+$border-radius-card: 16px;
+$border-radius-btn: 8px;
+
+/* Transitions & Effects */
+$transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+$box-shadow-soft: 0 8px 25px rgba(0, 0, 0, 0.05);
+$box-shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.1);
+
+/* Breakpoints */
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 1024px;

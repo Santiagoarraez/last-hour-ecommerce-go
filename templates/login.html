@@ -1,0 +1,31 @@
+{{define "content"}}
+<section class="contact page-section">
+  <div class="container">
+    <h1 class="section-title">Account Login</h1>
+
+    <div class="contact__panel">
+      {{if .Error}}
+      <p class="about__paragraph"><strong>Error:</strong> {{.Error}}</p>
+      {{end}}
+
+      <form class="contact-form" action="/login" method="POST">
+        <div class="contact-form__group">
+          <label for="email" class="contact-form__label">Email Address</label>
+          <input type="email" id="email" name="email" required class="contact-form__control">
+        </div>
+
+        <div class="contact-form__group">
+          <label for="password" class="contact-form__label">Password</label>
+          <input type="password" id="password" name="password" required class="contact-form__control">
+        </div>
+
+        <button type="submit" class="btn btn-primary contact-form__submit">Login</button>
+      </form>
+
+      <p class="app-note">Customer demo: customer@lasthour.com / customer123</p>
+      <p class="app-note">Seller demo: seller@lasthour.com / seller123</p>
+      <p class="app-note"><a href="/register">Create a new customer account</a></p>
+    </div>
+  </div>
+</section>
+{{end}}

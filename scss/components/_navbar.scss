@@ -1,0 +1,191 @@
+@use "../base/variables" as *;
+
+.navbar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  min-height: clamp(80px, 10vh, 120px);
+  position: relative;
+}
+
+.navbar__left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar__menu {
+  list-style: none;
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: auto;
+  background: rgba(13, 13, 13, 0.98);
+  backdrop-filter: blur(20px);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 0;
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  gap: 25px;
+  z-index: 1000;
+  margin: 0;
+}
+
+.navbar__item {
+  position: relative;
+  width: 100%;
+  text-align: center;
+}
+
+.navbar__link {
+  text-decoration: none;
+  color: $color-white;
+  font-family: $font-heading;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+  transition: $transition-smooth;
+  position: relative;
+  text-transform: uppercase;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: $color-red;
+    transition: $transition-smooth;
+  }
+
+  &:hover,
+  &:active {
+    color: $color-red;
+
+    &::after {
+      width: 100%;
+    }
+  }
+}
+
+.navbar__checkbox {
+  display: none;
+}
+
+.navbar__toggle {
+  display: block;
+  position: relative;
+  z-index: 1001;
+  font-size: 32px;
+  background: none;
+  border: none;
+  color: $color-light;
+  cursor: pointer;
+  transition: $transition-smooth;
+  user-select: none;
+
+  &:hover {
+    color: $color-red;
+    transform: scale(1.1);
+  }
+}
+
+.navbar__logo img {
+  height: clamp(40px, 8vw, 70px);
+  max-width: 50vw;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  padding: 4px;
+}
+
+.navbar__logo {
+  padding-left: 2vw;
+  padding-right: 2vw;
+  min-width: 0;
+}
+
+.navbar__right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  padding-right: 2vw;
+  flex: 0 0 auto;
+}
+
+.navbar__icon {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: $color-light;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-family: $font-body;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: $transition-smooth;
+  white-space: nowrap;
+
+  &:hover {
+    background: $color-white;
+    color: $color-dark-1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+  }
+}
+
+.navbar__checkbox:checked~.navbar__menu {
+  display: flex;
+}
+
+@media (min-width: 769px) {
+  .navbar {
+    grid-template-columns: 1fr auto 1fr;
+  }
+
+  .navbar__left {
+    gap: 30px;
+  }
+
+  .navbar__menu {
+    display: flex;
+    position: static;
+    width: auto;
+    background: transparent;
+    backdrop-filter: none;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    gap: 30px;
+  }
+
+  .navbar__item {
+    width: auto;
+    text-align: left;
+  }
+
+  .navbar__link {
+    color: $color-light;
+    font-size: 1.1rem;
+  }
+
+  .navbar__toggle {
+    display: none;
+  }
+
+  .navbar__logo img {
+    height: clamp(28px, 7vw, 45px);
+    max-width: 100%;
+    padding: 0;
+  }
+}

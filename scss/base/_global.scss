@@ -1,0 +1,225 @@
+@use "variables" as *;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-body;
+  background: $color-light;
+  color: $color-dark-1;
+  line-height: 1.6;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: $color-red;
+  color: $color-white;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-heading;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 0;
+  color: $color-dark-1;
+}
+
+.bg-dark {
+  background: $color-dark-1;
+  color: $color-light;
+}
+
+.container {
+  width: 100%;
+  max-width: $container-width;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 60px);
+}
+
+.section-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  text-align: center;
+  margin-bottom: 3rem;
+  background: linear-gradient(to right, $color-dark-1, $color-dark-2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(13, 13, 13, 0.95);
+  transition: $transition-smooth;
+}
+
+.header--scrolled {
+  background: rgba(13, 13, 13, 0.7);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.page-section {
+  padding: 4rem 0;
+}
+
+.section-title--catalog {
+  grid-column: 1 / -1;
+  margin-top: 20px;
+}
+
+.btn-link {
+  text-decoration: none;
+}
+
+.about__content {
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.8;
+  color: #444;
+}
+
+.about__paragraph {
+  margin-bottom: 1.5rem;
+}
+
+.contact__panel {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fafafa;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.contact-form__group {
+  margin-bottom: 1.5rem;
+}
+
+.contact-form__label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.contact-form__control {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.contact-form__control--textarea {
+  resize: vertical;
+}
+
+.contact-form__submit {
+  width: 100%;
+}
+
+.promo-banner {
+  background: linear-gradient(135deg, $color-dark-1 0%, #1A1A1A 100%);
+  padding: 60px 0;
+  color: $color-white;
+  margin: 60px 0;
+  border-top: 2px solid $color-red;
+  border-bottom: 2px solid $color-red;
+  overflow: hidden;
+  position: relative;
+}
+
+.promo-banner__glow {
+  position: absolute;
+  width: 50vw;
+  height: 50vw;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.promo-banner__glow--red {
+  top: -50%;
+  left: -10%;
+  background: rgba(218, 77, 90, 0.15);
+}
+
+.promo-banner__glow--blue {
+  right: -10%;
+  bottom: -50%;
+  background: rgba(40, 106, 246, 0.15);
+}
+
+.promo-banner__content {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.promo-banner__label {
+  display: inline-block;
+  background: rgba(218, 77, 90, 0.2);
+  color: $color-red;
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: 1px solid rgba(218, 77, 90, 0.3);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.promo-banner__title {
+  font-family: $font-heading;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  line-height: 1.1;
+  text-shadow: 2px 2px 0px rgba(218, 77, 90, 0.2);
+  color: $color-white;
+}
+
+.promo-banner__title-accent {
+  color: $color-red;
+}
+
+.promo-banner__description {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  color: $color-gray-soft;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.promo-banner__button {
+  display: inline-block;
+}
+
+.promo-banner__image {
+  position: relative;
+}
+
+.promo-banner__product {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  object-fit: contain;
+  margin: 0 auto;
+  display: block;
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
+  animation: floating 4s ease-in-out infinite;
+}
+
+@media (min-width: $tablet) {
+  .promo-banner__content {
+    grid-template-columns: 1fr 1fr;
+  }
+}

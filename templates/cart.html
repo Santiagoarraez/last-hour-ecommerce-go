@@ -1,0 +1,46 @@
+{{define "content"}}
+<section class="catalog page-section">
+  <div class="container">
+    <h1 class="section-title">Shopping Cart</h1>
+
+    {{if .Success}}
+    <div class="app-message app-message--success">{{.Success}}</div>
+    {{end}}
+
+    {{if .Error}}
+    <div class="app-message app-message--error">{{.Error}}</div>
+    {{end}}
+
+    {{if .Cart.Items}}
+    <div class="app-table">
+      {{range .Cart.Items}}
+      <article class="app-row">
+        <img src="{{.Product.Image}}" alt="{{.Product.Alt}}" class="app-row__image">
+        <div class="app-row__content">
+          <h2 class="app-row__title">{{.Product.Name}}</h2>
+          <p>{{.Quantity}} unit(s) x ${{printf "%.2f" .Product.Price}}</p>
+          <p><strong>Subtotal:</strong> ${{printf "%.2f" .Subtotal}}</p>
+        </div>
+        <form action="/cart/remove" method="POST">
+          <input type="hidden" name="product_id" value="{{.Product.ID}}">
+          <button type="submit" class="btn btn-secondary">Remove</button>
+        </form>
+      </article>
+      {{end}}
+    </div>
+
+    <div class="app-summary">
+      <h2>Total: ${{printf "%.2f" .Cart.Total}}</h2>
+      <form action="/cart/checkout" method="POST">
+        <button type="submit" class="btn btn-primary">Checkout</button>
+      </form>
+    </div>
+    {{else}}
+    <div class="app-panel">
+      <p>Your cart is empty.</p>
+      <a href="/products" class="btn btn-primary btn-link">Browse Products</a>
+    </div>
+    {{end}}
+  </div>
+</section>
+{{end}}

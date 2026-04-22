@@ -1,0 +1,63 @@
+@use "../base/variables" as *;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-body;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 12px 24px;
+  border-radius: $border-radius-btn;
+  border: none;
+  cursor: pointer;
+  transition: $transition-smooth;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary {
+  background: $color-red;
+  color: $color-white;
+  box-shadow: 0 4px 15px $color-red-glow;
+
+  &:hover {
+    transform: translateY(-3px);
+    background: lighten($color-red, 5%);
+    box-shadow: 0 8px 25px $color-red-glow;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-secondary {
+  // Outline blue to solid blue
+  background: transparent;
+  color: $color-blue;
+  border: 2px solid $color-blue;
+
+  &:hover {
+    background: $color-blue;
+    color: $color-white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(40, 106, 246, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-modern {
+  // Black and white style
+  background: $color-dark-1;
+  color: $color-white;
+  
+  &:hover {
+    background: $color-dark-2;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+}

@@ -1,0 +1,54 @@
+{{define "content"}}
+<section class="hero">
+  <div class="container hero__content">
+    <div class="hero__text">
+      <h1 class="hero__title">Discover the new Vape Pro</h1>
+      <p class="hero__subtitle">8000 puffs &bull; Premium flavors</p>
+      <a href="/products" class="btn btn-primary btn-link">Shop now</a>
+    </div>
+
+    <div class="hero__image">
+      <img src="/assets/images/hqd-hero-new.png" alt="HQD Glaze">
+    </div>
+  </div>
+</section>
+
+<section class="featured">
+  <div class="container">
+    <h2 class="section-title">Featured Products</h2>
+
+    <div class="featured__grid">
+      {{range .Products}}
+      <div class="product-card">
+        <img src="{{.Image}}" alt="{{.Alt}}" class="product-card__image">
+        <h3 class="product-card__title">{{.Name}}</h3>
+        <p class="product-card__flavors">{{.Subtitle}}</p>
+        <p class="product-card__price">${{printf "%.2f" .Price}}</p>
+        <a href="/products/{{.ID}}" class="btn btn-primary btn-link">View Details</a>
+      </div>
+      {{end}}
+    </div>
+  </div>
+</section>
+
+<section class="promo-banner">
+  <div class="promo-banner__glow promo-banner__glow--red"></div>
+  <div class="promo-banner__glow promo-banner__glow--blue"></div>
+
+  <div class="container promo-banner__content">
+    <div class="promo-banner__text">
+      <div class="promo-banner__label">Exclusive Launch</div>
+      <h2 class="promo-banner__title">HQD GLAZE <br><span class="promo-banner__title-accent">12000 PUFFS</span></h2>
+      <p class="promo-banner__description">
+        The most advanced vape on the market with a smart LED screen and unparalleled flavors. Get it now at a special
+        price!
+      </p>
+      <a href="/products" class="btn btn-primary btn-link promo-banner__button">View Catalog</a>
+    </div>
+
+    <div class="promo-banner__image">
+      <img src="/assets/images/hqd-hero-new.png" alt="HQD Glaze Promocional" class="promo-banner__product">
+    </div>
+  </div>
+</section>
+{{end}}

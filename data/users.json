@@ -1,0 +1,16 @@
+[
+  {
+    "id": "seller-1",
+    "name": "Last Hour Seller",
+    "email": "seller@lasthour.com",
+    "password": "seller123",
+    "role": "seller"
+  },
+  {
+    "id": "customer-1",
+    "name": "Demo Customer",
+    "email": "customer@lasthour.com",
+    "password": "customer123",
+    "role": "customer"
+  }
+]

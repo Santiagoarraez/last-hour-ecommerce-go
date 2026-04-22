@@ -1,0 +1,62 @@
+{{define "content"}}
+<section class="contact page-section">
+  <div class="container">
+    <h1 class="section-title">{{.Title}}</h1>
+
+    <div class="contact__panel app-panel--wide">
+      {{if .Error}}
+      <p class="about__paragraph"><strong>Error:</strong> {{.Error}}</p>
+      {{end}}
+
+      <form class="contact-form" action="{{.Action}}" method="POST">
+        <div class="contact-form__group">
+          <label for="name" class="contact-form__label">Product Name</label>
+          <input type="text" id="name" name="name" required class="contact-form__control" value="{{.Product.Name}}">
+        </div>
+
+        <div class="contact-form__group">
+          <label for="subtitle" class="contact-form__label">Subtitle</label>
+          <input type="text" id="subtitle" name="subtitle" required class="contact-form__control"
+            value="{{.Product.Subtitle}}">
+        </div>
+
+        <div class="contact-form__group">
+          <label for="description" class="contact-form__label">Description</label>
+          <textarea id="description" name="description" rows="5" required
+            class="contact-form__control contact-form__control--textarea">{{.Product.Description}}</textarea>
+        </div>
+
+        <div class="contact-form__group">
+          <label for="price" class="contact-form__label">Price</label>
+          <input type="number" step="0.01" min="0.01" id="price" name="price" required class="contact-form__control"
+            value="{{if .Product.Price}}{{printf "%.2f" .Product.Price}}{{end}}">
+        </div>
+
+        <div class="contact-form__group">
+          <label for="image" class="contact-form__label">Image Path</label>
+          <input type="text" id="image" name="image" required class="contact-form__control" value="{{.Product.Image}}">
+        </div>
+
+        <div class="contact-form__group">
+          <label for="alt" class="contact-form__label">Image Alt Text</label>
+          <input type="text" id="alt" name="alt" class="contact-form__control" value="{{.Product.Alt}}">
+        </div>
+
+        <div class="contact-form__group">
+          <label for="flavors" class="contact-form__label">Flavors separated by comma</label>
+          <input type="text" id="flavors" name="flavors" class="contact-form__control" value="{{range $index, $flavor := .Product.Flavors}}{{if $index}}, {{end}}{{$flavor}}{{end}}">
+        </div>
+
+        <div class="contact-form__group">
+          <label class="contact-form__label">
+            <input type="checkbox" name="featured" {{if .Product.Featured}}checked{{end}}>
+            Featured product
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary contact-form__submit">Save Product</button>
+      </form>
+    </div>
+  </div>
+</section>
+{{end}}

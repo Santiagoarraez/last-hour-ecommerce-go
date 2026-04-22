@@ -1,0 +1,85 @@
+{{define "layout"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{.Title}}</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;700;800&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+  <header class="header bg-dark">
+    <div class="container">
+      <nav class="navbar">
+        <div class="navbar__left">
+          <input type="checkbox" id="menuToggle" class="navbar__checkbox">
+          <label for="menuToggle" class="navbar__toggle">&#9776;</label>
+
+          <ul class="navbar__menu" id="navbarMenu">
+            <li class="navbar__item"><a href="/" class="navbar__link">Home</a></li>
+            <li class="navbar__item"><a href="/products" class="navbar__link">Products</a></li>
+            <li class="navbar__item"><a href="/about" class="navbar__link">About</a></li>
+            <li class="navbar__item"><a href="/contact" class="navbar__link">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="navbar__logo">
+          <a href="/">
+            <img src="/assets/images/logodefinitivo.png" alt="Last Hour">
+          </a>
+        </div>
+
+        <div class="navbar__right">
+          <a href="/account" class="navbar__icon navbar__icon-link">Account</a>
+          <a href="/cart" class="navbar__icon navbar__icon-link">Cart</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    {{template "content" .}}
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__content">
+      <div class="footer__brand">
+        <a href="/">
+          <img src="/assets/images/logoNegro.png" alt="Last Hour logo" class="footer__logo">
+        </a>
+        <p class="footer__description">Premium disposable vapes with long-lasting flavor.</p>
+      </div>
+
+      <div class="footer__links">
+        <h4 class="footer__title">Quick Links</h4>
+        <a href="/">Home</a>
+        <a href="/products">Products</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+      </div>
+
+      <div class="footer__contact">
+        <h4 class="footer__title">Contact</h4>
+        <p>Email: info@lasthour.com</p>
+        <p>Phone: +34 674466462</p>
+        <p>Location: Madrid, Spain</p>
+        <p>Instagram: @lasthour.official</p>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p>&copy; 2026 Last Hour. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+
+</html>
+{{end}}

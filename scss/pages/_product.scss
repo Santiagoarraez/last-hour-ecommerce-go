@@ -1,0 +1,137 @@
+@use "../base/variables" as *;
+
+.product-view {
+  padding: 2rem 0;
+  background: $color-white;
+}
+
+.product-view__header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.product-view__title {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  color: $color-dark-1;
+}
+
+.product-view__price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $color-dark-2;
+}
+
+.product-view__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.product-view__gallery {
+  background: $color-light;
+  border-radius: $border-radius-card;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.product-view__gallery img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 1rem;
+}
+
+.product-view__info {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.product-view__description {
+  color: #666666;
+  line-height: 1.75;
+}
+
+.product-view__form {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.form-group--inline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-label {
+  font-weight: 700;
+  color: $color-dark-1;
+}
+
+.form-select,
+.form-input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 1px solid $color-gray-soft;
+  border-radius: 12px;
+  background: $color-white;
+  color: $color-dark-1;
+  font-family: $font-body;
+  font-size: 1rem;
+}
+
+@media (min-width: $tablet) {
+  .product-view__header {
+    text-align: left;
+  }
+
+  .product-view__grid {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .product-view__gallery,
+  .product-view__info {
+    flex: 1;
+  }
+
+  .product-view__gallery {
+    max-width: 45%;
+  }
+
+  .product-view__form {
+    gap: 1rem;
+  }
+
+  .form-group--inline {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+@media (min-width: $desktop) {
+  .product-view {
+    padding: 4rem 0;
+  }
+
+  .product-view__title {
+    font-size: 2.5rem;
+  }
+
+  .product-view__grid {
+    gap: 2.5rem;
+  }
+
+  .form-select,
+  .form-input {
+    max-width: 320px;
+  }
+}

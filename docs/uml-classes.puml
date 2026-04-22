@@ -1,0 +1,143 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class App {
+  - products: ProductService
+  - contacts: ContactService
+  - auth: AuthService
+  - carts: CartService
+  - templateDir: string
+  + Home()
+  + Products()
+  + ProductDetail()
+  + About()
+  + Contact()
+  + Login()
+  + Register()
+  + Account()
+  + Cart()
+  + SellerProducts()
+}
+
+class ProductService {
+  - storage: ProductStorage
+  + ListProducts()
+  + ListFeaturedProducts()
+  + FindProductByID(id)
+  + CreateProduct()
+  + UpdateProduct()
+  + DeleteProduct(id)
+}
+
+class ContactService {
+  - storage: ContactStorage
+  + CreateMessage(name, email, message)
+}
+
+class AuthService {
+  - storage: UserStorage
+  + Register(name, email, password)
+  + Login(email, password)
+  + FindUserByID(id)
+}
+
+class CartService {
+  - carts: CartStorage
+  - products: ProductService
+  + AddItem(userID, productID, quantity)
+  + RemoveItem(userID, productID)
+  + GetCart(userID)
+  + Checkout(userID)
+}
+
+class ProductStorage {
+  - filePath: string
+  + FindAll()
+  + SaveAll(products)
+}
+
+class ContactStorage {
+  - filePath: string
+  + Save(message)
+  + FindAll()
+}
+
+class UserStorage {
+  - filePath: string
+  + FindAll()
+  + SaveAll(users)
+}
+
+class CartStorage {
+  - filePath: string
+  + FindAll()
+  + SaveAll(carts)
+}
+
+class Product {
+  + ID: string
+  + Name: string
+  + Subtitle: string
+  + Description: string
+  + Price: float64
+  + Image: string
+  + Alt: string
+  + Flavors: []string
+  + Featured: bool
+}
+
+class ContactMessage {
+  + Name: string
+  + Email: string
+  + Message: string
+  + CreatedAt: time.Time
+}
+
+class User {
+  + ID: string
+  + Name: string
+  + Email: string
+  + Password: string
+  + Role: string
+  + IsSeller()
+}
+
+class Cart {
+  + UserID: string
+  + Items: []CartItem
+}
+
+class CartItem {
+  + ProductID: string
+  + Quantity: int
+}
+
+class CartView {
+  + Items: []CartViewItem
+  + Total: float64
+}
+
+class CartViewItem {
+  + Product: Product
+  + Quantity: int
+  + Subtotal: float64
+}
+
+App --> ProductService
+App --> ContactService
+App --> AuthService
+App --> CartService
+ProductService --> ProductStorage
+ContactService --> ContactStorage
+AuthService --> UserStorage
+CartService --> CartStorage
+CartService --> ProductService
+ProductStorage --> Product
+ContactStorage --> ContactMessage
+UserStorage --> User
+CartStorage --> Cart
+Cart --> CartItem
+CartView --> CartViewItem
+CartViewItem --> Product
+
+@enduml

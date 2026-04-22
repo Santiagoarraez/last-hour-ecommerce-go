@@ -1,0 +1,40 @@
+{{define "content"}}
+<article class="product-view">
+  <div class="container">
+    <header class="product-view__header">
+      <h1 class="product-view__title">{{.Product.Name}}</h1>
+      <p class="product-view__price">${{printf "%.2f" .Product.Price}}</p>
+    </header>
+
+    <div class="product-view__grid">
+      <figure class="product-view__gallery">
+        <img src="{{.Product.Image}}" alt="{{.Product.Alt}}">
+      </figure>
+
+      <section class="product-view__info">
+        <p class="product-view__description">{{.Product.Description}}</p>
+
+        <form class="product-view__form" method="POST" action="/cart/add">
+          <input type="hidden" name="product_id" value="{{.Product.ID}}">
+
+          <div class="form-group">
+            <label class="form-label" for="flavor">Select a flavor</label>
+            <select class="form-select" id="flavor" name="flavor">
+              {{range .Product.Flavors}}
+              <option value="{{.}}">{{.}}</option>
+              {{end}}
+            </select>
+          </div>
+
+          <div class="form-group form-group--inline">
+            <label class="form-label" for="quantity">Quantity</label>
+            <input class="form-input" type="number" id="quantity" name="quantity" value="1" min="1">
+          </div>
+
+          <button type="submit" class="btn btn-primary">Add to cart</button>
+        </form>
+      </section>
+    </div>
+  </div>
+</article>
+{{end}}

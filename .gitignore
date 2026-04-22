@@ -1,0 +1,5 @@
+bin/
+server.log
+server.err
+.gocache/
+.gotmp/

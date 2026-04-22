@@ -1,0 +1,112 @@
+[
+  {
+    "id": "vape-x200",
+    "name": "Vape X200",
+    "subtitle": "5 flavors available",
+    "description": "The Vape X200 is the ideal choice for those seeking intense flavor and durability. With its long-lasting battery, it offers up to 2000 puffs of pure flavor.",
+    "price": 14.99,
+    "image": "/assets/images/vape1.png",
+    "alt": "Vape X200 disposable vape device",
+    "flavors": [
+      "Cool Mint",
+      "Mango Ice",
+      "Berry Blast",
+      "Watermelon"
+    ],
+    "featured": true
+  },
+  {
+    "id": "vape-x300",
+    "name": "Vape X300",
+    "subtitle": "8 flavors available",
+    "description": "The Vape X300 offers more autonomy and a larger selection of flavors for users who want a compact device with consistent performance.",
+    "price": 16.99,
+    "image": "/assets/images/vape2.png",
+    "alt": "Vape X300 disposable vape device",
+    "flavors": [
+      "Mint",
+      "Blue Razz",
+      "Mango",
+      "Strawberry",
+      "Cola",
+      "Grape",
+      "Peach",
+      "Lemon"
+    ],
+    "featured": true
+  },
+  {
+    "id": "vape-pro",
+    "name": "Vape Pro",
+    "subtitle": "10 flavors available",
+    "description": "The Vape Pro combines a stronger battery, a refined design and premium flavors for a more complete experience.",
+    "price": 19.99,
+    "image": "/assets/images/vape3.png",
+    "alt": "Vape Pro disposable vape device",
+    "flavors": [
+      "Cool Mint",
+      "Mango Ice",
+      "Berry Blast",
+      "Watermelon",
+      "Peach",
+      "Grape",
+      "Blueberry",
+      "Lemon",
+      "Cherry",
+      "Cola"
+    ],
+    "featured": true
+  },
+  {
+    "id": "hqd-glaze-watermelon",
+    "name": "HQD Glaze Watermelon",
+    "subtitle": "12000 Puffs - LED Screen",
+    "description": "A long-lasting HQD Glaze device with watermelon flavor, smart LED screen and high puff capacity.",
+    "price": 24.99,
+    "image": "/assets/images/hqd-catalog-new.png",
+    "alt": "HQD Glaze Watermelon Ice",
+    "flavors": [
+      "Watermelon Ice"
+    ],
+    "featured": false
+  },
+  {
+    "id": "hqd-glaze-blue-razz",
+    "name": "HQD Glaze Blue Razz",
+    "subtitle": "12000 Puffs - LED Screen",
+    "description": "A premium HQD Glaze device with blue razz flavor and LED screen for battery and usage information.",
+    "price": 24.99,
+    "image": "/assets/images/hqd-catalog-new.png",
+    "alt": "HQD Glaze Blue Razz",
+    "flavors": [
+      "Blue Razz"
+    ],
+    "featured": false
+  },
+  {
+    "id": "hqd-glaze-mango-ice",
+    "name": "HQD Glaze Mango Ice",
+    "subtitle": "12000 Puffs - LED Screen",
+    "description": "A mango ice version of the HQD Glaze line, designed for long duration and a fresh flavor profile.",
+    "price": 24.99,
+    "image": "/assets/images/hqd-catalog-new.png",
+    "alt": "HQD Glaze Mango Ice",
+    "flavors": [
+      "Mango Ice"
+    ],
+    "featured": false
+  },
+  {
+    "id": "hqd-glaze-cool-mint",
+    "name": "HQD Glaze Cool Mint",
+    "subtitle": "12000 Puffs - LED Screen",
+    "description": "A cool mint HQD Glaze product with high capacity and a clear display for device status.",
+    "price": 24.99,
+    "image": "/assets/images/hqd-catalog-new.png",
+    "alt": "HQD Glaze Cool Mint",
+    "flavors": [
+      "Cool Mint"
+    ],
+    "featured": false
+  }
+]
