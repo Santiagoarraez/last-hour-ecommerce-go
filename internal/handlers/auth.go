@@ -12,8 +12,10 @@ type AuthPageData struct {
 }
 
 type AccountPageData struct {
-	Title string
-	User  models.User
+	Title   string
+	User    models.User
+	Success string
+	Error   string
 }
 
 func (a *App) Login(w http.ResponseWriter, r *http.Request) {
@@ -86,5 +88,47 @@ func (a *App) Account(w http.ResponseWriter, r *http.Request) {
 	a.render(w, "account.html", AccountPageData{
 		Title: "Account - Last Hour",
 		User:  user,
+	})
+}
+
+func (a *App) UpdateAccount(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
+		return
+	}
+
+	user, ok := a.requireUser(w, r)
+	if !ok {
+		return
+	}
+
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "No se pudo leer el formulario", http.StatusBadRequest)
+		return
+	}
+
+	updatedUser, err := a.auth.UpdateProfile(
+		user.ID,
+		r.FormValue("name"),
+		r.FormValue("email"),
+		r.FormValue("phone"),
+	)
+
+	if err != nil {
+		a.render(w, "account.html", AccountPageData{
+			Title: "Account - Last Hour",
+			User:  user,
+			Error: err.Error(),
+		})
+		return
+	}
+
+	// Update session cookie with new info (optional but good)
+	setSessionCookie(w, updatedUser)
+
+	a.render(w, "account.html", AccountPageData{
+		Title:   "Account - Last Hour",
+		User:    updatedUser,
+		Success: "Perfil actualizado correctamente",
 	})
 }

@@ -32,6 +32,7 @@ func main() {
 	mux.HandleFunc("/register", app.Register)
 	mux.HandleFunc("/logout", app.Logout)
 	mux.HandleFunc("/account", app.Account)
+	mux.HandleFunc("/account/update", app.UpdateAccount)
 	mux.HandleFunc("/cart", app.Cart)
 	mux.HandleFunc("/cart/add", app.CartAdd)
 	mux.HandleFunc("/cart/remove", app.CartRemove)

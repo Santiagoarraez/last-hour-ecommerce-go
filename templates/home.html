@@ -23,8 +23,8 @@
         <img src="{{.Image}}" alt="{{.Alt}}" class="product-card__image">
         <h3 class="product-card__title">{{.Name}}</h3>
         <p class="product-card__flavors">{{.Subtitle}}</p>
-        <p class="product-card__price">${{printf "%.2f" .Price}}</p>
-        <a href="/products/{{.ID}}" class="btn btn-primary btn-link">View Details</a>
+        <p class="product-card__price">{{printf "%.2f" .Price}}€</p>
+        <a href="/products/{{.ID}}" class="btn btn-primary btn-link"><i class="fa-solid fa-eye"></i> View Details</a>
       </div>
       {{end}}
     </div>
@@ -43,7 +43,7 @@
         The most advanced vape on the market with a smart LED screen and unparalleled flavors. Get it now at a special
         price!
       </p>
-      <a href="/products" class="btn btn-primary btn-link promo-banner__button">View Catalog</a>
+      <a href="/products" class="btn btn-primary btn-link promo-banner__button"><i class="fa-solid fa-list-ul"></i> View Catalog</a>
     </div>
 
     <div class="promo-banner__image">

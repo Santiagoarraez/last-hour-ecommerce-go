@@ -3,7 +3,7 @@
   <div class="container">
     <header class="product-view__header">
       <h1 class="product-view__title">{{.Product.Name}}</h1>
-      <p class="product-view__price">${{printf "%.2f" .Product.Price}}</p>
+      <p class="product-view__price">{{printf "%.2f" .Product.Price}}€</p>
     </header>
 
     <div class="product-view__grid">
@@ -31,7 +31,9 @@
             <input class="form-input" type="number" id="quantity" name="quantity" value="1" min="1">
           </div>
 
-          <button type="submit" class="btn btn-primary">Add to cart</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-cart-plus"></i> Add to cart
+          </button>
         </form>
       </section>
     </div>

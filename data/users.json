@@ -3,14 +3,16 @@
     "id": "seller-1",
     "name": "Last Hour Seller",
     "email": "seller@lasthour.com",
-    "password": "seller123",
+    "phone": "+34 674466462",
+    "password": "$2a$10$CwenJyD4t/.LWStwQkW9.e/dd0hqImYRW9snQ1CnVJZiIp132qLsm",
     "role": "seller"
   },
   {
     "id": "customer-1",
     "name": "Demo Customer",
     "email": "customer@lasthour.com",
-    "password": "customer123",
+    "phone": "+34 600000000",
+    "password": "$2a$10$omjWXuHv7ZfTm0931cmp3uEfIV.GTkgo2uRF7jrD9o/R3xKfUPrCi",
     "role": "customer"
   }
 ]

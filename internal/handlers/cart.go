@@ -1,8 +1,11 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
+	"net/url"
 	"strconv"
+	"strings"
 
 	"lasthour/internal/models"
 )
@@ -99,20 +102,33 @@ func (a *App) CartCheckout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := a.carts.Checkout(user.ID); err != nil {
-		cart, _ := a.carts.GetCart(user.ID)
-		a.render(w, "cart.html", CartPageData{
-			Title: "Cart - Last Hour",
-			User:  user,
-			Cart:  cart,
-			Error: err.Error(),
-		})
+	cart, err := a.carts.GetCart(user.ID)
+	if err != nil || len(cart.Items) == 0 {
+		http.Redirect(w, r, "/cart", http.StatusSeeOther)
 		return
 	}
 
-	a.render(w, "cart.html", CartPageData{
-		Title:   "Cart - Last Hour",
-		User:    user,
-		Success: "Order processed by the server. Your cart is now empty.",
-	})
+	// 1. Build the WhatsApp message
+	var sb strings.Builder
+	sb.WriteString(fmt.Sprintf("Hola Last Hour, soy %s. Quisiera realizar el siguiente pedido:\n\n", user.Name))
+
+	for _, item := range cart.Items {
+		sb.WriteString(fmt.Sprintf("• %s x%d - %.2f€\n", item.Product.Name, item.Quantity, item.Subtotal))
+	}
+
+	sb.WriteString(fmt.Sprintf("\nTotal: %.2f€\n", cart.Total))
+	sb.WriteString("\nEspero vuestra confirmación. ¡Gracias!")
+
+	message := sb.String()
+	phoneNumber := "34674466462" // User's requested number
+
+	// 2. Clear the cart (simulating execution of the order)
+	if err := a.carts.Checkout(user.ID); err != nil {
+		http.Error(w, "Error al procesar el pedido", http.StatusInternalServerError)
+		return
+	}
+
+	// 3. Redirect to WhatsApp
+	whatsappURL := fmt.Sprintf("https://wa.me/%s?text=%s", phoneNumber, url.QueryEscape(message))
+	http.Redirect(w, r, whatsappURL, http.StatusSeeOther)
 }

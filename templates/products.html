@@ -11,8 +11,8 @@
         </div>
         <h3 class="product-card__title">{{.Name}}</h3>
         <p class="product-card__flavors">{{.Subtitle}}</p>
-        <p class="product-card__price">${{printf "%.2f" .Price}}</p>
-        <a href="/products/{{.ID}}" class="btn btn-primary btn-link">View Details</a>
+        <p class="product-card__price">{{printf "%.2f" .Price}}€</p>
+        <a href="/products/{{.ID}}" class="btn btn-primary btn-link"><i class="fa-solid fa-eye"></i> View Details</a>
       </div>
       {{end}}
     </div>
