@@ -8,6 +8,7 @@ import (
 	"lasthour/internal/models"
 )
 
+// ProductStorage se encarga de leer y escribir los productos en el archivo JSON del sistema.
 type ProductStorage struct {
 	filePath string
 }

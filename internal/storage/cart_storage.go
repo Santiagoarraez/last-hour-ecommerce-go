@@ -9,6 +9,7 @@ import (
 	"lasthour/internal/models"
 )
 
+// CartStorage almacena los carritos de compra activos de los usuarios en un archivo JSON.
 type CartStorage struct {
 	filePath string
 }

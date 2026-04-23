@@ -9,6 +9,7 @@ import (
 	"lasthour/internal/models"
 )
 
+// ContactStorage persiste los mensajes de contacto en formato JSON.
 type ContactStorage struct {
 	filePath string
 }

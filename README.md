@@ -35,23 +35,35 @@ El objetivo de esta fase (PEC 2) ha sido migrar la estructura estática previa a
 └── 📁 css/              # Hojas de estilo compiladas
 ```
 
-## Guía de Ejecución (Windows/WSL)
-Debido a restricciones de seguridad de Windows con binarios no firmados de Go, se recomienda ejecutar el proyecto utilizando el entorno **WSL (Windows Subsystem for Linux)**.
+## Guía de Ejecución
 
-### Requisitos previos
-1.  Tener instalado **WSL** (Ubuntu u otra distribución).
-2.  Tener instalado **Go** en Windows.
+Existen dos formas principales de ejecutar el proyecto según las restricciones de seguridad de tu entorno:
 
-### Pasos para ejecutar:
-1.  **Compilar para Linux** (desde PowerShell):
+### Opción A: Ejecución Estándar (Recomendada)
+Si tienes Go instalado en tu sistema local (Windows o macOS) y no tienes restricciones de firewall o antivirus persistentes, simplemente ejecuta:
+
+1.  **Desde la raíz del proyecto**, abre una terminal y ejecuta:
+    ```bash
+    go run ./cmd/server/main.go
+    ```
+2.  **Acceder a la aplicación**:
+    Abre tu navegador en: [http://localhost:8080](http://localhost:8080)
+
+---
+
+### Opción B: Ejecución mediante WSL (Entorno con restricciones de seguridad)
+En algunos entornos Windows, los antivirus pueden bloquear la ejecución directa de binarios compilados por Go en la red local. Si la opción A falla, sigue estos pasos:
+
+1.  **Instalar Go en Windows**.
+2.  **Compilar para Linux** (desde una terminal de PowerShell):
     ```powershell
     $env:GOOS='linux'; $env:GOARCH='amd64'; go build -o bin/lasthour-linux ./cmd/server
     ```
-2.  **Ejecutar mediante WSL**:
-    ```powershell
+3.  **Ejecutar mediante WSL**:
+    ```bash
     wsl ./bin/lasthour-linux
     ```
-3.  **Acceder a la aplicación**:
+4.  **Acceder a la aplicación**:
     Abre tu navegador en: [http://localhost:8080](http://localhost:8080)
 
 ## Usuarios de Prueba (Demo)

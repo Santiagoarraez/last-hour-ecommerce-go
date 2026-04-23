@@ -1,7 +1,7 @@
 {{define "content"}}
 <section class="contact page-section">
   <div class="container">
-    <h1 class="section-title">Create Account</h1>
+    <h1 class="section-title"><i class="fa-solid fa-user-plus"></i> Create Account</h1>
 
     <div class="contact__panel">
       {{if .Error}}
@@ -24,10 +24,10 @@
           <input type="password" id="password" name="password" required class="contact-form__control">
         </div>
 
-        <button type="submit" class="btn btn-primary contact-form__submit">Register</button>
+        <button type="submit" class="btn btn-primary contact-form__submit"><i class="fa-solid fa-check"></i> Register</button>
       </form>
 
-      <p class="app-note"><a href="/login">Already have an account?</a></p>
+      <p class="app-note"><a href="/login"><i class="fa-solid fa-right-to-bracket"></i> Already have an account? Login</a></p>
     </div>
   </div>
 </section>

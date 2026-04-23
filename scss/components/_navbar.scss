@@ -121,6 +121,9 @@
 }
 
 .navbar__icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: $color-light;
@@ -132,6 +135,10 @@
   cursor: pointer;
   transition: $transition-smooth;
   white-space: nowrap;
+
+  i {
+    font-size: 1rem;
+  }
 
   &:hover {
     background: $color-white;

@@ -91,6 +91,8 @@ func (a *App) CartRemove(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/cart", http.StatusSeeOther)
 }
 
+// CartCheckout procesa la orden y redirige al usuario a WhatsApp para finalizar la compra.
+// Esta es la funcionalidad estrella de la PEC 2 para gestionar el pedido sin pasarela de pago.
 func (a *App) CartCheckout(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
@@ -108,7 +110,8 @@ func (a *App) CartCheckout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 1. Build the WhatsApp message
+	// 1. Construcción del mensaje de WhatsApp con el resumen del pedido.
+	// El mensaje incluye nombre del cliente, productos, cantidades y total.
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("Hola Last Hour, soy %s. Quisiera realizar el siguiente pedido:\n\n", user.Name))
 
@@ -120,15 +123,16 @@ func (a *App) CartCheckout(w http.ResponseWriter, r *http.Request) {
 	sb.WriteString("\nEspero vuestra confirmación. ¡Gracias!")
 
 	message := sb.String()
-	phoneNumber := "34674466462" // User's requested number
+	phoneNumber := "34674466462" // Número de contacto de la tienda (ficticio para la PEC)
 
-	// 2. Clear the cart (simulating execution of the order)
+	// 2. Limpieza del carrito tras "confirmar" el pedido.
 	if err := a.carts.Checkout(user.ID); err != nil {
 		http.Error(w, "Error al procesar el pedido", http.StatusInternalServerError)
 		return
 	}
 
-	// 3. Redirect to WhatsApp
+	// 3. Redirección final a la API de WhatsApp.
+	// Uso de url.QueryEscape para asegurar que el mensaje se transmita correctamente.
 	whatsappURL := fmt.Sprintf("https://wa.me/%s?text=%s", phoneNumber, url.QueryEscape(message))
 	http.Redirect(w, r, whatsappURL, http.StatusSeeOther)
 }

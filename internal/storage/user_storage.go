@@ -9,6 +9,8 @@ import (
 	"lasthour/internal/models"
 )
 
+// UserStorage gestiona la persistencia de los usuarios en un archivo JSON.
+// Garantiza que los perfiles actualizados y los hashes de Bcrypt se guarden correctamente.
 type UserStorage struct {
 	filePath string
 }

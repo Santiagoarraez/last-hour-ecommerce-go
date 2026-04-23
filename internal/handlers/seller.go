@@ -7,6 +7,7 @@ import (
 	"lasthour/internal/models"
 )
 
+// SellerProductsPageData define los datos para la lista de gestión de productos del vendedor.
 type SellerProductsPageData struct {
 	Title    string
 	User     models.User
@@ -14,25 +15,18 @@ type SellerProductsPageData struct {
 	Error    string
 }
 
+// SellerProductFormData define los datos para el formulario de creación/edición de productos.
 type SellerProductFormData struct {
 	Title   string
 	User    models.User
 	Product models.Product
-	Action  string
+	Action  string // Indica si es una creación o edición
 	Error   string
 }
 
+// SellerProducts muestra la tabla de productos para que el vendedor pueda gestionarlos.
 func (a *App) SellerProducts(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/seller/products" {
-		http.NotFound(w, r)
-		return
-	}
-
-	if r.Method != http.MethodGet {
-		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
-		return
-	}
-
+	// Protegemos la ruta asegurando que el usuario es un vendedor
 	user, ok := a.requireSeller(w, r)
 	if !ok {
 		return
@@ -51,6 +45,7 @@ func (a *App) SellerProducts(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// SellerProductNew gestiona tanto el formulario vacío como la creación de un nuevo producto.
 func (a *App) SellerProductNew(w http.ResponseWriter, r *http.Request) {
 	user, ok := a.requireSeller(w, r)
 	if !ok {
@@ -59,15 +54,17 @@ func (a *App) SellerProductNew(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
+		// Mostramos formulario de creación
 		a.render(w, "seller_product_form.html", SellerProductFormData{
 			Title:  "New Product - Last Hour",
 			User:   user,
 			Action: "/seller/products/new",
 			Product: models.Product{
-				Image: "/assets/images/hqd-catalog-new.png",
+				Image: "/assets/images/hqd-catalog-new.png", // Imagen por defecto
 			},
 		})
 	case http.MethodPost:
+		// Procesamos la creación del producto
 		if err := r.ParseForm(); err != nil {
 			http.Error(w, "No se pudo leer el formulario", http.StatusBadRequest)
 			return
@@ -94,11 +91,10 @@ func (a *App) SellerProductNew(w http.ResponseWriter, r *http.Request) {
 		}
 
 		http.Redirect(w, r, "/seller/products", http.StatusSeeOther)
-	default:
-		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
 	}
 }
 
+// SellerProductEdit gestiona la edición de un producto existente.
 func (a *App) SellerProductEdit(w http.ResponseWriter, r *http.Request) {
 	user, ok := a.requireSeller(w, r)
 	if !ok {
@@ -106,11 +102,6 @@ func (a *App) SellerProductEdit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := strings.TrimPrefix(r.URL.Path, "/seller/products/edit/")
-	if id == "" || strings.Contains(id, "/") {
-		http.NotFound(w, r)
-		return
-	}
-
 	product, err := a.products.FindProductByID(id)
 	if err != nil {
 		http.NotFound(w, r)
@@ -119,6 +110,7 @@ func (a *App) SellerProductEdit(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case http.MethodGet:
+		// Mostramos el formulario con los datos actuales del producto
 		a.render(w, "seller_product_form.html", SellerProductFormData{
 			Title:   "Edit Product - Last Hour",
 			User:    user,
@@ -126,6 +118,7 @@ func (a *App) SellerProductEdit(w http.ResponseWriter, r *http.Request) {
 			Action:  "/seller/products/edit/" + id,
 		})
 	case http.MethodPost:
+		// Procesamos la actualización
 		if err := r.ParseForm(); err != nil {
 			http.Error(w, "No se pudo leer el formulario", http.StatusBadRequest)
 			return
@@ -154,11 +147,10 @@ func (a *App) SellerProductEdit(w http.ResponseWriter, r *http.Request) {
 		}
 
 		http.Redirect(w, r, "/seller/products", http.StatusSeeOther)
-	default:
-		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
 	}
 }
 
+// SellerProductDelete maneja la eliminación de un producto por su ID.
 func (a *App) SellerProductDelete(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
@@ -170,11 +162,6 @@ func (a *App) SellerProductDelete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := strings.TrimPrefix(r.URL.Path, "/seller/products/delete/")
-	if id == "" || strings.Contains(id, "/") {
-		http.NotFound(w, r)
-		return
-	}
-
 	if err := a.products.DeleteProduct(id); err != nil {
 		http.Error(w, "No se pudo eliminar el producto", http.StatusBadRequest)
 		return

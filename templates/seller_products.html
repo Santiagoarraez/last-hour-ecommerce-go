@@ -1,11 +1,11 @@
 {{define "content"}}
 <section class="catalog page-section">
   <div class="container">
-    <h1 class="section-title">Seller Products</h1>
+    <h1 class="section-title"><i class="fa-solid fa-boxes-stacked"></i> Seller Products</h1>
 
     <div class="app-toolbar">
-      <a href="/seller/products/new" class="btn btn-primary btn-link">Add Product</a>
-      <a href="/account" class="btn btn-secondary btn-link">Back to Account</a>
+      <a href="/seller/products/new" class="btn btn-primary btn-link"><i class="fa-solid fa-plus"></i> Add Product</a>
+      <a href="/account" class="btn btn-secondary btn-link"><i class="fa-solid fa-arrow-left"></i> Back to Account</a>
     </div>
 
     <div class="app-table">
@@ -18,9 +18,9 @@
           <p><strong>Price:</strong> ${{printf "%.2f" .Price}}</p>
         </div>
         <div class="app-actions">
-          <a href="/seller/products/edit/{{.ID}}" class="btn btn-secondary btn-link">Edit</a>
+          <a href="/seller/products/edit/{{.ID}}" class="btn btn-secondary btn-link"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
           <form action="/seller/products/delete/{{.ID}}" method="POST">
-            <button type="submit" class="btn btn-modern">Delete</button>
+            <button type="submit" class="btn btn-modern"><i class="fa-solid fa-trash"></i> Delete</button>
           </form>
         </div>
       </article>
