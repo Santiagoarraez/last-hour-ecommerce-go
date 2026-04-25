@@ -4,10 +4,10 @@
     <h1 class="section-title"><i class="fa-solid fa-user-gear"></i> My Account</h1>
 
     {{if .Success}}
-    <div class="alert alert-success">{{.Success}}</div>
+    <div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> {{.Success}}</div>
     {{end}}
     {{if .Error}}
-    <div class="alert alert-danger">{{.Error}}</div>
+    <div class="alert alert-danger"><i class="fa-solid fa-circle-exclamation"></i> {{.Error}}</div>
     {{end}}
 
     <div class="app-grid">
@@ -46,8 +46,8 @@
             <i class="fa-solid fa-store"></i> Seller Panel
           </a>
           {{end}}
-          <form action="/logout" method="POST" style="width: 100%;">
-            <button type="submit" class="btn btn-modern" style="width: 100%;">
+          <form action="/logout" method="POST" class="w-full">
+            <button type="submit" class="btn btn-modern w-full">
               <i class="fa-solid fa-right-from-bracket"></i> Logout
             </button>
           </form>

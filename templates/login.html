@@ -5,7 +5,7 @@
 
     <div class="contact__panel">
       {{if .Error}}
-      <p class="about__paragraph"><strong>Error:</strong> {{.Error}}</p>
+      <div class="alert alert-danger"><i class="fa-solid fa-circle-exclamation"></i> {{.Error}}</div>
       {{end}}
 
       <form class="contact-form" action="/login" method="POST">

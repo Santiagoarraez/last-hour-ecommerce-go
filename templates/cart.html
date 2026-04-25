@@ -4,11 +4,11 @@
     <h1 class="section-title"><i class="fa-solid fa-cart-shopping"></i> Shopping Cart</h1>
 
     {{if .Success}}
-    <div class="alert alert-success">{{.Success}}</div>
+    <div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> {{.Success}}</div>
     {{end}}
 
     {{if .Error}}
-    <div class="alert alert-danger">{{.Error}}</div>
+    <div class="alert alert-danger"><i class="fa-solid fa-circle-exclamation"></i> {{.Error}}</div>
     {{end}}
 
     {{if .Cart.Items}}
@@ -34,14 +34,14 @@
     <div class="app-summary">
       <h2>Total: {{printf "%.2f" .Cart.Total}}€</h2>
       <form action="/cart/checkout" method="POST">
-        <button type="submit" class="btn btn-primary" style="background-color: #25D366; border-color: #25D366;">
+        <button type="submit" class="btn btn-primary btn-whatsapp">
           <i class="fa-brands fa-whatsapp"></i> Checkout via WhatsApp
         </button>
       </form>
     </div>
     {{else}}
-    <div class="app-panel" style="text-align: center; padding: 3rem;">
-      <i class="fa-solid fa-cart-arrow-down" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem;"></i>
+    <div class="app-panel app-panel--empty">
+      <i class="fa-solid fa-cart-arrow-down"></i>
       <p>Your cart is empty.</p>
       <a href="/products" class="btn btn-primary btn-link">
         <i class="fa-solid fa-shop"></i> Browse Products

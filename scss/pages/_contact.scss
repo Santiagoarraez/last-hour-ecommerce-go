@@ -1,0 +1,35 @@
+@use "../base/variables" as *;
+
+.contact__panel {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #fafafa;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.contact-form__group {
+  margin-bottom: 1.5rem;
+}
+
+.contact-form__label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.contact-form__control {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.contact-form__control--textarea {
+  resize: vertical;
+}
+
+.contact-form__submit {
+  width: 100%;
+}

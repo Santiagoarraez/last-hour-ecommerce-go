@@ -1,16 +1,20 @@
 @use "base/variables";
 @use "base/reset";
 @use "base/global";
+@use "base/alerts";
+@use "base/utilities";
 
-@use "layout/header";
-@use "layout/grid";
 @use "layout/footer";
 
 @use "components/navbar";
 @use "components/buttons";
 @use "components/product_card";
-
-@use "pages/home";
-@use "pages/product";
 @use "components/hero";
 @use "components/featured";
+
+@use "pages/home";
+@use "pages/about";
+@use "pages/contact";
+@use "pages/product";
+@use "pages/cart";
+@use "pages/auth";

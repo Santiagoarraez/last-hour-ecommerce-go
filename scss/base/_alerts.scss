@@ -1,0 +1,40 @@
+@use "variables" as *;
+
+.alert {
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-family: $font-body;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: slideIn 0.3s ease-out;
+
+  i {
+    font-size: 1.2rem;
+  }
+}
+
+.alert-success {
+  background: rgba(46, 125, 50, 0.1);
+  color: #2e7d32;
+  border: 1px solid rgba(46, 125, 50, 0.2);
+}
+
+.alert-danger {
+  background: rgba(218, 77, 90, 0.1);
+  color: $color-red;
+  border: 1px solid rgba(218, 77, 90, 0.2);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

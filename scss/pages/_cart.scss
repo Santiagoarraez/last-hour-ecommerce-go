@@ -1,0 +1,74 @@
+@use "../base/variables" as *;
+
+.btn-whatsapp {
+  background-color: #25D366 !important;
+  border-color: #25D366 !important;
+  color: white !important;
+
+  &:hover {
+    background-color: darken(#25D366, 10%) !important;
+    box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3) !important;
+  }
+}
+
+.app-panel--empty {
+  text-align: center;
+  padding: 3rem;
+
+  i {
+    font-size: 4rem;
+    color: #ccc;
+    margin-bottom: 1rem;
+    display: block;
+  }
+}
+
+.app-table {
+  background: white;
+  border-radius: $border-radius-card;
+  padding: 24px;
+  box-shadow: $box-shadow-soft;
+  margin-bottom: 24px;
+}
+
+.app-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid #eeeeee;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  @media (min-width: $tablet) {
+    grid-template-columns: 96px 1fr auto;
+  }
+}
+
+.app-row__image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  background: $color-light;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.app-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  background: white;
+  border-radius: $border-radius-card;
+  padding: 24px;
+  box-shadow: $box-shadow-soft;
+
+  @media (max-width: $tablet) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

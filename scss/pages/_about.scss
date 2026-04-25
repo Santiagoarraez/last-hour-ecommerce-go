@@ -1,0 +1,12 @@
+@use "../base/variables" as *;
+
+.about__content {
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.8;
+  color: #444;
+}
+
+.about__paragraph {
+  margin-bottom: 1.5rem;
+}
