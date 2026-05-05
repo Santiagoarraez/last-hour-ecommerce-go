@@ -11,6 +11,8 @@
 @use "components/product_card";
 @use "components/hero";
 @use "components/featured";
+@use "components/toast";
+@use "components/forms";
 
 @use "pages/home";
 @use "pages/about";
@@ -18,3 +20,4 @@
 @use "pages/product";
 @use "pages/cart";
 @use "pages/auth";
+@use "pages/dashboard";

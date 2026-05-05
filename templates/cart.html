@@ -12,33 +12,46 @@
     {{end}}
 
     {{if .Cart.Items}}
-    <div class="app-table">
+    <div class="app-table" id="cart-table">
       {{range .Cart.Items}}
-      <article class="app-row">
+      <article class="app-row" id="row-{{.Product.ID}}">
         <img src="{{.Product.Image}}" alt="{{.Product.Alt}}" class="app-row__image">
         <div class="app-row__content">
           <h2 class="app-row__title">{{.Product.Name}}</h2>
-          <p>{{.Quantity}} unit(s) x {{printf "%.2f" .Product.Price}}€</p>
-          <p><strong>Subtotal:</strong> {{printf "%.2f" .Subtotal}}€</p>
+          {{if .Flavors}}
+          <p class="app-row__flavors">
+            <i class="fa-solid fa-droplet"></i> 
+            {{range $index, $flavor := .Flavors}}{{if $index}}, {{end}}{{$flavor}}{{end}}
+          </p>
+          {{end}}
+          
+          <div class="app-row__quantity-control">
+            <button class="btn-qty" data-id="{{.Product.ID}}" data-action="dec">-</button>
+            <span class="qty-value">{{.Quantity}}</span>
+            <button class="btn-qty" data-id="{{.Product.ID}}" data-action="inc">+</button>
+            <span class="qty-multiplier">x {{printf "%.2f" .Product.Price}}€</span>
+          </div>
+          
+          <p class="app-row__subtotal"><strong>Subtotal:</strong> <span class="item-subtotal">{{printf "%.2f" .Subtotal}}€</span></p>
         </div>
-        <form action="/cart/remove" method="POST">
-          <input type="hidden" name="product_id" value="{{.Product.ID}}">
-          <button type="submit" class="btn btn-secondary">
-            <i class="fa-solid fa-trash-can"></i> Remove
+        <div class="app-row__actions">
+          <button type="button" class="btn btn-secondary btn-remove-item" data-id="{{.Product.ID}}">
+            <i class="fa-solid fa-trash-can"></i>
           </button>
-        </form>
+        </div>
       </article>
       {{end}}
     </div>
 
     <div class="app-summary">
-      <h2>Total: {{printf "%.2f" .Cart.Total}}€</h2>
+      <h2>Total: <span id="cart-total-amount">{{printf "%.2f" .Cart.Total}}€</span></h2>
       <form action="/cart/checkout" method="POST">
         <button type="submit" class="btn btn-primary btn-whatsapp">
           <i class="fa-brands fa-whatsapp"></i> Checkout via WhatsApp
         </button>
       </form>
     </div>
+    <script src="/js/cart.js"></script>
     {{else}}
     <div class="app-panel app-panel--empty">
       <i class="fa-solid fa-cart-arrow-down"></i>

@@ -1,0 +1,80 @@
+@use "../base/variables" as *;
+
+.toast-container {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  pointer-events: none;
+
+  @media (max-width: $tablet) {
+    top: auto;
+    bottom: 30px;
+    right: 20px;
+    left: 20px;
+    align-items: center;
+  }
+}
+
+.toast {
+  pointer-events: auto;
+  min-width: 280px;
+  background: white;
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-left: 5px solid $color-red;
+  animation: toastIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  &--success {
+    border-left-color: #2ecc71;
+    i { color: #2ecc71; }
+  }
+
+  &--error {
+    border-left-color: $color-red;
+    i { color: $color-red; }
+  }
+
+  i {
+    font-size: 1.2rem;
+  }
+
+  &__message {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: $color-dark-1;
+  }
+
+  &--out {
+    animation: toastOut 0.4s forwards ease-in;
+  }
+}
+
+@keyframes toastIn {
+  from { transform: translateX(100px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes toastOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100px); opacity: 0; }
+}
+
+@media (max-width: $tablet) {
+  @keyframes toastIn {
+    from { transform: translateY(100px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  @keyframes toastOut {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(100px); opacity: 0; }
+  }
+}

@@ -17,13 +17,12 @@ func NewCartService(carts *storage.CartStorage, products *ProductService) *CartS
 	return &CartService{carts: carts, products: products}
 }
 
-// AddItem añade un producto al carrito o incrementa su cantidad si ya existe.
-func (s *CartService) AddItem(userID, productID string, quantity int) error {
+// AddItem añade un producto al carrito. Si el producto con los mismos sabores ya existe, incrementa cantidad.
+func (s *CartService) AddItem(userID, productID string, quantity int, flavors []string) error {
 	if quantity < 1 {
 		quantity = 1
 	}
 
-	// Verificamos que el producto exista realmente antes de añadirlo
 	if _, err := s.products.FindProductByID(productID); err != nil {
 		return err
 	}
@@ -33,34 +32,69 @@ func (s *CartService) AddItem(userID, productID string, quantity int) error {
 		return err
 	}
 
-	// Buscamos si el usuario ya tiene un carrito iniciado
 	for cartIndex := range carts {
 		if carts[cartIndex].UserID == userID {
-			// Buscamos si el producto ya está en el carrito
+			// Buscamos si el mismo producto con mismos sabores ya está
 			for itemIndex := range carts[cartIndex].Items {
-				if carts[cartIndex].Items[itemIndex].ProductID == productID {
-					// Solo incrementamos la cantidad
-					carts[cartIndex].Items[itemIndex].Quantity += quantity
+				item := &carts[cartIndex].Items[itemIndex]
+				if item.ProductID == productID && s.compareFlavors(item.Flavors, flavors) {
+					item.Quantity += quantity
 					return s.carts.SaveAll(carts)
 				}
 			}
 
-			// Si el producto no estaba, lo añadimos a la lista de items
+			// Si no existe esa combinación, añadimos nuevo item
 			carts[cartIndex].Items = append(carts[cartIndex].Items, models.CartItem{
 				ProductID: productID,
 				Quantity:  quantity,
+				Flavors:   flavors,
 			})
 			return s.carts.SaveAll(carts)
 		}
 	}
 
-	// Si el usuario no tenía carrito, creamos uno nuevo
 	carts = append(carts, models.Cart{
 		UserID: userID,
-		Items:  []models.CartItem{{ProductID: productID, Quantity: quantity}},
+		Items:  []models.CartItem{{ProductID: productID, Quantity: quantity, Flavors: flavors}},
 	})
 
 	return s.carts.SaveAll(carts)
+}
+
+// UpdateQuantity permite modificar la cantidad de un item específico.
+func (s *CartService) UpdateQuantity(userID, productID string, quantity int) error {
+	carts, err := s.carts.FindAll()
+	if err != nil {
+		return err
+	}
+
+	for cartIndex := range carts {
+		if carts[cartIndex].UserID == userID {
+			for itemIndex := range carts[cartIndex].Items {
+				if carts[cartIndex].Items[itemIndex].ProductID == productID {
+					if quantity <= 0 {
+						// Si la cantidad es 0 o menos, eliminamos el item
+						return s.RemoveItem(userID, productID)
+					}
+					carts[cartIndex].Items[itemIndex].Quantity = quantity
+					return s.carts.SaveAll(carts)
+				}
+			}
+		}
+	}
+	return errors.New("item no encontrado")
+}
+
+func (s *CartService) compareFlavors(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
 }
 
 // RemoveItem elimina un producto específico del carrito del usuario.
@@ -73,7 +107,6 @@ func (s *CartService) RemoveItem(userID, productID string) error {
 	for cartIndex := range carts {
 		if carts[cartIndex].UserID == userID {
 			var items []models.CartItem
-			// Filtramos los items manteniendo todos menos el solicitado
 			for _, item := range carts[cartIndex].Items {
 				if item.ProductID != productID {
 					items = append(items, item)
@@ -115,7 +148,6 @@ func (s *CartService) Checkout(userID string) error {
 			if len(carts[cartIndex].Items) == 0 {
 				return errors.New("el carrito esta vacio")
 			}
-			// Limpiamos los items del carrito
 			carts[cartIndex].Items = []models.CartItem{}
 			return s.carts.SaveAll(carts)
 		}
@@ -124,22 +156,21 @@ func (s *CartService) Checkout(userID string) error {
 	return errors.New("el carrito esta vacio")
 }
 
-// buildCartView es una función auxiliar que combina los IDs del carrito con los datos reales de los productos.
-// Calcula subtotales y el total acumulado.
+// buildCartView combina IDs con detalles reales.
 func (s *CartService) buildCartView(cart models.Cart) (models.CartView, error) {
 	var view models.CartView
 
 	for _, item := range cart.Items {
-		// Obtenemos los detalles del producto (nombre, precio, etc.)
 		product, err := s.products.FindProductByID(item.ProductID)
 		if err != nil {
-			continue // Si un producto se borró del catálogo, lo ignoramos en el carrito
+			continue
 		}
 
 		subtotal := product.Price * float64(item.Quantity)
 		view.Items = append(view.Items, models.CartViewItem{
 			Product:  product,
 			Quantity: item.Quantity,
+			Flavors:  item.Flavors,
 			Subtotal: subtotal,
 		})
 		view.Total += subtotal

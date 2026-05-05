@@ -4,12 +4,37 @@
     "items": [
       {
         "product_id": "vape-x300",
-        "quantity": 1
+        "quantity": 1,
+        "flavors": null
+      },
+      {
+        "product_id": "hqd-glaze-12000-bundle-2",
+        "quantity": 1,
+        "flavors": []
+      },
+      {
+        "product_id": "hqd-air-4000-bundle-2",
+        "quantity": 1,
+        "flavors": []
       }
     ]
   },
   {
     "user_id": "seller-1",
-    "items": null
+    "items": [
+      {
+        "product_id": "glaze-mint-ice",
+        "quantity": 2,
+        "flavors": []
+      },
+      {
+        "product_id": "glaze-bundle-2",
+        "quantity": 2,
+        "flavors": [
+          "Mint Ice",
+          "Black Ice"
+        ]
+      }
+    ]
   }
 ]

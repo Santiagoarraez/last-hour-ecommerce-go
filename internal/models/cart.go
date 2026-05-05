@@ -2,8 +2,9 @@ package models
 
 // CartItem representa un producto específico y su cantidad dentro del almacenamiento JSON.
 type CartItem struct {
-	ProductID string `json:"product_id"`
-	Quantity  int    `json:"quantity"`
+	ProductID string   `json:"product_id"`
+	Quantity  int      `json:"quantity"`
+	Flavors   []string `json:"flavors"` // Sabores seleccionados
 }
 
 // Cart es la estructura raíz que vincula a un usuario con su lista de productos seleccionados.
@@ -16,6 +17,7 @@ type Cart struct {
 type CartViewItem struct {
 	Product  Product
 	Quantity int
+	Flavors  []string
 	Subtotal float64
 }
 

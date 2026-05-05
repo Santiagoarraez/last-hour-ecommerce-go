@@ -11,4 +11,6 @@ type Product struct {
 	Alt         string   `json:"alt"`         // Texto alternativo para accesibilidad
 	Flavors     []string `json:"flavors"`     // Lista de sabores/variantes disponibles
 	Featured    bool     `json:"featured"`    // Indica si aparece en la portada
+	Category    string   `json:"category"`    // glaze, air, bundle
+	Units       int      `json:"units"`       // Número de unidades para bundles
 }

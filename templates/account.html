@@ -10,28 +10,30 @@
     <div class="alert alert-danger"><i class="fa-solid fa-circle-exclamation"></i> {{.Error}}</div>
     {{end}}
 
+    <div id="account-notification" class="dashboard__notification" hidden></div>
+
     <div class="app-grid">
       <section class="app-panel">
         <h2 class="app-panel__title">Profile Details</h2>
-        <form action="/account/update" method="POST" class="form">
+        <form id="account-form" class="form">
           <div class="form-group">
             <label for="name">Full Name</label>
-            <input type="text" id="name" name="name" value="{{.User.Name}}" class="form-input" required>
+            <input type="text" id="acc-name" name="name" value="{{.User.Name}}" class="form-input" required>
           </div>
           <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" value="{{.User.Email}}" class="form-input" required>
+            <input type="email" id="acc-email" name="email" value="{{.User.Email}}" class="form-input" required>
           </div>
           <div class="form-group">
             <label for="phone">Phone Number</label>
-            <input type="text" id="phone" name="phone" value="{{.User.Phone}}" class="form-input" placeholder="+34 ...">
+            <input type="text" id="acc-phone" name="phone" value="{{.User.Phone}}" class="form-input" placeholder="+34 ...">
           </div>
           <div class="form-group">
             <label>Role</label>
             <input type="text" value="{{.User.Role}}" class="form-input" disabled>
             <small>Roles can only be changed by administrators.</small>
           </div>
-          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Save Changes</button>
+          <button type="submit" id="btn-save-account" class="btn btn-primary"><i class="fa-solid fa-save"></i> Save Changes</button>
         </form>
       </section>
 
@@ -42,8 +44,8 @@
             <i class="fa-solid fa-cart-shopping"></i> View Cart
           </a>
           {{if .User.IsSeller}}
-          <a href="/seller/products" class="btn btn-secondary btn-link">
-            <i class="fa-solid fa-store"></i> Seller Panel
+          <a href="/seller/dashboard" class="btn btn-secondary btn-link">
+            <i class="fa-solid fa-store"></i> Admin Panel
           </a>
           {{end}}
           <form action="/logout" method="POST" class="w-full">
@@ -54,6 +56,7 @@
         </div>
       </section>
     </div>
+    <script src="/js/account.js"></script>
   </div>
 </section>
 {{end}}

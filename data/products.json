@@ -1,112 +1,184 @@
 [
   {
-    "id": "vape-x200",
-    "name": "Vape X200",
-    "subtitle": "5 flavors available",
-    "description": "The Vape X200 is the ideal choice for those seeking intense flavor and durability. With its long-lasting battery, it offers up to 2000 puffs of pure flavor.",
-    "price": 14.99,
+    "id": "glaze-peach-ice",
+    "name": "HQD GLAZE - Peach Ice",
+    "subtitle": "12000 Puffs - 5% Nicotine",
+    "description": "Sweet and juicy peach flavor with a refreshing icy finish. Experience 12000 puffs of pure satisfaction.",
+    "price": 30.00,
     "image": "/assets/images/vape1.png",
-    "alt": "Vape X200 disposable vape device",
-    "flavors": [
-      "Cool Mint",
-      "Mango Ice",
-      "Berry Blast",
-      "Watermelon"
-    ],
-    "featured": true
+    "alt": "HQD GLAZE Peach Ice",
+    "flavors": ["Peach Ice"],
+    "featured": true,
+    "category": "glaze"
   },
   {
-    "id": "vape-x300",
-    "name": "Vape X300",
-    "subtitle": "8 flavors available",
-    "description": "The Vape X300 offers more autonomy and a larger selection of flavors for users who want a compact device with consistent performance.",
-    "price": 16.99,
-    "image": "/assets/images/vape2.png",
-    "alt": "Vape X300 disposable vape device",
-    "flavors": [
-      "Mint",
-      "Blue Razz",
-      "Mango",
-      "Strawberry",
-      "Cola",
-      "Grape",
-      "Peach",
-      "Lemon"
-    ],
-    "featured": true
+    "id": "glaze-black-ice",
+    "name": "HQD GLAZE - Black Ice",
+    "subtitle": "12000 Puffs - 5% Nicotine",
+    "description": "A mysterious and cool blend of dark berries with a strong menthol kick.",
+    "price": 30.00,
+    "image": "/assets/images/vape1.png",
+    "alt": "HQD GLAZE Black Ice",
+    "flavors": ["Black Ice"],
+    "featured": true,
+    "category": "glaze"
   },
   {
-    "id": "vape-pro",
-    "name": "Vape Pro",
-    "subtitle": "10 flavors available",
-    "description": "The Vape Pro combines a stronger battery, a refined design and premium flavors for a more complete experience.",
-    "price": 19.99,
-    "image": "/assets/images/vape3.png",
-    "alt": "Vape Pro disposable vape device",
-    "flavors": [
-      "Cool Mint",
-      "Mango Ice",
-      "Berry Blast",
-      "Watermelon",
-      "Peach",
-      "Grape",
-      "Blueberry",
-      "Lemon",
-      "Cherry",
-      "Cola"
-    ],
-    "featured": true
+    "id": "glaze-mint-ice",
+    "name": "HQD GLAZE - Mint Ice",
+    "subtitle": "12000 Puffs - 5% Nicotine",
+    "description": "The ultimate classic. Pure, crisp mint that leaves your breath fresh and your cravings satisfied.",
+    "price": 30.00,
+    "image": "/assets/images/vape1.png",
+    "alt": "HQD GLAZE Mint Ice",
+    "flavors": ["Mint Ice"],
+    "featured": true,
+    "category": "glaze"
   },
   {
-    "id": "hqd-glaze-watermelon",
-    "name": "HQD Glaze Watermelon",
-    "subtitle": "12000 Puffs - LED Screen",
-    "description": "A long-lasting HQD Glaze device with watermelon flavor, smart LED screen and high puff capacity.",
-    "price": 24.99,
+    "id": "glaze-lush-ice",
+    "name": "HQD GLAZE - Lush Ice",
+    "subtitle": "12000 Puffs - 5% Nicotine",
+    "description": "Summery watermelon flavor paired with a cool ice blast. Perfect for any time of day.",
+    "price": 30.00,
+    "image": "/assets/images/vape1.png",
+    "alt": "HQD GLAZE Lush Ice",
+    "flavors": ["Lush Ice"],
+    "featured": true,
+    "category": "glaze"
+  },
+  {
+    "id": "glaze-strawberry-watermelon",
+    "name": "HQD GLAZE - Strawberry Watermelon",
+    "subtitle": "12000 Puffs - 5% Nicotine",
+    "description": "A perfect duo of ripe strawberries and sweet watermelon.",
+    "price": 30.00,
+    "image": "/assets/images/vape1.png",
+    "alt": "HQD GLAZE Strawberry Watermelon",
+    "flavors": ["Strawberry Watermelon"],
+    "featured": true,
+    "category": "glaze"
+  },
+  {
+    "id": "glaze-grapey",
+    "name": "HQD GLAZE - Grapey",
+    "subtitle": "12000 Puffs - 5% Nicotine",
+    "description": "Rich, purple grape flavor that's both sweet and slightly tart.",
+    "price": 30.00,
+    "image": "/assets/images/vape1.png",
+    "alt": "HQD GLAZE Grapey",
+    "flavors": ["Grapey"],
+    "featured": true,
+    "category": "glaze"
+  },
+  {
+    "id": "glaze-blueberry",
+    "name": "HQD GLAZE - Blueberry",
+    "subtitle": "12000 Puffs - 5% Nicotine",
+    "description": "Classic wild blueberry taste. Simple, sweet, and effective.",
+    "price": 30.00,
+    "image": "/assets/images/vape1.png",
+    "alt": "HQD GLAZE Blueberry",
+    "flavors": ["Blueberry"],
+    "featured": true,
+    "category": "glaze"
+  },
+  {
+    "id": "air-peach-ice",
+    "name": "HQD AIR - Peach Ice",
+    "subtitle": "4000 Puffs - 5% Nicotine",
+    "description": "Compact power with a delicious peach ice flavor.",
+    "price": 20.00,
     "image": "/assets/images/hqd-catalog-new.png",
-    "alt": "HQD Glaze Watermelon Ice",
-    "flavors": [
-      "Watermelon Ice"
-    ],
-    "featured": false
+    "alt": "HQD AIR Peach Ice",
+    "flavors": ["Peach Ice"],
+    "featured": true,
+    "category": "air"
   },
   {
-    "id": "hqd-glaze-blue-razz",
-    "name": "HQD Glaze Blue Razz",
-    "subtitle": "12000 Puffs - LED Screen",
-    "description": "A premium HQD Glaze device with blue razz flavor and LED screen for battery and usage information.",
-    "price": 24.99,
+    "id": "air-black-ice",
+    "name": "HQD AIR - Black Ice",
+    "subtitle": "4000 Puffs - 5% Nicotine",
+    "description": "Intense dark berries and ice in a portable design.",
+    "price": 20.00,
     "image": "/assets/images/hqd-catalog-new.png",
-    "alt": "HQD Glaze Blue Razz",
-    "flavors": [
-      "Blue Razz"
-    ],
-    "featured": false
+    "alt": "HQD AIR Black Ice",
+    "flavors": ["Black Ice"],
+    "featured": true,
+    "category": "air"
   },
   {
-    "id": "hqd-glaze-mango-ice",
-    "name": "HQD Glaze Mango Ice",
-    "subtitle": "12000 Puffs - LED Screen",
-    "description": "A mango ice version of the HQD Glaze line, designed for long duration and a fresh flavor profile.",
-    "price": 254.99,
+    "id": "air-sky-ice",
+    "name": "HQD AIR - Sky Ice",
+    "subtitle": "4000 Puffs - 5% Nicotine",
+    "description": "A light and airy menthol blend that's incredibly smooth.",
+    "price": 20.00,
     "image": "/assets/images/hqd-catalog-new.png",
-    "alt": "HQD Glaze Mango Ice",
-    "flavors": [
-      "Mango Ice"
-    ],
-    "featured": false
+    "alt": "HQD AIR Sky Ice",
+    "flavors": ["Sky Ice"],
+    "featured": true,
+    "category": "air"
   },
   {
-    "id": "hqd-glaze-cool-mint",
-    "name": "HQD Glaze Cool Mint",
-    "subtitle": "12000 Puffs - LED Screen",
-    "description": "A cool mint HQD Glaze product with high capacity and a clear display for device status.",
-    "price": 24.99,
+    "id": "air-lush-ice",
+    "name": "HQD AIR - Lush Ice",
+    "subtitle": "4000 Puffs - 5% Nicotine",
+    "description": "Refreshing watermelon and ice, perfect for on-the-go.",
+    "price": 20.00,
     "image": "/assets/images/hqd-catalog-new.png",
-    "alt": "HQD Glaze Cool Mint",
-    "flavors": [
-      "Cool Mint"
-    ],
-    "featured": false
+    "alt": "HQD AIR Lush Ice",
+    "flavors": ["Lush Ice"],
+    "featured": true,
+    "category": "air"
+  },
+  {
+    "id": "air-strawberry-watermelon",
+    "name": "HQD AIR - Strawberry Watermelon",
+    "subtitle": "4000 Puffs - 5% Nicotine",
+    "description": "Sweet fruits in a compact, reliable device.",
+    "price": 20.00,
+    "image": "/assets/images/hqd-catalog-new.png",
+    "alt": "HQD AIR Strawberry Watermelon",
+    "flavors": ["Strawberry Watermelon"],
+    "featured": true,
+    "category": "air"
+  },
+  {
+    "id": "air-grapey",
+    "name": "HQD AIR - Grapey",
+    "subtitle": "4000 Puffs - 5% Nicotine",
+    "description": "The perfect grape vape for your pocket.",
+    "price": 20.00,
+    "image": "/assets/images/hqd-catalog-new.png",
+    "alt": "HQD AIR Grapey",
+    "flavors": ["Grapey"],
+    "featured": true,
+    "category": "air"
+  },
+  {
+    "id": "glaze-bundle-2",
+    "name": "HQD GLAZE - Pack x2",
+    "subtitle": "Promo: 50€ (Save 10€)",
+    "description": "Pick any 2 flavors from the GLAZE 12000 collection and save money.",
+    "price": 50.00,
+    "image": "/assets/images/vape1.png",
+    "alt": "HQD GLAZE Pack",
+    "flavors": ["Peach Ice", "Black Ice", "Mint Ice", "Lush Ice", "Strawberry Watermelon", "Grapey", "Blueberry"],
+    "featured": true,
+    "category": "bundle",
+    "units": 2
+  },
+  {
+    "id": "air-bundle-2",
+    "name": "HQD AIR - Pack x2",
+    "subtitle": "Promo: 32€ (Save 8€)",
+    "description": "Get 2 HQD AIR 4000 vapes at a special price. Choose your favorites.",
+    "price": 32.00,
+    "image": "/assets/images/hqd-catalog-new.png",
+    "alt": "HQD AIR Pack",
+    "flavors": ["Peach Ice", "Black Ice", "Sky Ice", "Lush Ice", "Strawberry Watermelon", "Grapey"],
+    "featured": true,
+    "category": "bundle",
+    "units": 2
   }
 ]

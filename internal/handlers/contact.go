@@ -2,12 +2,6 @@ package handlers
 
 import "net/http"
 
-// ContactPageData define el estado de la página de contacto (si hubo éxito o error).
-type ContactPageData struct {
-	Title   string
-	Success bool
-	Error   string
-}
 
 // Contact gestiona tanto la visualización del formulario de contacto (GET)
 // como la recepción del mensaje (POST).
@@ -15,7 +9,7 @@ func (a *App) Contact(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		// Mostramos el formulario vacío
-		a.render(w, "contact.html", ContactPageData{Title: "Contact Us | Vape Store"})
+		a.render(w, r, "contact.html", map[string]any{"Title": "Contact Us | Vape Store"})
 	case http.MethodPost:
 		// Procesamos los datos enviados
 		a.processContact(w, r)
@@ -39,16 +33,16 @@ func (a *App) processContact(w http.ResponseWriter, r *http.Request) {
 	)
 	if err != nil {
 		// Si hay error en la lógica de negocio, lo notificamos en la misma página
-		a.render(w, "contact.html", ContactPageData{
-			Title: "Contact Us | Vape Store",
-			Error: err.Error(),
+		a.render(w, r, "contact.html", map[string]any{
+			"Title": "Contact Us | Vape Store",
+			"Error": err.Error(),
 		})
 		return
 	}
 
 	// Si todo sale bien, mostramos un mensaje de confirmación
-	a.render(w, "contact.html", ContactPageData{
-		Title:   "Contact Us | Vape Store",
-		Success: true,
+	a.render(w, r, "contact.html", map[string]any{
+		"Title":   "Contact Us | Vape Store",
+		"Success": true,
 	})
 }

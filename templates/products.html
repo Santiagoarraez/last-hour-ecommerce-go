@@ -6,16 +6,51 @@
     <div class="featured__grid">
       {{range .Products}}
       <div class="product-card">
-        <div class="product-card__image-wrapper">
+        {{if eq .Category "glaze"}}<div class="product-card__badge">12000 Puffs</div>{{end}}
+        {{if eq .Category "air"}}<div class="product-card__badge">4000 Puffs</div>{{end}}
+        {{if eq .Category "bundle"}}<div class="product-card__badge product-card__badge--blue">PROMO!</div>{{end}}
+        
+        <div class="product-card__image-container">
           <img src="{{.Image}}" alt="{{.Alt}}" class="product-card__image">
         </div>
         <h3 class="product-card__title">{{.Name}}</h3>
-        <p class="product-card__flavors">{{.Subtitle}}</p>
         <p class="product-card__price">{{printf "%.2f" .Price}}€</p>
-        <a href="/products/{{.ID}}" class="btn btn-primary btn-link"><i class="fa-solid fa-eye"></i> View Details</a>
+        
+        <div class="product-card__actions">
+          <form class="product-card__form quick-add-form">
+            <input type="hidden" name="product_id" value="{{.ID}}">
+            
+            <div class="bundle-flavors">
+              {{if eq .Category "bundle"}}
+                {{if eq .Units 2}}
+                  <select name="flavor_1" class="form-select" style="margin-bottom: 8px;">
+                    <option value="" disabled selected>Flavor 1</option>
+                    {{range .Flavors}}<option value="{{.}}">{{.}}</option>{{end}}
+                  </select>
+                  <select name="flavor_2" class="form-select" style="margin-bottom: 8px;">
+                    <option value="" disabled selected>Flavor 2</option>
+                    {{range .Flavors}}<option value="{{.}}">{{.}}</option>{{end}}
+                  </select>
+                {{end}}
+              {{else}}
+                {{range .Flavors}}<input type="hidden" name="flavor" value="{{.}}">{{end}}
+              {{end}}
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+              <i class="fa-solid fa-cart-plus"></i> Add
+            </button>
+          </form>
+          <a href="/products/{{.ID}}" class="btn btn-secondary">
+            <i class="fa-solid fa-eye"></i> Info
+          </a>
+        </div>
       </div>
       {{end}}
     </div>
+    <!-- Floating notification container (Toast) -->
+    <div id="toast-container" class="toast-container"></div>
+    <script src="/js/cart.js"></script>
   </div>
 </section>
 {{end}}

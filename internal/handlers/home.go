@@ -3,14 +3,8 @@ package handlers
 import (
 	"net/http"
 
-	"lasthour/internal/models"
 )
 
-// HomePageData define los datos que se pasan a la plantilla de inicio.
-type HomePageData struct {
-	Title    string
-	Products []models.Product
-}
 
 // Home maneja la petición a la página principal de la tienda.
 // Filtra únicamente la raíz "/" y obtiene los productos destacados para mostrar.
@@ -34,8 +28,8 @@ func (a *App) Home(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Renderizamos la plantilla home.html inyectando los productos
-	a.render(w, "home.html", HomePageData{
-		Title:    "Vape Store",
-		Products: products,
+	a.render(w, r, "home.html", map[string]any{
+		"Title":    "Vape Store",
+		"Products": products,
 	})
 }

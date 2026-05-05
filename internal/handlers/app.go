@@ -32,10 +32,10 @@ func NewApp(products *services.ProductService, contacts *services.ContactService
 
 // render se encarga de procesar las plantillas HTML y enviar la respuesta al navegador.
 // Siempre incluye el 'layout.html' como base para mantener la cabecera y el pie de página consistentes.
-func (a *App) render(w http.ResponseWriter, page string, data any) {
+func (a *App) render(w http.ResponseWriter, r *http.Request, page string, data any) {
 	files := []string{
-		filepath.Join(a.templateDir, "layout.html"), // Plantilla base lógica común
-		filepath.Join(a.templateDir, page),        // Plantilla específica de la página
+		filepath.Join(a.templateDir, "layout.html"),
+		filepath.Join(a.templateDir, page),
 	}
 
 	tmpl, err := template.ParseFiles(files...)
@@ -44,9 +44,28 @@ func (a *App) render(w http.ResponseWriter, page string, data any) {
 		return
 	}
 
+	// Recuperamos el usuario para inyectarlo siempre
+	user, _ := a.currentUser(r)
+
+	finalData := make(map[string]any)
+	finalData["User"] = user
+
+	// Si data es un mapa, volcamos sus claves al mapa final
+	if m, ok := data.(map[string]any); ok {
+		for k, v := range m {
+			finalData[k] = v
+		}
+	} else if data != nil {
+		// Si es un struct u otro tipo, lo pasamos bajo la clave "Data" 
+		// (aunque lo ideal es usar mapas para el layout global)
+		finalData["Data"] = data
+	}
+
+	// Si data es un struct, el layout accederá a .User solo si el struct lo tiene.
+	// Para asegurar que .User esté disponible en el layout siempre, lo mejor es usar mapas.
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	// Ejecutamos la plantilla principal 'layout' definida en layout.html
-	if err := tmpl.ExecuteTemplate(w, "layout", data); err != nil {
+	if err := tmpl.ExecuteTemplate(w, "layout", finalData); err != nil {
 		http.Error(w, "Error generando la respuesta HTML", http.StatusInternalServerError)
 	}
 }

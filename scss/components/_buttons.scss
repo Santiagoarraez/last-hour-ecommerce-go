@@ -1,4 +1,5 @@
 @use "../base/variables" as *;
+@use "sass:color";
 
 .btn {
   display: inline-flex;
@@ -28,7 +29,7 @@
 
   &:hover {
     transform: translateY(-3px);
-    background: lighten($color-red, 5%);
+    background: color.adjust($color-red, $lightness: 5%);
     box-shadow: 0 8px 25px $color-red-glow;
   }
 
@@ -38,14 +39,12 @@
 }
 
 .btn-secondary {
-  // Outline blue to solid blue
-  background: transparent;
-  color: $color-blue;
-  border: 2px solid $color-blue;
+  background: $color-blue;
+  color: $color-white;
+  border: none;
 
   &:hover {
-    background: $color-blue;
-    color: $color-white;
+    background: color.adjust($color-blue, $lightness: 5%);
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(40, 106, 246, 0.3);
   }

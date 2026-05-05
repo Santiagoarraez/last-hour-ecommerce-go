@@ -70,6 +70,12 @@
       width: 100%;
     }
   }
+
+  &--admin {
+    color: $color-red;
+    font-family: $font-heading !important;
+    font-weight: 800;
+  }
 }
 
 .navbar__checkbox {

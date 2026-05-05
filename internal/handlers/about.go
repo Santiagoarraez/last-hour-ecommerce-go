@@ -2,10 +2,6 @@ package handlers
 
 import "net/http"
 
-// AboutPageData define los datos para la página estática "Sobre Nosotros".
-type AboutPageData struct {
-	Title string
-}
 
 // About maneja la visualización de la página de información de la empresa.
 func (a *App) About(w http.ResponseWriter, r *http.Request) {
@@ -14,5 +10,5 @@ func (a *App) About(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.render(w, "about.html", AboutPageData{Title: "About Us | Vape Store"})
+	a.render(w, r, "about.html", map[string]any{"Title": "About Us | Vape Store"})
 }

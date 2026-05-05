@@ -3,29 +3,14 @@ package handlers
 import (
 	"net/http"
 
-	"lasthour/internal/models"
 )
 
-// AuthPageData contiene los datos necesarios para renderizar las páginas de Login y Registro.
-type AuthPageData struct {
-	Title string
-	Error string
-}
-
-// AccountPageData contiene los datos para la página de gestión de cuenta (Perfil).
-// Estructura creada para soportar la visualización y edición del perfil.
-type AccountPageData struct {
-	Title   string
-	User    models.User
-	Success string
-	Error   string
-}
 
 // Login maneja la visualización del formulario y el proceso de inicio de sesión.
 func (a *App) Login(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		a.render(w, "login.html", AuthPageData{Title: "Login - Last Hour"})
+		a.render(w, r, "login.html", map[string]any{"Title": "Login - Last Hour"})
 	case http.MethodPost:
 		if err := r.ParseForm(); err != nil {
 			http.Error(w, "No se pudo leer el formulario", http.StatusBadRequest)
@@ -34,7 +19,7 @@ func (a *App) Login(w http.ResponseWriter, r *http.Request) {
 
 		user, err := a.auth.Login(r.FormValue("email"), r.FormValue("password"))
 		if err != nil {
-			a.render(w, "login.html", AuthPageData{Title: "Login - Last Hour", Error: err.Error()})
+			a.render(w, r, "login.html", map[string]any{"Title": "Login - Last Hour", "Error": err.Error()})
 			return
 		}
 
@@ -49,7 +34,7 @@ func (a *App) Login(w http.ResponseWriter, r *http.Request) {
 func (a *App) Register(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		a.render(w, "register.html", AuthPageData{Title: "Register - Last Hour"})
+		a.render(w, r, "register.html", map[string]any{"Title": "Register - Last Hour"})
 	case http.MethodPost:
 		if err := r.ParseForm(); err != nil {
 			http.Error(w, "No se pudo leer el formulario", http.StatusBadRequest)
@@ -58,7 +43,7 @@ func (a *App) Register(w http.ResponseWriter, r *http.Request) {
 
 		user, err := a.auth.Register(r.FormValue("name"), r.FormValue("email"), r.FormValue("password"))
 		if err != nil {
-			a.render(w, "register.html", AuthPageData{Title: "Register - Last Hour", Error: err.Error()})
+			a.render(w, r, "register.html", map[string]any{"Title": "Register - Last Hour", "Error": err.Error()})
 			return
 		}
 
@@ -93,9 +78,9 @@ func (a *App) Account(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.render(w, "account.html", AccountPageData{
-		Title: "Account - Last Hour",
-		User:  user,
+	a.render(w, r, "account.html", map[string]any{
+		"Title": "Account - Last Hour",
+		"User":  user,
 	})
 }
 
@@ -126,10 +111,10 @@ func (a *App) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err != nil {
-		a.render(w, "account.html", AccountPageData{
-			Title: "Account - Last Hour",
-			User:  user,
-			Error: err.Error(),
+		a.render(w, r, "account.html", map[string]any{
+			"Title": "Account - Last Hour",
+			"User":  user,
+			"Error": err.Error(),
 		})
 		return
 	}
@@ -137,9 +122,9 @@ func (a *App) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 	// Actualizamos la cookie de sesión con la nueva información del usuario
 	setSessionCookie(w, updatedUser)
 
-	a.render(w, "account.html", AccountPageData{
-		Title:   "Account - Last Hour",
-		User:    updatedUser,
-		Success: "Perfil actualizado correctamente",
+	a.render(w, r, "account.html", map[string]any{
+		"Title":   "Account - Last Hour",
+		"User":    updatedUser,
+		"Success": "Perfil actualizado correctamente",
 	})
 }

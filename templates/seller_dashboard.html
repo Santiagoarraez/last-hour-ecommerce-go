@@ -1,0 +1,199 @@
+{{define "content"}}
+<!-- ===============================================
+     SELLER DASHBOARD — Panel de Administración SPA
+     PEC 3: Explotación de API REST con JavaScript
+     =============================================== -->
+
+<section class="dashboard page-section">
+  <div class="container">
+
+    <!-- Cabecera del Dashboard -->
+    <div class="dashboard__header">
+      <div class="dashboard__header-text">
+        <h1 class="section-title dashboard__title">
+          <i class="fa-solid fa-gauge-high"></i> Admin Dashboard
+        </h1>
+        <p class="dashboard__subtitle">Gestiona tu catálogo de vapes en tiempo real.</p>
+      </div>
+      <div class="dashboard__header-actions">
+        <button id="btn-new-product" class="btn btn-primary">
+          <i class="fa-solid fa-plus"></i> Nuevo Producto
+        </button>
+        <a href="/seller/products" class="btn btn-secondary btn-link">
+          <i class="fa-solid fa-list"></i> Vista Clásica
+        </a>
+      </div>
+    </div>
+
+    <!-- Zona de Notificaciones (gestionada por JS) -->
+    <div id="dashboard-notification" class="dashboard__notification" aria-live="polite" hidden></div>
+
+    <!-- Formulario de Crear/Editar (oculto hasta que se necesite) -->
+    <div id="form-panel" class="dashboard__form-panel" hidden>
+      <div class="app-panel">
+        <div class="app-panel__header">
+          <h2 class="app-panel__title" id="form-panel-title">Nuevo Producto</h2>
+          <button id="btn-cancel-form" class="btn btn-secondary" aria-label="Cerrar formulario">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Formulario impulsado por JS (no hace POST clásico) -->
+        <form id="product-form" class="form dashboard__form" novalidate>
+          <input type="hidden" id="product-id" name="id" value="">
+
+          <div class="dashboard__form-grid">
+            <div class="form-group">
+              <label for="field-name" class="form-label">Nombre del producto *</label>
+              <input type="text" id="field-name" name="name" class="form-input" required
+                placeholder="ej. HQD Glaze Watermelon">
+            </div>
+            <div class="form-group">
+              <label for="field-price" class="form-label">Precio (€) *</label>
+              <input type="number" id="field-price" name="price" class="form-input" required
+                step="0.01" min="0.01" placeholder="ej. 24.99">
+            </div>
+            <div class="form-group">
+              <label for="field-subtitle" class="form-label">Subtítulo *</label>
+              <input type="text" id="field-subtitle" name="subtitle" class="form-input" required
+                placeholder="ej. 12000 Puffs - LED Screen">
+            </div>
+            <div class="form-group">
+              <label for="field-image" class="form-label">Ruta de imagen *</label>
+              <input type="text" id="field-image" name="image" class="form-input" required
+                placeholder="/assets/images/mi-producto.png">
+            </div>
+            <div class="form-group dashboard__form-grid--full">
+              <label for="field-description" class="form-label">Descripción *</label>
+              <textarea id="field-description" name="description" class="form-input form-textarea"
+                required rows="3" placeholder="Descripción detallada del producto..."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="field-alt" class="form-label">Texto alternativo (img)</label>
+              <input type="text" id="field-alt" name="alt" class="form-input"
+                placeholder="Descripción accesible de la imagen">
+            </div>
+            <div class="form-group">
+              <label for="field-flavors" class="form-label">Sabores (separados por comas)</label>
+              <input type="text" id="field-flavors" name="flavors" class="form-input"
+                placeholder="Mango, Mint, Blue Razz">
+            </div>
+            <div class="form-group dashboard__form-grid--full">
+              <label class="dashboard__checkbox-label">
+                <input type="checkbox" id="field-featured" name="featured" class="dashboard__checkbox">
+                <span>Producto destacado (aparece en la Home)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="dashboard__form-actions">
+            <button type="submit" id="btn-submit-form" class="btn btn-primary">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Guardar Producto
+            </button>
+            <button type="button" id="btn-cancel-form-2" class="btn btn-secondary">
+              <i class="fa-solid fa-xmark"></i> Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tabla de Productos -->
+    <div class="app-panel">
+      <div class="dashboard__table-header">
+        <h2 class="app-panel__title">Catálogo de Productos</h2>
+        <div class="dashboard__search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="search" id="search-input" class="form-input" placeholder="Buscar producto...">
+        </div>
+      </div>
+
+      <!-- Estado de carga -->
+      <div id="table-loading" class="dashboard__state">
+        <i class="fa-solid fa-circle-notch fa-spin"></i>
+        <p>Cargando productos...</p>
+      </div>
+
+      <!-- Estado vacío -->
+      <div id="table-empty" class="dashboard__state" hidden>
+        <i class="fa-solid fa-box-open"></i>
+        <p>No hay productos todavía. ¡Crea el primero!</p>
+      </div>
+
+      <!-- Tabla (se muestra solo cuando hay datos) -->
+      <div id="table-wrapper" hidden>
+        <table class="dashboard__table" id="products-table">
+          <thead>
+            <tr>
+              <th>Imagen</th>
+              <th>Nombre</th>
+              <th>Subtítulo</th>
+              <th>Precio</th>
+              <th>Destacado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="products-tbody">
+            <!-- Las filas se inyectan desde el <template> por JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- =====================================================
+     PLANTILLAS HTML (reutilizadas por JavaScript)
+     El navegador no renderiza el contenido de <template>
+     hasta que el JS las clona e inserta en el DOM.
+     ===================================================== -->
+
+<!-- Plantilla: Fila de la tabla de productos -->
+<template id="tpl-product-row">
+  <tr class="dashboard__row" data-id="">
+    <td class="dashboard__cell--img">
+      <img src="" alt="" class="dashboard__product-thumb">
+    </td>
+    <td class="dashboard__cell--name" data-label="Nombre">
+      <span class="dashboard__product-name"></span>
+    </td>
+    <td class="dashboard__cell--subtitle" data-label="Subtítulo">
+      <span class="dashboard__product-subtitle"></span>
+    </td>
+    <td class="dashboard__cell--price" data-label="Precio">
+      <span class="dashboard__product-price"></span>
+    </td>
+    <td class="dashboard__cell--featured" data-label="Destacado">
+      <span class="dashboard__badge"></span>
+    </td>
+    <td class="dashboard__cell--actions">
+      <button class="btn btn-secondary btn-sm btn-edit" aria-label="Editar producto">
+        <i class="fa-solid fa-pen-to-square"></i> Editar
+      </button>
+      <button class="btn btn-modern btn-sm btn-delete" aria-label="Eliminar producto">
+        <i class="fa-solid fa-trash"></i> Eliminar
+      </button>
+    </td>
+  </tr>
+</template>
+
+<!-- Plantilla: Notificación de éxito -->
+<template id="tpl-notify-success">
+  <div class="alert alert-success">
+    <i class="fa-solid fa-circle-check"></i>
+    <span class="notify-message"></span>
+  </div>
+</template>
+
+<!-- Plantilla: Notificación de error -->
+<template id="tpl-notify-error">
+  <div class="alert alert-danger">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <span class="notify-message"></span>
+  </div>
+</template>
+
+<!-- Carga del módulo JavaScript del dashboard -->
+<script src="/js/seller-dashboard.js" defer></script>
+{{end}}

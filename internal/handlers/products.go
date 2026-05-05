@@ -7,46 +7,22 @@ import (
 	"lasthour/internal/models"
 )
 
-// ProductsPageData estructura los datos para la página del catálogo completo.
-type ProductsPageData struct {
-	Title    string
-	Products []models.Product
-}
-
-// ProductDetailPageData estructura los datos para la ficha de un producto individual.
-type ProductDetailPageData struct {
-	Title   string
-	Product models.Product
-}
-
-// Products maneja la visualización de todo el catálogo de productos disponibles.
+// Products muestra el catálogo completo de productos.
 func (a *App) Products(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
-		return
-	}
-
-	// Recuperamos todos los productos del servicio
 	products, err := a.products.ListProducts()
 	if err != nil {
-		http.Error(w, "No se pudo cargar el catalogo", http.StatusInternalServerError)
+		http.Error(w, "No se pudieron cargar los productos", http.StatusInternalServerError)
 		return
 	}
 
-	a.render(w, "products.html", ProductsPageData{
-		Title:    "Our Products - Last Hour",
-		Products: products,
+	a.render(w, r, "products.html", map[string]any{
+		"Title":    "Nuestro Catálogo - Last Hour",
+		"Products": products,
 	})
 }
 
-// ProductDetail gestiona la visualización de la página de detalle de un producto específico.
-// Extrae el ID de la URL y busca el producto correspondiente.
+// ProductDetail muestra la información detallada de un solo vape.
 func (a *App) ProductDetail(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
-		return
-	}
-
 	// Extraemos el identificador quitando el prefijo de la ruta
 	id := strings.TrimPrefix(r.URL.Path, "/products/")
 	if id == "" || strings.Contains(id, "/") {
@@ -54,16 +30,24 @@ func (a *App) ProductDetail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Buscamos el producto por su ID
 	product, err := a.products.FindProductByID(id)
 	if err != nil {
-		// Si no existe, devolvemos un 404 Not Found
 		http.NotFound(w, r)
 		return
 	}
 
-	a.render(w, "product_detail.html", ProductDetailPageData{
-		Title:   product.Name + " - Last Hour",
-		Product: product,
+	// Buscamos otros productos de la misma categoría (sabores del mismo modelo)
+	allProducts, _ := a.products.ListProducts()
+	var variants []models.Product
+	for _, p := range allProducts {
+		if p.Category == product.Category && p.ID != product.ID {
+			variants = append(variants, p)
+		}
+	}
+
+	a.render(w, r, "product_detail.html", map[string]any{
+		"Title":    product.Name + " - Last Hour",
+		"Product":  product,
+		"Variants": variants,
 	})
 }

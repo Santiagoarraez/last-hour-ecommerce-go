@@ -51,15 +51,44 @@ func main() {
 	// PEC 2: Nueva ruta para el checkout vía WhatsApp
 	mux.HandleFunc("/cart/checkout", app.CartCheckout)
 	
-	// Rutas de administración (Vendedor)
-	mux.HandleFunc("/seller/products", app.SellerProducts)
-	mux.HandleFunc("/seller/products/new", app.SellerProductNew)
-	mux.HandleFunc("/seller/products/edit/", app.SellerProductEdit)
-	mux.HandleFunc("/seller/products/delete/", app.SellerProductDelete)
+	// PEC 3: API REST para Carrito y Cuenta
+	mux.HandleFunc("/api/cart", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			app.ApiCart(w, r)
+		case http.MethodPost:
+			app.ApiCartAdd(w, r)
+		case http.MethodPatch:
+			app.ApiCartUpdateQuantity(w, r)
+		case http.MethodDelete:
+			app.ApiCartRemove(w, r)
+		default:
+			http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
+		}
+	})
 
-	// 5. Servidor de archivos estáticos (CSS, Imágenes)
+	mux.HandleFunc("/api/account", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPut {
+			app.ApiAccountUpdate(w, r)
+		} else {
+			http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
+		}
+	})
+
+	// PEC 3: Panel de administración SPA (API REST + JavaScript)
+	mux.HandleFunc("/seller/dashboard", app.SellerDashboard)
+
+	// PEC 3: Endpoints de la API REST
+	// /api/products       → GET (listar) y POST (crear)
+	// /api/products/{id}  → GET (obtener), PUT (actualizar) y DELETE (eliminar)
+	mux.HandleFunc("/api/products", app.ApiProducts)
+	mux.HandleFunc("/api/products/", app.ApiProductByID)
+
+	// 5. Servidor de archivos estáticos (CSS, Imágenes, JavaScript)
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
 	mux.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
+	// PEC 3: Servimos los ficheros JS de la carpeta /js/
+	mux.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("js"))))
 
 	// 6. Lanzamiento del servidor
 	log.Println("Servidor web iniciado en http://localhost:8080")

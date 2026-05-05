@@ -1,55 +1,113 @@
 {{define "content"}}
 <section class="hero">
-  <div class="container hero__content">
-    <div class="hero__text">
-      <h1 class="hero__title">Discover the new Vape Pro</h1>
-      <p class="hero__subtitle">8000 puffs &bull; Premium flavors</p>
-      <a href="/products" class="btn btn-primary btn-link"><i class="fa-solid fa-cart-shopping"></i> Shop now</a>
-    </div>
-
-    <div class="hero__image">
-      <img src="/assets/images/hqd-hero-new.png" alt="HQD Glaze">
+  <div class="container hero__grid">
+    <div class="hero__content">
+      <h1 class="hero__title">LAST HOUR <br><span>VAPE SHOP</span></h1>
+      <p class="hero__subtitle">Discover the most intense flavors with HQD Glaze and HQD Air.</p>
+      <div class="hero__actions">
+        <a href="/products" class="btn btn-primary btn-lg">Explore Catalog</a>
+        <a href="/about" class="btn btn-secondary btn-lg">Our Story</a>
+      </div>
     </div>
   </div>
 </section>
 
 <section class="featured">
   <div class="container">
-    <h2 class="section-title">Featured Products</h2>
 
+    <!-- ══ SPECIAL BUNDLES ══ -->
+    <h2 class="section-title"><i class="fa-solid fa-tags"></i> SPECIAL BUNDLES</h2>
     <div class="featured__grid">
-      {{range .Products}}
-      <div class="product-card">
-        <img src="{{.Image}}" alt="{{.Alt}}" class="product-card__image">
+      {{range .Products}}{{if eq .Category "bundle"}}
+      <div class="product-card product-card--bundle">
+        <div class="product-card__badge product-card__badge--blue">PROMO!</div>
+        <div class="product-card__image-container">
+          <img src="{{.Image}}" alt="{{.Alt}}" class="product-card__image">
+        </div>
         <h3 class="product-card__title">{{.Name}}</h3>
-        <p class="product-card__flavors">{{.Subtitle}}</p>
         <p class="product-card__price">{{printf "%.2f" .Price}}€</p>
-        <a href="/products/{{.ID}}" class="btn btn-primary btn-link"><i class="fa-solid fa-eye"></i> View Details</a>
+        <div class="product-card__actions">
+          <form class="product-card__form quick-add-form">
+            <input type="hidden" name="product_id" value="{{.ID}}">
+            <div class="bundle-flavors">
+              {{if eq .Units 2}}
+              <select name="flavor_1"><option value="" disabled selected>Sabor 1</option>{{range .Flavors}}<option value="{{.}}">{{.}}</option>{{end}}</select>
+              <select name="flavor_2"><option value="" disabled selected>Sabor 2</option>{{range .Flavors}}<option value="{{.}}">{{.}}</option>{{end}}</select>
+              {{end}}
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-cart-plus"></i> Añadir al carrito</button>
+          </form>
+          <a href="/products/{{.ID}}" class="btn btn-secondary"><i class="fa-solid fa-circle-info"></i> Ver detalles</a>
+        </div>
       </div>
-      {{end}}
+      {{end}}{{end}}
     </div>
+
+    <!-- ══ HQD GLAZE CAROUSEL ══ -->
+    <h2 class="section-title" style="margin-top:5rem"><i class="fa-solid fa-fire"></i> HQD GLAZE 12000</h2>
+    <div class="carousel-wrapper">
+      <div class="carousel-track" id="glaze-track">
+        {{range .Products}}{{if eq .Category "glaze"}}
+        <div class="product-card">
+          <div class="product-card__badge">12000 Puffs</div>
+          <div class="product-card__image-container">
+            <img src="{{.Image}}" alt="{{.Alt}}" class="product-card__image">
+          </div>
+          <h3 class="product-card__title">{{.Name}}</h3>
+          <p class="product-card__price">{{printf "%.2f" .Price}}€</p>
+          <div class="product-card__actions">
+            <form class="product-card__form quick-add-form">
+              <input type="hidden" name="product_id" value="{{.ID}}">
+              {{range .Flavors}}<input type="hidden" name="flavor" value="{{.}}">{{end}}
+              <button type="submit" class="btn btn-primary"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
+            </form>
+            <a href="/products/{{.ID}}" class="btn btn-secondary"><i class="fa-solid fa-circle-info"></i> Detalles</a>
+          </div>
+        </div>
+        {{end}}{{end}}
+      </div>
+      <div class="carousel-nav">
+        <button onclick="scrollCarousel('glaze-track',-1)" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+        <button onclick="scrollCarousel('glaze-track', 1)" aria-label="Siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+
+    <!-- ══ HQD AIR CAROUSEL ══ -->
+    <h2 class="section-title" style="margin-top:5rem"><i class="fa-solid fa-wind"></i> HQD AIR 4000</h2>
+    <div class="carousel-wrapper">
+      <div class="carousel-track" id="air-track">
+        {{range .Products}}{{if eq .Category "air"}}
+        <div class="product-card">
+          <div class="product-card__badge">4000 Puffs</div>
+          <div class="product-card__image-container">
+            <img src="{{.Image}}" alt="{{.Alt}}" class="product-card__image">
+          </div>
+          <h3 class="product-card__title">{{.Name}}</h3>
+          <p class="product-card__price">{{printf "%.2f" .Price}}€</p>
+          <div class="product-card__actions">
+            <form class="product-card__form quick-add-form">
+              <input type="hidden" name="product_id" value="{{.ID}}">
+              {{range .Flavors}}<input type="hidden" name="flavor" value="{{.}}">{{end}}
+              <button type="submit" class="btn btn-primary"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
+            </form>
+            <a href="/products/{{.ID}}" class="btn btn-secondary"><i class="fa-solid fa-circle-info"></i> Detalles</a>
+          </div>
+        </div>
+        {{end}}{{end}}
+      </div>
+      <div class="carousel-nav">
+        <button onclick="scrollCarousel('air-track',-1)" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+        <button onclick="scrollCarousel('air-track', 1)" aria-label="Siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+
   </div>
 </section>
 
-<section class="promo-banner">
-  <div class="promo-banner__glow promo-banner__glow--red"></div>
-  <div class="promo-banner__glow promo-banner__glow--blue"></div>
-
-  <div class="container promo-banner__content">
-    <div class="promo-banner__text">
-      <div class="promo-banner__label">Exclusive Launch</div>
-      <h2 class="promo-banner__title">HQD GLAZE <br><span class="promo-banner__title-accent">12000 PUFFS</span></h2>
-      <p class="promo-banner__description">
-        The most advanced vape on the market with a smart LED screen and unparalleled flavors. Get it now at a special
-        price!
-      </p>
-      <a href="/products" class="btn btn-primary btn-link promo-banner__button"><i class="fa-solid fa-list-ul"></i> View
-        Catalog</a>
-    </div>
-
-    <div class="promo-banner__image">
-      <img src="/assets/images/hqd-hero-new.png" alt="HQD Glaze Promocional" class="promo-banner__product">
-    </div>
-  </div>
-</section>
+<script>
+  function scrollCarousel(id, dir) {
+    const track = document.getElementById(id);
+    if (track) track.scrollBy({ left: dir * 310, behavior: 'smooth' });
+  }
+</script>
 {{end}}

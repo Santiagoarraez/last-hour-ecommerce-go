@@ -7,36 +7,63 @@
     </header>
 
     <div class="product-view__grid">
-      <figure class="product-view__gallery">
-        <img src="{{.Product.Image}}" alt="{{.Product.Alt}}">
-      </figure>
+      <div class="product-view__gallery">
+        <figure class="product-view__main-image">
+          <img src="{{.Product.Image}}" alt="{{.Product.Alt}}" id="main-product-img">
+        </figure>
+        
+        {{if .Variants}}
+        <div class="product-view__thumbnails">
+          <a href="/products/{{.Product.ID}}" class="thumb-link thumb-link--active">
+            <img src="{{.Product.Image}}" alt="{{.Product.Name}}">
+          </a>
+          {{range .Variants}}
+          <a href="/products/{{.ID}}" class="thumb-link">
+            <img src="{{.Image}}" alt="{{.Name}}">
+            <span class="thumb-tooltip">{{.Name}}</span>
+          </a>
+          {{end}}
+        </div>
+        {{end}}
+      </div>
 
       <section class="product-view__info">
         <p class="product-view__description">{{.Product.Description}}</p>
 
-        <form class="product-view__form" method="POST" action="/cart/add">
+        <form class="product-view__form quick-add-form" id="add-to-cart-form">
           <input type="hidden" name="product_id" value="{{.Product.ID}}">
-
-          <div class="form-group">
-            <label class="form-label" for="flavor">Select a flavor</label>
-            <select class="form-select" id="flavor" name="flavor">
-              {{range .Product.Flavors}}
-              <option value="{{.}}">{{.}}</option>
-              {{end}}
-            </select>
-          </div>
-
+          {{range .Product.Flavors}}<input type="hidden" name="flavor" value="{{.}}">{{end}}
+          
           <div class="form-group form-group--inline">
             <label class="form-label" for="quantity">Quantity</label>
-            <input class="form-input" type="number" id="quantity" name="quantity" value="1" min="1">
+            <div class="quantity-picker">
+              <button type="button" class="btn-qty-adj" data-delta="-1">-</button>
+              <input class="form-input" type="number" id="cart-quantity" name="quantity" value="1" min="1">
+              <button type="button" class="btn-qty-adj" data-delta="1">+</button>
+            </div>
           </div>
 
-          <button type="submit" class="btn btn-primary">
-            <i class="fa-solid fa-cart-plus"></i> Add to cart
+          <button type="submit" class="btn btn-primary btn-lg w-full">
+            <i class="fa-solid fa-cart-plus"></i> Add to Cart
           </button>
         </form>
       </section>
     </div>
   </div>
 </article>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="/js/cart.js"></script>
+
+<script>
+  // Script rápido para el picker de cantidad en detalle
+  document.querySelectorAll('.btn-qty-adj').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = document.getElementById('cart-quantity');
+      const delta = parseInt(btn.dataset.delta);
+      const newVal = parseInt(input.value) + delta;
+      if (newVal >= 1) input.value = newVal;
+    });
+  });
+</script>
 {{end}}

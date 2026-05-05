@@ -1,4 +1,5 @@
 @use "../base/variables" as *;
+@use "sass:color";
 
 .btn-whatsapp {
   background-color: #25D366 !important;
@@ -6,7 +7,7 @@
   color: white !important;
 
   &:hover {
-    background-color: darken(#25D366, 10%) !important;
+    background-color: color.adjust(#25D366, $lightness: -10%) !important;
     box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3) !important;
   }
 }
@@ -55,6 +56,62 @@
   background: $color-light;
   border-radius: 8px;
   padding: 8px;
+}
+
+.app-row__content {
+  .app-row__title {
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+  }
+
+  .app-row__flavors {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 8px;
+    i { margin-right: 4px; color: $color-red; }
+  }
+}
+
+.app-row__quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+
+  .btn-qty {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    &:hover {
+      background: $color-light;
+      border-color: #bbb;
+    }
+    &:active { transform: scale(0.9); }
+  }
+
+  .qty-value {
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  .qty-multiplier {
+    font-size: 0.9rem;
+    color: #888;
+  }
+}
+
+.app-row__subtotal {
+  font-size: 0.95rem;
+  color: #333;
 }
 
 .app-summary {

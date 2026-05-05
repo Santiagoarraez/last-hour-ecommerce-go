@@ -7,16 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"lasthour/internal/models"
 )
 
-type CartPageData struct {
-	Title   string
-	User    models.User
-	Cart    models.CartView
-	Success string
-	Error   string
-}
 
 func (a *App) Cart(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
@@ -35,10 +27,10 @@ func (a *App) Cart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.render(w, "cart.html", CartPageData{
-		Title: "Cart - Last Hour",
-		User:  user,
-		Cart:  cart,
+	a.render(w, r, "cart.html", map[string]any{
+		"Title": "Cart - Last Hour",
+		"User":  user,
+		"Cart":  cart,
 	})
 }
 
@@ -59,7 +51,13 @@ func (a *App) CartAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	quantity, _ := strconv.Atoi(r.FormValue("quantity"))
-	if err := a.carts.AddItem(user.ID, r.FormValue("product_id"), quantity); err != nil {
+	flavor := r.FormValue("flavor")
+	flavors := []string{}
+	if flavor != "" {
+		flavors = append(flavors, flavor)
+	}
+
+	if err := a.carts.AddItem(user.ID, r.FormValue("product_id"), quantity, flavors); err != nil {
 		http.Error(w, "No se pudo agregar el producto", http.StatusBadRequest)
 		return
 	}
