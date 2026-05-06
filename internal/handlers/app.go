@@ -16,16 +16,31 @@ type App struct {
 	contacts    *services.ContactService
 	auth        *services.AuthService
 	carts       *services.CartService
+	vapeModels  *services.ModelService
+	flavors     *services.FlavorService
+	promotions  *services.PromotionService
 	templateDir string
 }
 
 // NewApp crea una nueva instancia de la aplicación inyectando las dependencias necesarias.
-func NewApp(products *services.ProductService, contacts *services.ContactService, auth *services.AuthService, carts *services.CartService, templateDir string) *App {
+func NewApp(
+	products *services.ProductService,
+	contacts *services.ContactService,
+	auth *services.AuthService,
+	carts *services.CartService,
+	vapeModels *services.ModelService,
+	flavors *services.FlavorService,
+	promotions *services.PromotionService,
+	templateDir string,
+) *App {
 	return &App{
 		products:    products,
 		contacts:    contacts,
 		auth:        auth,
 		carts:       carts,
+		vapeModels:  vapeModels,
+		flavors:     flavors,
+		promotions:  promotions,
 		templateDir: templateDir,
 	}
 }

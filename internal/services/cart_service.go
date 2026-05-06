@@ -17,14 +17,10 @@ func NewCartService(carts *storage.CartStorage, products *ProductService) *CartS
 	return &CartService{carts: carts, products: products}
 }
 
-// AddItem añade un producto al carrito. Si el producto con los mismos sabores ya existe, incrementa cantidad.
-func (s *CartService) AddItem(userID, productID string, quantity int, flavors []string) error {
+// AddItem añade un producto al carrito. Si el producto con el mismo sabor ya existe, incrementa cantidad.
+func (s *CartService) AddItem(userID, productID string, quantity int, flavors []string, flavorID, flavorName string, price float64, image string) error {
 	if quantity < 1 {
 		quantity = 1
-	}
-
-	if _, err := s.products.FindProductByID(productID); err != nil {
-		return err
 	}
 
 	carts, err := s.carts.FindAll()
@@ -34,35 +30,56 @@ func (s *CartService) AddItem(userID, productID string, quantity int, flavors []
 
 	for cartIndex := range carts {
 		if carts[cartIndex].UserID == userID {
-			// Buscamos si el mismo producto con mismos sabores ya está
+			// Buscamos si el mismo sabor ya está en el carrito
 			for itemIndex := range carts[cartIndex].Items {
 				item := &carts[cartIndex].Items[itemIndex]
-				if item.ProductID == productID && s.compareFlavors(item.Flavors, flavors) {
+				
+				// Prioridad al FlavorID para identificar el item
+				if flavorID != "" && item.FlavorID == flavorID {
+					item.Quantity += quantity
+					return s.carts.SaveAll(carts)
+				}
+				
+				// Fallback para compatibilidad con el sistema de "bundles" antiguo
+				if flavorID == "" && item.ProductID == productID && s.compareFlavors(item.Flavors, flavors) {
 					item.Quantity += quantity
 					return s.carts.SaveAll(carts)
 				}
 			}
 
-			// Si no existe esa combinación, añadimos nuevo item
+			// Si no existe esa combinación, añadimos nuevo item con toda su metadata
 			carts[cartIndex].Items = append(carts[cartIndex].Items, models.CartItem{
-				ProductID: productID,
-				Quantity:  quantity,
-				Flavors:   flavors,
+				ProductID:  productID,
+				FlavorID:   flavorID,
+				FlavorName: flavorName,
+				Price:      price,
+				Image:      image,
+				Quantity:   quantity,
+				Flavors:    flavors,
 			})
 			return s.carts.SaveAll(carts)
 		}
 	}
 
+	// Si el usuario no tiene carrito, lo creamos
 	carts = append(carts, models.Cart{
 		UserID: userID,
-		Items:  []models.CartItem{{ProductID: productID, Quantity: quantity, Flavors: flavors}},
+		Items: []models.CartItem{{
+			ProductID:  productID,
+			FlavorID:   flavorID,
+			FlavorName: flavorName,
+			Price:      price,
+			Image:      image,
+			Quantity:   quantity,
+			Flavors:    flavors,
+		}},
 	})
 
 	return s.carts.SaveAll(carts)
 }
 
 // UpdateQuantity permite modificar la cantidad de un item específico.
-func (s *CartService) UpdateQuantity(userID, productID string, quantity int) error {
+func (s *CartService) UpdateQuantity(userID, id string, quantity int) error {
 	carts, err := s.carts.FindAll()
 	if err != nil {
 		return err
@@ -71,12 +88,13 @@ func (s *CartService) UpdateQuantity(userID, productID string, quantity int) err
 	for cartIndex := range carts {
 		if carts[cartIndex].UserID == userID {
 			for itemIndex := range carts[cartIndex].Items {
-				if carts[cartIndex].Items[itemIndex].ProductID == productID {
+				item := &carts[cartIndex].Items[itemIndex]
+				// Buscamos coincidencia por FlavorID o por ProductID (fallback)
+				if (item.FlavorID != "" && item.FlavorID == id) || (item.FlavorID == "" && item.ProductID == id) {
 					if quantity <= 0 {
-						// Si la cantidad es 0 o menos, eliminamos el item
-						return s.RemoveItem(userID, productID)
+						return s.RemoveItem(userID, id)
 					}
-					carts[cartIndex].Items[itemIndex].Quantity = quantity
+					item.Quantity = quantity
 					return s.carts.SaveAll(carts)
 				}
 			}
@@ -98,7 +116,7 @@ func (s *CartService) compareFlavors(a, b []string) bool {
 }
 
 // RemoveItem elimina un producto específico del carrito del usuario.
-func (s *CartService) RemoveItem(userID, productID string) error {
+func (s *CartService) RemoveItem(userID, id string) error {
 	carts, err := s.carts.FindAll()
 	if err != nil {
 		return err
@@ -108,7 +126,9 @@ func (s *CartService) RemoveItem(userID, productID string) error {
 		if carts[cartIndex].UserID == userID {
 			var items []models.CartItem
 			for _, item := range carts[cartIndex].Items {
-				if item.ProductID != productID {
+				// Comprobamos si coincide el ID enviado con FlavorID o ProductID
+				isMatch := (item.FlavorID != "" && item.FlavorID == id) || (item.FlavorID == "" && item.ProductID == id)
+				if !isMatch {
 					items = append(items, item)
 				}
 			}
@@ -156,14 +176,28 @@ func (s *CartService) Checkout(userID string) error {
 	return errors.New("el carrito esta vacio")
 }
 
-// buildCartView combina IDs con detalles reales.
+// buildCartView combina datos persistidos con la estructura visual para la web.
 func (s *CartService) buildCartView(cart models.Cart) (models.CartView, error) {
 	var view models.CartView
 
 	for _, item := range cart.Items {
-		product, err := s.products.FindProductByID(item.ProductID)
-		if err != nil {
-			continue
+		var product models.Product
+
+		// Intentamos reconstruir el objeto Product desde la metadata del item (nuevo sistema modular)
+		if item.FlavorName != "" {
+			product = models.Product{
+				ID:    item.FlavorID,
+				Name:  item.FlavorName,
+				Price: item.Price,
+				Image: item.Image,
+			}
+		} else {
+			// Fallback al sistema antiguo buscando en el storage de productos
+			p, err := s.products.FindProductByID(item.ProductID)
+			if err != nil {
+				continue
+			}
+			product = p
 		}
 
 		subtotal := product.Price * float64(item.Quantity)

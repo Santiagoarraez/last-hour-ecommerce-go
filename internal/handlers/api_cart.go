@@ -33,9 +33,13 @@ func (a *App) ApiCartAdd(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var input struct {
-		ProductID string   `json:"product_id"`
-		Quantity  int      `json:"quantity"`
-		Flavors   []string `json:"flavors"`
+		ProductID  string   `json:"product_id"`
+		FlavorID   string   `json:"flavor_id"`
+		FlavorName string   `json:"flavor_name"`
+		Price      float64  `json:"price"`
+		Image      string   `json:"image"`
+		Quantity   int      `json:"quantity"`
+		Flavors    []string `json:"flavors"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
@@ -47,7 +51,7 @@ func (a *App) ApiCartAdd(w http.ResponseWriter, r *http.Request) {
 		input.Quantity = 1
 	}
 
-	if err := a.carts.AddItem(user.ID, input.ProductID, input.Quantity, input.Flavors); err != nil {
+	if err := a.carts.AddItem(user.ID, input.ProductID, input.Quantity, input.Flavors, input.FlavorID, input.FlavorName, input.Price, input.Image); err != nil {
 		writeError(w, http.StatusBadRequest, err.Error())
 		return
 	}

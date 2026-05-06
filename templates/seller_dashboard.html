@@ -19,124 +19,197 @@
         <button id="btn-new-product" class="btn btn-primary">
           <i class="fa-solid fa-plus"></i> Nuevo Producto
         </button>
-        <a href="/seller/products" class="btn btn-secondary btn-link">
-          <i class="fa-solid fa-list"></i> Vista Clásica
-        </a>
       </div>
     </div>
 
     <!-- Zona de Notificaciones (gestionada por JS) -->
     <div id="dashboard-notification" class="dashboard__notification" aria-live="polite" hidden></div>
 
-    <!-- Formulario de Crear/Editar (oculto hasta que se necesite) -->
-    <div id="form-panel" class="dashboard__form-panel" hidden>
-      <div class="app-panel">
-        <div class="app-panel__header">
-          <h2 class="app-panel__title" id="form-panel-title">Nuevo Producto</h2>
-          <button id="btn-cancel-form" class="btn btn-secondary" aria-label="Cerrar formulario">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
+    <!-- Navegación por Pestañas -->
+    <div class="dashboard__tabs">
+      <button class="dashboard__tab-btn active" data-tab="tab-models">
+        <i class="fa-solid fa-layer-group"></i> Modelos
+      </button>
+      <button class="dashboard__tab-btn" data-tab="tab-flavors">
+        <i class="fa-solid fa-droplet"></i> Sabores
+      </button>
+      <button class="dashboard__tab-btn" data-tab="tab-promotions">
+        <i class="fa-solid fa-tags"></i> Promociones
+      </button>
+    </div>
+
+    <!-- PESTAÑA: MODELOS -->
+    <div id="tab-models" class="dashboard__tab-content active">
+      <div id="model-form-panel" class="dashboard__form-panel">
+        <div class="app-panel">
+          <div class="app-panel__header">
+            <h2 class="app-panel__title" id="model-form-title">Nuevo Modelo</h2>
+          </div>
+          <form id="model-form" class="form dashboard__form" novalidate>
+            <input type="hidden" id="model-id" name="id" value="">
+            <div class="dashboard__form-grid">
+              <div class="form-group">
+                <label for="model-name" class="form-label">Nombre del modelo *</label>
+                <input type="text" id="model-name" name="name" class="form-input" required placeholder="ej. HQD Glaze">
+              </div>
+              <div class="form-group">
+                <label for="model-subtitle" class="form-label">Subtítulo *</label>
+                <input type="text" id="model-subtitle" name="subtitle" class="form-input" required placeholder="ej. 12000 Puffs - LED Screen">
+              </div>
+              <div class="form-group dashboard__form-grid--full">
+                <label for="model-description" class="form-label">Descripción *</label>
+                <textarea id="model-description" name="description" class="form-input form-textarea" required rows="2" placeholder="Descripción del modelo..."></textarea>
+              </div>
+              <div class="form-group">
+                <label for="model-price" class="form-label">Precio base (€) *</label>
+                <input type="number" id="model-price" name="price" class="form-input" required step="0.01" min="0.01" placeholder="ej. 24.99">
+              </div>
+            </div>
+            <div class="dashboard__form-actions">
+              <button type="submit" id="btn-submit-model" class="btn btn-primary">
+                <i class="fa-solid fa-save"></i> Guardar Modelo
+              </button>
+              <button type="reset" class="btn btn-secondary">Limpiar</button>
+            </div>
+          </form>
         </div>
+      </div>
 
-        <!-- Formulario impulsado por JS (no hace POST clásico) -->
-        <form id="product-form" class="form dashboard__form" novalidate>
-          <input type="hidden" id="product-id" name="id" value="">
-
-          <div class="dashboard__form-grid">
-            <div class="form-group">
-              <label for="field-name" class="form-label">Nombre del producto *</label>
-              <input type="text" id="field-name" name="name" class="form-input" required
-                placeholder="ej. HQD Glaze Watermelon">
-            </div>
-            <div class="form-group">
-              <label for="field-price" class="form-label">Precio (€) *</label>
-              <input type="number" id="field-price" name="price" class="form-input" required
-                step="0.01" min="0.01" placeholder="ej. 24.99">
-            </div>
-            <div class="form-group">
-              <label for="field-subtitle" class="form-label">Subtítulo *</label>
-              <input type="text" id="field-subtitle" name="subtitle" class="form-input" required
-                placeholder="ej. 12000 Puffs - LED Screen">
-            </div>
-            <div class="form-group">
-              <label for="field-image" class="form-label">Ruta de imagen *</label>
-              <input type="text" id="field-image" name="image" class="form-input" required
-                placeholder="/assets/images/mi-producto.png">
-            </div>
-            <div class="form-group dashboard__form-grid--full">
-              <label for="field-description" class="form-label">Descripción *</label>
-              <textarea id="field-description" name="description" class="form-input form-textarea"
-                required rows="3" placeholder="Descripción detallada del producto..."></textarea>
-            </div>
-            <div class="form-group">
-              <label for="field-alt" class="form-label">Texto alternativo (img)</label>
-              <input type="text" id="field-alt" name="alt" class="form-input"
-                placeholder="Descripción accesible de la imagen">
-            </div>
-            <div class="form-group">
-              <label for="field-flavors" class="form-label">Sabores (separados por comas)</label>
-              <input type="text" id="field-flavors" name="flavors" class="form-input"
-                placeholder="Mango, Mint, Blue Razz">
-            </div>
-            <div class="form-group dashboard__form-grid--full">
-              <label class="dashboard__checkbox-label">
-                <input type="checkbox" id="field-featured" name="featured" class="dashboard__checkbox">
-                <span>Producto destacado (aparece en la Home)</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="dashboard__form-actions">
-            <button type="submit" id="btn-submit-form" class="btn btn-primary">
-              <i class="fa-solid fa-cloud-arrow-up"></i> Guardar Producto
-            </button>
-            <button type="button" id="btn-cancel-form-2" class="btn btn-secondary">
-              <i class="fa-solid fa-xmark"></i> Cancelar
-            </button>
-          </div>
-        </form>
+      <div class="app-panel">
+        <h2 class="app-panel__title">Lista de Modelos</h2>
+        <div class="dashboard__table-wrapper">
+          <table class="dashboard__table" id="models-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Subtítulo</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="models-tbody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
-    <!-- Tabla de Productos -->
-    <div class="app-panel">
-      <div class="dashboard__table-header">
-        <h2 class="app-panel__title">Catálogo de Productos</h2>
-        <div class="dashboard__search">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="search" id="search-input" class="form-input" placeholder="Buscar producto...">
+    <!-- PESTAÑA: SABORES -->
+    <div id="tab-flavors" class="dashboard__tab-content" hidden>
+      <div id="flavor-form-panel" class="dashboard__form-panel">
+        <div class="app-panel">
+          <div class="app-panel__header">
+            <h2 class="app-panel__title">Nuevo Sabor</h2>
+          </div>
+          <form id="flavor-form" class="form dashboard__form" novalidate>
+            <div class="dashboard__form-grid">
+              <div class="form-group">
+                <label for="flavor-model-id" class="form-label">Modelo Padre *</label>
+                <select id="flavor-model-id" name="model_id" class="form-input" required>
+                  <option value="">Selecciona un modelo...</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="flavor-name" class="form-label">Nombre del sabor *</label>
+                <input type="text" id="flavor-name" name="name" class="form-input" required placeholder="ej. Watermelon Ice">
+              </div>
+              <div class="form-group dashboard__form-grid--full">
+                <label for="flavor-image" class="form-label">Imagen del sabor *</label>
+                <input type="file" id="flavor-image" name="image" class="form-input" accept="image/*">
+              </div>
+            </div>
+            <div class="dashboard__form-actions">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-plus"></i> Añadir Sabor
+              </button>
+            </div>
+          </form>
         </div>
       </div>
 
-      <!-- Estado de carga -->
-      <div id="table-loading" class="dashboard__state">
-        <i class="fa-solid fa-circle-notch fa-spin"></i>
-        <p>Cargando productos...</p>
+      <div class="app-panel">
+        <h2 class="app-panel__title">Lista de Sabores</h2>
+        <div class="dashboard__table-wrapper">
+          <table class="dashboard__table" id="flavors-table">
+            <thead>
+              <tr>
+                <th>Modelo</th>
+                <th>Nombre</th>
+                <th>Imagen</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="flavors-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PESTAÑA: PROMOCIONES -->
+    <div id="tab-promotions" class="dashboard__tab-content" hidden>
+      <div id="promotion-form-panel" class="dashboard__form-panel">
+        <div class="app-panel">
+          <div class="app-panel__header">
+            <h2 class="app-panel__title">Nueva Promoción</h2>
+          </div>
+          <form id="promotion-form" class="form dashboard__form" novalidate>
+            <input type="hidden" id="promotion-id" name="id" value="">
+            <div class="dashboard__form-grid">
+              <div class="form-group">
+                <label for="promo-name" class="form-label">Nombre del pack *</label>
+                <input type="text" id="promo-name" name="name" class="form-input" required placeholder="ej. Pack Inicio">
+              </div>
+              <div class="form-group">
+                <label for="promo-price" class="form-label">Precio Pack (€) *</label>
+                <input type="number" id="promo-price" name="price" class="form-input" required step="0.01">
+              </div>
+              <div class="form-group">
+                <label for="promo-units" class="form-label">Unidades totales *</label>
+                <input type="number" id="promo-units" name="units" class="form-input" required>
+              </div>
+              <div class="form-group">
+                <label for="promo-image" class="form-label">Imagen promocional</label>
+                <input type="file" id="promo-image" name="image" class="form-input" accept="image/*">
+              </div>
+              <div class="form-group dashboard__form-grid--full">
+                <label for="promo-description" class="form-label">Descripción *</label>
+                <textarea id="promo-description" name="description" class="form-input form-textarea" required rows="2"></textarea>
+              </div>
+            </div>
+
+            <div class="dashboard__promo-items-section">
+              <h3 class="app-panel__title" style="font-size: 1.1rem;">Contenido del Pack</h3>
+              <div id="promo-items-container"></div>
+              <button type="button" id="btn-add-promo-item" class="btn btn-secondary btn-sm mt-2">
+                <i class="fa-solid fa-circle-plus"></i> Añadir modelo
+              </button>
+            </div>
+
+            <div class="dashboard__form-actions mt-3">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-tags"></i> Guardar Promoción
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
 
-      <!-- Estado vacío -->
-      <div id="table-empty" class="dashboard__state" hidden>
-        <i class="fa-solid fa-box-open"></i>
-        <p>No hay productos todavía. ¡Crea el primero!</p>
-      </div>
-
-      <!-- Tabla (se muestra solo cuando hay datos) -->
-      <div id="table-wrapper" hidden>
-        <table class="dashboard__table" id="products-table">
-          <thead>
-            <tr>
-              <th>Imagen</th>
-              <th>Nombre</th>
-              <th>Subtítulo</th>
-              <th>Precio</th>
-              <th>Destacado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="products-tbody">
-            <!-- Las filas se inyectan desde el <template> por JavaScript -->
-          </tbody>
-        </table>
+      <div class="app-panel">
+        <h2 class="app-panel__title">Lista de Promociones</h2>
+        <div class="dashboard__table-wrapper">
+          <table class="dashboard__table" id="promotions-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Unidades</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="promotions-tbody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -163,9 +236,6 @@
     </td>
     <td class="dashboard__cell--price" data-label="Precio">
       <span class="dashboard__product-price"></span>
-    </td>
-    <td class="dashboard__cell--featured" data-label="Destacado">
-      <span class="dashboard__badge"></span>
     </td>
     <td class="dashboard__cell--actions">
       <button class="btn btn-secondary btn-sm btn-edit" aria-label="Editar producto">
@@ -195,5 +265,5 @@
 </template>
 
 <!-- Carga del módulo JavaScript del dashboard -->
-<script src="/js/seller-dashboard.js" defer></script>
+<script src="/js/seller-dashboard.js"></script>
 {{end}}

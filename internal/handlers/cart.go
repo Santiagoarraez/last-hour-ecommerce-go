@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -45,24 +46,66 @@ func (a *App) CartAdd(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := r.ParseForm(); err != nil {
-		http.Error(w, "No se pudo leer el formulario", http.StatusBadRequest)
+	var productID, flavorID, flavorName, image string
+	var quantity int
+	var price float64
+	var flavors []string
+
+	if strings.Contains(r.Header.Get("Content-Type"), "application/json") {
+		var input struct {
+			ProductID  string   `json:"product_id"`
+			FlavorID   string   `json:"flavor_id"`
+			FlavorName string   `json:"flavor_name"`
+			Price      float64  `json:"price"`
+			Image      string   `json:"image"`
+			Quantity   int      `json:"quantity"`
+			Flavors    []string `json:"flavors"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+			http.Error(w, "JSON inválido", http.StatusBadRequest)
+			return
+		}
+		productID = input.ProductID
+		flavorID = input.FlavorID
+		flavorName = input.FlavorName
+		price = input.Price
+		image = input.Image
+		quantity = input.Quantity
+		flavors = input.Flavors
+	} else {
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "No se pudo leer el formulario", http.StatusBadRequest)
+			return
+		}
+		productID = r.FormValue("product_id")
+		flavorID = r.FormValue("flavor_id")
+		flavorName = r.FormValue("flavor_name")
+		if flavorName == "" {
+			flavorName = r.FormValue("flavor")
+		}
+		price, _ = strconv.ParseFloat(r.FormValue("price"), 64)
+		image = r.FormValue("image")
+		quantity, _ = strconv.Atoi(r.FormValue("quantity"))
+		if flavorName != "" {
+			flavors = append(flavors, flavorName)
+		}
+	}
+
+	if quantity <= 0 {
+		quantity = 1
+	}
+
+	if err := a.carts.AddItem(user.ID, productID, quantity, flavors, flavorID, flavorName, price, image); err != nil {
+		http.Error(w, "Error: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	quantity, _ := strconv.Atoi(r.FormValue("quantity"))
-	flavor := r.FormValue("flavor")
-	flavors := []string{}
-	if flavor != "" {
-		flavors = append(flavors, flavor)
+	if strings.Contains(r.Header.Get("Content-Type"), "application/json") {
+		cart, _ := a.carts.GetCart(user.ID)
+		writeJSON(w, http.StatusOK, map[string]any{"message": "Añadido", "cart": cart})
+	} else {
+		http.Redirect(w, r, "/cart", http.StatusSeeOther)
 	}
-
-	if err := a.carts.AddItem(user.ID, r.FormValue("product_id"), quantity, flavors); err != nil {
-		http.Error(w, "No se pudo agregar el producto", http.StatusBadRequest)
-		return
-	}
-
-	http.Redirect(w, r, "/cart", http.StatusSeeOther)
 }
 
 func (a *App) CartRemove(w http.ResponseWriter, r *http.Request) {

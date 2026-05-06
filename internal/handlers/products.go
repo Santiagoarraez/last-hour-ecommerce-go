@@ -1,23 +1,34 @@
 package handlers
 
 import (
+	"encoding/json"
+	"html/template"
 	"net/http"
 	"strings"
 
 	"lasthour/internal/models"
 )
 
-// Products muestra el catálogo completo de productos.
+// Products muestra el catálogo completo organizado por Modelos, Sabores y Promociones.
 func (a *App) Products(w http.ResponseWriter, r *http.Request) {
-	products, err := a.products.ListProducts()
-	if err != nil {
-		http.Error(w, "No se pudieron cargar los productos", http.StatusInternalServerError)
-		return
-	}
+	// Cargamos los datos desde los nuevos servicios modulares
+	modelsList, _ := a.vapeModels.ListModels()
+	flavorsList, _ := a.flavors.ListFlavors()
+	promosList, _ := a.promotions.ListPromotions()
+
+	// Convertimos a JSON para que el frontend pueda usarlos en el modal de promos
+	modelsJson, _ := json.Marshal(modelsList)
+	flavorsJson, _ := json.Marshal(flavorsList)
+	promosJson, _ := json.Marshal(promosList)
 
 	a.render(w, r, "products.html", map[string]any{
-		"Title":    "Nuestro Catálogo - Last Hour",
-		"Products": products,
+		"Title":           "Nuestro Catálogo - Last Hour",
+		"Models":          modelsList,
+		"Flavors":         flavorsList,
+		"Promotions":      promosList,
+		"ModelsJSON":      template.JS(modelsJson),
+		"FlavorsJSON":     template.JS(flavorsJson),
+		"PromotionsJSON":  template.JS(promosJson),
 	})
 }
 

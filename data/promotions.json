@@ -1,0 +1,20 @@
+[
+  {
+    "id": "promo",
+    "name": "promo",
+    "description": "test",
+    "price": 50,
+    "image": "",
+    "units": 2,
+    "items": [
+      {
+        "model_id": "hqd-glaze",
+        "model_name": "HQD GLAZE"
+      },
+      {
+        "model_id": "hqd-air",
+        "model_name": "HQD AIR"
+      }
+    ]
+  }
+]

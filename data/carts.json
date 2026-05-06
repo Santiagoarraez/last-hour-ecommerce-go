@@ -1,38 +1,50 @@
 [
   {
-    "user_id": "customer-1",
-    "items": [
-      {
-        "product_id": "vape-x300",
-        "quantity": 1,
-        "flavors": null
-      },
-      {
-        "product_id": "hqd-glaze-12000-bundle-2",
-        "quantity": 1,
-        "flavors": []
-      },
-      {
-        "product_id": "hqd-air-4000-bundle-2",
-        "quantity": 1,
-        "flavors": []
-      }
-    ]
-  },
-  {
     "user_id": "seller-1",
     "items": [
       {
-        "product_id": "glaze-mint-ice",
-        "quantity": 2,
-        "flavors": []
+        "product_id": "hqd-glaze",
+        "flavor_id": "hqd-glaze-peach-ice",
+        "flavor_name": "Peach Ice",
+        "price": 30,
+        "image": "",
+        "quantity": 1,
+        "flavors": [
+          "Peach Ice"
+        ]
       },
       {
-        "product_id": "glaze-bundle-2",
+        "product_id": "hqd-glaze",
+        "flavor_id": "hqd-glaze-grapey",
+        "flavor_name": "Grapey",
+        "price": 30,
+        "image": "",
+        "quantity": 11,
+        "flavors": [
+          "Grapey"
+        ]
+      },
+      {
+        "product_id": "hqd-air",
+        "flavor_id": "hqd-air-strawberry-watermelom",
+        "flavor_name": "Strawberry Watermelom",
+        "price": 20,
+        "image": "",
+        "quantity": 3,
+        "flavors": [
+          "Strawberry Watermelom"
+        ]
+      },
+      {
+        "product_id": "promo",
+        "flavor_id": "promo-promo",
+        "flavor_name": "promo",
+        "price": 50,
+        "image": "",
         "quantity": 2,
         "flavors": [
-          "Mint Ice",
-          "Black Ice"
+          "Black Ice",
+          "Lush ice"
         ]
       }
     ]

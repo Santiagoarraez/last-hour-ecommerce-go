@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"strings"
 
 	"lasthour/internal/handlers"
 	"lasthour/internal/services"
@@ -16,15 +17,21 @@ func main() {
 	contactStorage := storage.NewContactStorage("data/messages.json")
 	userStorage := storage.NewUserStorage("data/users.json")
 	cartStorage := storage.NewCartStorage("data/carts.json")
+	modelStorage := storage.NewModelStorage("data/models.json")
+	flavorStorage := storage.NewFlavorStorage("data/flavors.json")
+	promotionStorage := storage.NewPromotionStorage("data/promotions.json")
 
 	// 2. Inicialización de la capa de Negocio (Services) con Inyección de Dependencias
 	productService := services.NewProductService(productStorage)
 	contactService := services.NewContactService(contactStorage)
 	authService := services.NewAuthService(userStorage)
 	cartService := services.NewCartService(cartStorage, productService)
+	modelService := services.NewModelService(modelStorage)
+	flavorService := services.NewFlavorService(flavorStorage)
+	promotionService := services.NewPromotionService(promotionStorage)
 
 	// 3. Inicialización de la capa de Orquestación (Handlers)
-	app := handlers.NewApp(productService, contactService, authService, cartService, "templates")
+	app := handlers.NewApp(productService, contactService, authService, cartService, modelService, flavorService, promotionService, "templates")
 	
 	// 4. Configuración del Enrutador (Multiplexor)
 	mux := http.NewServeMux()
@@ -83,6 +90,25 @@ func main() {
 	// /api/products/{id}  → GET (obtener), PUT (actualizar) y DELETE (eliminar)
 	mux.HandleFunc("/api/products", app.ApiProducts)
 	mux.HandleFunc("/api/products/", app.ApiProductByID)
+
+	// Endpoints para Modelos
+	mux.HandleFunc("/api/models", app.ApiModels)
+	mux.HandleFunc("/api/models/", func(w http.ResponseWriter, r *http.Request) {
+		// Diferenciar entre /api/models/{id} y /api/models/{id}/flavors
+		if strings.HasSuffix(r.URL.Path, "/flavors") {
+			app.ApiListFlavorsByModel(w, r)
+		} else {
+			app.ApiModelByID(w, r)
+		}
+	})
+
+	// Endpoints para Sabores
+	mux.HandleFunc("/api/flavors", app.ApiFlavors)
+	mux.HandleFunc("/api/flavors/", app.ApiFlavorByID)
+
+	// Endpoints para Promociones
+	mux.HandleFunc("/api/promotions", app.ApiPromotions)
+	mux.HandleFunc("/api/promotions/", app.ApiPromotionByID)
 
 	// 5. Servidor de archivos estáticos (CSS, Imágenes, JavaScript)
 	mux.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))

@@ -119,7 +119,6 @@ func (a *App) ApiCreateProduct(w http.ResponseWriter, r *http.Request) {
 		Image       string  `json:"image"`
 		Alt         string  `json:"alt"`
 		Flavors     string  `json:"flavors"` // Recibido como string separado por comas
-		Featured    bool    `json:"featured"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
@@ -139,7 +138,6 @@ func (a *App) ApiCreateProduct(w http.ResponseWriter, r *http.Request) {
 		input.Image,
 		input.Alt,
 		input.Flavors,
-		input.Featured,
 	)
 	if err != nil {
 		writeError(w, http.StatusBadRequest, err.Error())
@@ -173,7 +171,6 @@ func (a *App) ApiUpdateProduct(w http.ResponseWriter, r *http.Request, id string
 		Image       string  `json:"image"`
 		Alt         string  `json:"alt"`
 		Flavors     string  `json:"flavors"`
-		Featured    bool    `json:"featured"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
@@ -192,7 +189,6 @@ func (a *App) ApiUpdateProduct(w http.ResponseWriter, r *http.Request, id string
 		input.Image,
 		input.Alt,
 		input.Flavors,
-		input.Featured,
 	)
 	if err != nil {
 		if strings.Contains(err.Error(), "no encontrado") {

@@ -3,54 +3,98 @@
   <div class="container">
     <h1 class="section-title"><i class="fa-solid fa-shop"></i> All Our Vapes</h1>
 
+    <!-- SECCIONES DINÁMICAS POR MODELO -->
+    {{ range .Models }}
+      {{ $model := . }}
+      <h2 class="section-title" style="margin-top: 40px;"><i class="fa-solid fa-layer-group"></i> Sabores {{ $model.Name }}</h2>
+      <div class="featured__grid">
+        {{ range $.Flavors }}
+          {{ if eq .ModelID $model.ID }}
+            <div class="product-card">
+              <div class="product-card__badge">{{ $model.Subtitle }}</div>
+              <div class="product-card__image-container">
+                <img src="{{ if .Image }}{{ .Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ .Name }}" class="product-card__image">
+              </div>
+              <h3 class="product-card__title">{{ .Name }}</h3>
+              <p class="product-card__description" style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 10px;">{{ $model.Name }} - {{ $model.Description }}</p>
+              <p class="product-card__price">{{ printf "%.2f" $model.Price }}€</p>
+              
+              <div class="product-card__actions">
+                <form class="product-card__form quick-add-form">
+                  <input type="hidden" name="product_id" value="{{ $model.ID }}">
+                  <input type="hidden" name="flavor_id" value="{{ .ID }}">
+                  <input type="hidden" name="flavor_name" value="{{ .Name }}">
+                  <input type="hidden" name="price" value="{{ $model.Price }}">
+                  <input type="hidden" name="image" value="{{ .Image }}">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-cart-plus"></i> Add
+                  </button>
+                </form>
+              </div>
+            </div>
+          {{ end }}
+        {{ end }}
+      </div>
+    {{ end }}
+
+    <!-- SECCIÓN DE PROMOCIONES -->
+    {{ if .Promotions }}
+    <h2 class="section-title" style="margin-top: 60px;"><i class="fa-solid fa-tags"></i> Promociones Especiales</h2>
     <div class="featured__grid">
-      {{range .Products}}
-      <div class="product-card">
-        {{if eq .Category "glaze"}}<div class="product-card__badge">12000 Puffs</div>{{end}}
-        {{if eq .Category "air"}}<div class="product-card__badge">4000 Puffs</div>{{end}}
-        {{if eq .Category "bundle"}}<div class="product-card__badge product-card__badge--blue">PROMO!</div>{{end}}
-        
+      {{ range .Promotions }}
+      <div class="product-card product-card--promo">
+        <div class="product-card__badge product-card__badge--blue">¡OFERTA!</div>
         <div class="product-card__image-container">
-          <img src="{{.Image}}" alt="{{.Alt}}" class="product-card__image">
+          <img src="{{ if .Image }}{{ .Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ .Name }}" class="product-card__image">
         </div>
-        <h3 class="product-card__title">{{.Name}}</h3>
-        <p class="product-card__price">{{printf "%.2f" .Price}}€</p>
+        <h3 class="product-card__title">{{ .Name }}</h3>
+        <p class="product-card__description" style="font-size: 0.85rem; height: 3em; overflow: hidden;">{{ .Description }}</p>
+        <p class="product-card__price">{{ printf "%.2f" .Price }}€ <small style="font-weight: normal; font-size: 0.7rem;">({{ .Units }} uds)</small></p>
         
         <div class="product-card__actions">
-          <form class="product-card__form quick-add-form">
-            <input type="hidden" name="product_id" value="{{.ID}}">
-            
-            <div class="bundle-flavors">
-              {{if eq .Category "bundle"}}
-                {{if eq .Units 2}}
-                  <select name="flavor_1" class="form-select" style="margin-bottom: 8px;">
-                    <option value="" disabled selected>Flavor 1</option>
-                    {{range .Flavors}}<option value="{{.}}">{{.}}</option>{{end}}
-                  </select>
-                  <select name="flavor_2" class="form-select" style="margin-bottom: 8px;">
-                    <option value="" disabled selected>Flavor 2</option>
-                    {{range .Flavors}}<option value="{{.}}">{{.}}</option>{{end}}
-                  </select>
-                {{end}}
-              {{else}}
-                {{range .Flavors}}<input type="hidden" name="flavor" value="{{.}}">{{end}}
-              {{end}}
-            </div>
-
-            <button type="submit" class="btn btn-primary">
-              <i class="fa-solid fa-cart-plus"></i> Add
-            </button>
-          </form>
-          <a href="/products/{{.ID}}" class="btn btn-secondary">
-            <i class="fa-solid fa-eye"></i> Info
-          </a>
+          <button class="btn btn-primary btn-block btn-open-promo" data-promo-id="{{ .ID }}">
+            <i class="fa-solid fa-gift"></i> Añadir al carrito
+          </button>
         </div>
       </div>
-      {{end}}
+      {{ end }}
     </div>
-    <!-- Floating notification container (Toast) -->
-    <div id="toast-container" class="toast-container"></div>
-    <script src="/js/cart.js"></script>
+    {{ end }}
+
+    <!-- Modal de Selección de Sabores para Promociones -->
+    <div id="promo-modal" class="modal">
+      <div class="modal__content">
+        <span class="modal__close">&times;</span>
+        <div class="modal__header">
+          <img id="modal-promo-image" src="" alt="Promo" class="modal__image">
+          <div class="modal__info">
+            <h2 id="modal-promo-name">Nombre de la Promo</h2>
+            <p id="modal-promo-price" class="modal__price">0.00€</p>
+          </div>
+        </div>
+        <form id="promo-add-form" class="modal__form">
+          <input type="hidden" name="product_id" id="modal-promo-id">
+          <input type="hidden" name="flavor_name" id="modal-promo-name-input">
+          <input type="hidden" name="price" id="modal-promo-price-input">
+          <input type="hidden" name="image" id="modal-promo-image-input">
+          
+          <div id="modal-flavor-selectors" class="modal__selectors">
+            <!-- Los selects se generarán aquí dinámicamente -->
+          </div>
+          
+          <button type="submit" class="btn btn-primary btn-block" style="margin-top: 20px;">
+            <i class="fa-solid fa-cart-arrow-down"></i> Confirmar y añadir
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Exportamos los datos a JS para que el modal sea dinámico -->
+    <script>
+      window.VAPE_MODELS = {{ .ModelsJSON }};
+      window.VAPE_FLAVORS = {{ .FlavorsJSON }};
+      window.PROMOTIONS = {{ .PromotionsJSON }};
+    </script>
   </div>
 </section>
 {{end}}

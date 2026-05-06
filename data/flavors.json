@@ -1,0 +1,80 @@
+[
+  {
+    "id": "hqd-glaze-peach-ice",
+    "model_id": "hqd-glaze",
+    "name": "Peach Ice",
+    "image": ""
+  },
+  {
+    "id": "hqd-glaze-grapey",
+    "model_id": "hqd-glaze",
+    "name": "Grapey",
+    "image": ""
+  },
+  {
+    "id": "hqd-glaze-black-ice",
+    "model_id": "hqd-glaze",
+    "name": "Black Ice",
+    "image": ""
+  },
+  {
+    "id": "hqd-glaze-lush-ice",
+    "model_id": "hqd-glaze",
+    "name": "Lush Ice",
+    "image": ""
+  },
+  {
+    "id": "hqd-glaze-mint-ice",
+    "model_id": "hqd-glaze",
+    "name": "Mint Ice",
+    "image": ""
+  },
+  {
+    "id": "hqd-glaze-strawberry-watermelon",
+    "model_id": "hqd-glaze",
+    "name": "Strawberry Watermelon",
+    "image": ""
+  },
+  {
+    "id": "hqd-glaze-blueberry",
+    "model_id": "hqd-glaze",
+    "name": "Blueberry",
+    "image": ""
+  },
+  {
+    "id": "hqd-air-peach-ice",
+    "model_id": "hqd-air",
+    "name": "Peach Ice",
+    "image": ""
+  },
+  {
+    "id": "hqd-air-black-ice",
+    "model_id": "hqd-air",
+    "name": "Black Ice",
+    "image": ""
+  },
+  {
+    "id": "hqd-air-lush-ice",
+    "model_id": "hqd-air",
+    "name": "Lush ice",
+    "image": ""
+  },
+  {
+    "id": "hqd-air-sky-mint",
+    "model_id": "hqd-air",
+    "name": "Sky Mint",
+    "image": ""
+  },
+  {
+    "id": "hqd-air-strawberry-watermelom",
+    "model_id": "hqd-air",
+    "name": "Strawberry Watermelom",
+    "image": ""
+  },
+  {
+    "id": "hqd-air-grapey",
+    "model_id": "hqd-air",
+    "name": "Grapey",
+    "image": ""
+  }
+]

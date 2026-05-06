@@ -25,21 +25,9 @@ func (s *ProductService) ListProducts() ([]models.Product, error) {
 	return s.storage.FindAll()
 }
 
-// ListFeaturedProducts filtra y devuelve solo los productos marcados como destacados (para la home).
+// ListFeaturedProducts devuelve todos los productos para la home (ya no hay filtro de destacados).
 func (s *ProductService) ListFeaturedProducts() ([]models.Product, error) {
-	products, err := s.storage.FindAll()
-	if err != nil {
-		return nil, err
-	}
-
-	var featured []models.Product
-	for _, product := range products {
-		if product.Featured {
-			featured = append(featured, product)
-		}
-	}
-
-	return featured, nil
+	return s.storage.FindAll()
 }
 
 // FindProductByID busca un producto específico por su identificador único.
@@ -59,7 +47,7 @@ func (s *ProductService) FindProductByID(id string) (models.Product, error) {
 }
 
 // CreateProduct valida y añade un nuevo producto al catálogo.
-func (s *ProductService) CreateProduct(name, subtitle, description, priceText, image, alt, flavorsText string, featured bool) error {
+func (s *ProductService) CreateProduct(name, subtitle, description, priceText, image, alt, flavorsText string) error {
 	// Conversión de precio de texto a decimal (float64)
 	price, err := strconv.ParseFloat(strings.TrimSpace(priceText), 64)
 	if err != nil || price <= 0 {
@@ -75,7 +63,6 @@ func (s *ProductService) CreateProduct(name, subtitle, description, priceText, i
 		Image:       strings.TrimSpace(image),
 		Alt:         strings.TrimSpace(alt),
 		Flavors:     splitFlavors(flavorsText), // Convertimos la lista de sabores de texto a un array
-		Featured:    featured,
 	}
 
 	// Validación básica de campos requeridos
@@ -101,7 +88,7 @@ func (s *ProductService) CreateProduct(name, subtitle, description, priceText, i
 }
 
 // UpdateProduct modifica un producto existente identificado por ID.
-func (s *ProductService) UpdateProduct(id, name, subtitle, description, priceText, image, alt, flavorsText string, featured bool) error {
+func (s *ProductService) UpdateProduct(id, name, subtitle, description, priceText, image, alt, flavorsText string) error {
 	price, err := strconv.ParseFloat(strings.TrimSpace(priceText), 64)
 	if err != nil || price <= 0 {
 		return errors.New("el precio debe ser un numero positivo")
@@ -122,7 +109,6 @@ func (s *ProductService) UpdateProduct(id, name, subtitle, description, priceTex
 			products[index].Image = strings.TrimSpace(image)
 			products[index].Alt = strings.TrimSpace(alt)
 			products[index].Flavors = splitFlavors(flavorsText)
-			products[index].Featured = featured
 			return s.storage.SaveAll(products)
 		}
 	}
