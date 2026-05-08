@@ -76,5 +76,11 @@
     "model_id": "hqd-air",
     "name": "Grapey",
     "image": ""
+  },
+  {
+    "id": "tes1-test1",
+    "model_id": "tes1",
+    "name": "test1",
+    "image": ""
   }
 ]

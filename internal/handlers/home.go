@@ -1,15 +1,15 @@
 package handlers
 
 import (
+	"encoding/json"
+	"html/template"
 	"net/http"
-
 )
 
-
 // Home maneja la petición a la página principal de la tienda.
-// Filtra únicamente la raíz "/" y obtiene los productos destacados para mostrar.
+// Filtra únicamente la raíz "/" y obtiene los datos necesarios para la home.
 func (a *App) Home(w http.ResponseWriter, r *http.Request) {
-	// Verificamos que sea exactamente la raíz para evitar capturar rutas inexistentes
+	// Verificamos que sea exactamente la raíz
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
@@ -20,16 +20,24 @@ func (a *App) Home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Obtenemos del servicio los productos que irán en la home
-	products, err := a.products.ListFeaturedProducts()
-	if err != nil {
-		http.Error(w, "No se pudieron cargar los productos", http.StatusInternalServerError)
-		return
-	}
+	// PEC 3: Cargamos los datos desde los nuevos servicios modulares
+	modelsList, _ := a.vapeModels.ListModels()
+	flavorsList, _ := a.flavors.ListFlavors()
+	promosList, _ := a.promotions.ListPromotions()
 
-	// Renderizamos la plantilla home.html inyectando los productos
+	// Convertimos a JSON para que el JS pueda usarlos en el modal de promos
+	modelsJson, _ := json.Marshal(modelsList)
+	flavorsJson, _ := json.Marshal(flavorsList)
+	promosJson, _ := json.Marshal(promosList)
+
+	// Renderizamos la plantilla home.html inyectando los datos
 	a.render(w, r, "home.html", map[string]any{
-		"Title":    "Vape Store",
-		"Products": products,
+		"Title":          "Vape Store - Last Hour",
+		"Models":         modelsList,
+		"Flavors":        flavorsList,
+		"Promotions":     promosList,
+		"ModelsJSON":     template.JS(modelsJson),
+		"FlavorsJSON":    template.JS(flavorsJson),
+		"PromotionsJSON": template.JS(promosJson),
 	})
 }

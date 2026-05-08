@@ -29,16 +29,22 @@ func main() {
 	modelService := services.NewModelService(modelStorage)
 	flavorService := services.NewFlavorService(flavorStorage)
 	promotionService := services.NewPromotionService(promotionStorage)
+	sessionService := services.NewSessionService()
 
 	// 3. Inicialización de la capa de Orquestación (Handlers)
-	app := handlers.NewApp(productService, contactService, authService, cartService, modelService, flavorService, promotionService, "templates")
-	
+	// NewApp también carga y cachea todas las plantillas HTML al arrancar
+	app, err := handlers.NewApp(productService, contactService, authService, cartService, modelService, flavorService, promotionService, sessionService, "templates")
+	if err != nil {
+		log.Fatalf("Error inicializando la aplicación: %v", err)
+	}
+
 	// 4. Configuración del Enrutador (Multiplexor)
 	mux := http.NewServeMux()
 
 	// Definición de rutas públicas
 	mux.HandleFunc("/", app.Home)
 	mux.HandleFunc("/products", app.Products)
+	mux.HandleFunc("/products/flavor/", app.FlavorDetail)
 	mux.HandleFunc("/products/", app.ProductDetail)
 	mux.HandleFunc("/about", app.About)
 	mux.HandleFunc("/contact", app.Contact)

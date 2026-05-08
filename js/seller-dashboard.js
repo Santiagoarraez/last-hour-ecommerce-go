@@ -48,12 +48,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showNotification(type, message) {
     if (!notifArea) return;
-    const div = document.createElement('div');
-    div.className = `alert alert-${type === 'success' ? 'success' : 'danger'}`;
-    div.innerHTML = `<i class="fa-solid fa-${type === 'success' ? 'circle-check' : 'circle-exclamation'}"></i> <span>${message}</span>`;
+    
+    // PEC 3: Uso de templates para notificaciones
+    const templateId = type === 'success' ? 'tpl-notify-success' : 'tpl-notify-error';
+    const template = document.getElementById(templateId);
+    if (!template) return;
+
+    const clone = template.content.cloneNode(true);
+    clone.querySelector('.notify-message').textContent = message;
+
     notifArea.innerHTML = '';
-    notifArea.appendChild(div);
+    notifArea.appendChild(clone);
     notifArea.hidden = false;
+    
     setTimeout(() => { notifArea.hidden = true; }, 4000);
   }
 
@@ -100,23 +107,27 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(err => showNotification('error', 'Error al cargar modelos: ' + err.message));
   }
 
+  /**
+   * PEC 3: Refactorizada para usar <template> tpl-model-row
+   */
   function renderModelsTable(models) {
     if (!modelTbody) return;
     modelTbody.innerHTML = '';
+    const template = document.getElementById('tpl-model-row');
+
     models.forEach(m => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><strong>${m.name}</strong></td>
-        <td>${m.subtitle}</td>
-        <td><small>${m.description}</small></td>
-        <td class="dashboard__product-price">${m.price.toFixed(2)} €</td>
-        <td>
-          <button class="btn btn-modern btn-sm" onclick="deleteModel('${m.id}')">
-            <i class="fa-solid fa-trash"></i> Eliminar
-          </button>
-        </td>
-      `;
-      modelTbody.appendChild(tr);
+      const clone = template.content.cloneNode(true);
+      
+      // Relleno de valores usando querySelector y textContent
+      clone.querySelector('.model-name strong').textContent = m.name;
+      clone.querySelector('.model-subtitle').textContent = m.subtitle;
+      clone.querySelector('.model-description small').textContent = m.description;
+      clone.querySelector('.model-price').textContent = m.price.toFixed(2) + ' €';
+      
+      // Asignación de evento al botón de eliminar
+      clone.querySelector('.btn-delete').addEventListener('click', () => deleteModel(m.id));
+
+      modelTbody.appendChild(clone);
     });
   }
 
@@ -127,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         name: document.getElementById('model-name').value,
         subtitle: document.getElementById('model-subtitle').value,
         description: document.getElementById('model-description').value,
-        price: document.getElementById('model-price').value
+        price: parseFloat(document.getElementById('model-price').value)
       };
 
       apiFetch(API_MODELS, { method: 'POST', body: JSON.stringify(data) })
@@ -140,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  window.deleteModel = (id) => {
+  function deleteModel(id) {
     if (!confirm('¿Eliminar este modelo?')) return;
     apiFetch(`${API_MODELS}/${id}`, { method: 'DELETE' })
       .then(() => {
@@ -148,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadModels();
       })
       .catch(err => showNotification('error', err.message));
-  };
+  }
 
   // ── Lógica de SABORES ─────────────────────────────────────────────────────
 
@@ -170,44 +181,52 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(err => showNotification('error', 'Error al cargar sabores: ' + err.message));
   }
 
+  /**
+   * PEC 3: Refactorizada para usar <template> tpl-flavor-row
+   */
   function renderFlavorsTable(flavors) {
     if (!flavorTbody) return;
     flavorTbody.innerHTML = '';
+    const template = document.getElementById('tpl-flavor-row');
+
     flavors.forEach(f => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><span class="dashboard__badge dashboard__badge--normal">${f.model_id}</span></td>
-        <td><strong>${f.name}</strong></td>
-        <td><img src="${f.image || '/assets/images/placeholder.png'}" class="dashboard__product-thumb"></td>
-        <td>
-          <button class="btn btn-modern btn-sm" onclick="deleteFlavor('${f.id}')">
-            <i class="fa-solid fa-trash"></i> Eliminar
-          </button>
-        </td>
-      `;
-      flavorTbody.appendChild(tr);
+      const clone = template.content.cloneNode(true);
+      
+      clone.querySelector('.flavor-model-id').textContent = f.model_id;
+      clone.querySelector('.flavor-name strong').textContent = f.name;
+      
+      const img = clone.querySelector('.flavor-image');
+      img.src = f.image || '/assets/images/placeholder.png';
+      img.alt = f.name;
+      
+      clone.querySelector('.btn-delete').addEventListener('click', () => deleteFlavor(f.id));
+
+      flavorTbody.appendChild(clone);
     });
   }
 
   if (flavorForm) {
-    flavorForm.addEventListener('submit', async (e) => {
+    // PEC 3: Eliminado async/await en favor de cadenas .then()
+    flavorForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const modelOpt = flavorModelSelect.options[flavorModelSelect.selectedIndex];
       if (!modelOpt || !modelOpt.value) {
         showNotification('error', 'Selecciona un modelo');
         return;
       }
+      
       const imageFile = document.getElementById('flavor-image').files[0];
-      const imageBase64 = await fileToBase64(imageFile);
-
-      const data = {
-        modelID: modelOpt.value,
-        modelName: modelOpt.dataset.name,
-        name: document.getElementById('flavor-name').value,
-        image: imageBase64
-      };
-
-      apiFetch(API_FLAVORS, { method: 'POST', body: JSON.stringify(data) })
+      
+      fileToBase64(imageFile)
+        .then(imageBase64 => {
+          const data = {
+            modelID: modelOpt.value,
+            modelName: modelOpt.dataset.name,
+            name: document.getElementById('flavor-name').value,
+            image: imageBase64
+          };
+          return apiFetch(API_FLAVORS, { method: 'POST', body: JSON.stringify(data) });
+        })
         .then(() => {
           showNotification('success', 'Sabor añadido');
           flavorForm.reset();
@@ -217,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  window.deleteFlavor = (id) => {
+  function deleteFlavor(id) {
     if (!confirm('¿Eliminar este sabor?')) return;
     apiFetch(`${API_FLAVORS}/${id}`, { method: 'DELETE' })
       .then(() => {
@@ -225,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadFlavors();
       })
       .catch(err => showNotification('error', err.message));
-  };
+  }
 
   // ── Lógica de PROMOCIONES ─────────────────────────────────────────────────
 
@@ -263,59 +282,60 @@ document.addEventListener('DOMContentLoaded', () => {
       .catch(err => showNotification('error', 'Error al cargar promociones: ' + err.message));
   }
 
+  /**
+   * PEC 3: Refactorizada para usar <template> tpl-promotion-row
+   */
   function renderPromotionsTable(promos) {
     if (!promoTbody) return;
     promoTbody.innerHTML = '';
+    const template = document.getElementById('tpl-promotion-row');
+
     promos.forEach(p => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><strong>${p.name}</strong></td>
-        <td><small>${p.description}</small></td>
-        <td class="dashboard__product-price">${p.price.toFixed(2)} €</td>
-        <td>${p.units} uds.</td>
-        <td>
-          <div class="dashboard__cell--actions">
-            <button class="btn btn-secondary btn-sm" onclick='editPromotion(${JSON.stringify(p)})'>
-              <i class="fa-solid fa-pen"></i>
-            </button>
-            <button class="btn btn-modern btn-sm" onclick="deletePromotion('${p.id}')">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-        </td>
-      `;
-      promoTbody.appendChild(tr);
+      const clone = template.content.cloneNode(true);
+      
+      clone.querySelector('.promo-name strong').textContent = p.name;
+      clone.querySelector('.promo-description small').textContent = p.description;
+      clone.querySelector('.promo-price').textContent = p.price.toFixed(2) + ' €';
+      clone.querySelector('.promo-units').textContent = p.units + ' uds.';
+      
+      clone.querySelector('.btn-edit').addEventListener('click', () => editPromotion(p));
+      clone.querySelector('.btn-delete').addEventListener('click', () => deletePromotion(p.id));
+
+      promoTbody.appendChild(clone);
     });
   }
 
   if (promoForm) {
-    promoForm.addEventListener('submit', async (e) => {
+    // PEC 3: Eliminado async/await en favor de cadenas .then()
+    promoForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const id = document.getElementById('promotion-id').value;
       const imageFile = document.getElementById('promo-image').files[0];
-      const imageBase64 = await fileToBase64(imageFile);
 
-      const items = [];
-      document.querySelectorAll('.promo-item-select').forEach(sel => {
-        const opt = sel.options[sel.selectedIndex];
-        if (opt && opt.value) {
-          items.push({ model_id: opt.value, model_name: opt.dataset.name });
-        }
-      });
+      fileToBase64(imageFile)
+        .then(imageBase64 => {
+          const items = [];
+          document.querySelectorAll('.promo-item-select').forEach(sel => {
+            const opt = sel.options[sel.selectedIndex];
+            if (opt && opt.value) {
+              items.push({ model_id: opt.value, model_name: opt.dataset.name });
+            }
+          });
 
-      const data = {
-        name: document.getElementById('promo-name').value,
-        description: document.getElementById('promo-description').value,
-        price: parseFloat(document.getElementById('promo-price').value),
-        units: parseInt(document.getElementById('promo-units').value),
-        image: imageBase64 || "",
-        items: items
-      };
+          const data = {
+            name: document.getElementById('promo-name').value,
+            description: document.getElementById('promo-description').value,
+            price: parseFloat(document.getElementById('promo-price').value),
+            units: parseInt(document.getElementById('promo-units').value),
+            image: imageBase64 || "",
+            items: items
+          };
 
-      const method = id ? 'PUT' : 'POST';
-      const url = id ? `${API_PROMOTIONS}/${id}` : API_PROMOTIONS;
+          const method = id ? 'PUT' : 'POST';
+          const url = id ? `${API_PROMOTIONS}/${id}` : API_PROMOTIONS;
 
-      apiFetch(url, { method, body: JSON.stringify(data) })
+          return apiFetch(url, { method, body: JSON.stringify(data) });
+        })
         .then(() => {
           showNotification('success', 'Promoción guardada');
           promoForm.reset();
@@ -327,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  window.editPromotion = (p) => {
+  function editPromotion(p) {
     const idField = document.getElementById('promotion-id');
     if (idField) idField.value = p.id;
     
@@ -347,9 +367,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const tabPromo = document.getElementById('tab-promotions');
     if (tabPromo) tabPromo.scrollIntoView({ behavior: 'smooth' });
-  };
+  }
 
-  window.deletePromotion = (id) => {
+  function deletePromotion(id) {
     if (!confirm('¿Eliminar esta promoción?')) return;
     apiFetch(`${API_PROMOTIONS}/${id}`, { method: 'DELETE' })
       .then(() => {
@@ -357,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadPromotions();
       })
       .catch(err => showNotification('error', err.message));
-  };
+  }
 
   // ── Arranque ──────────────────────────────────────────────────────────────
 

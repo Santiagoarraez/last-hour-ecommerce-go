@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 	"path/filepath"
@@ -19,10 +20,15 @@ type App struct {
 	vapeModels  *services.ModelService
 	flavors     *services.FlavorService
 	promotions  *services.PromotionService
+	sessions    *services.SessionService
 	templateDir string
+	// templates almacena las plantillas pre-compiladas al arrancar la app.
+	// La clave es el nombre del archivo de página (ej: "products.html").
+	templates   map[string]*template.Template
 }
 
 // NewApp crea una nueva instancia de la aplicación inyectando las dependencias necesarias.
+// También carga y cachea todas las plantillas HTML para mejorar el rendimiento.
 func NewApp(
 	products *services.ProductService,
 	contacts *services.ContactService,
@@ -31,9 +37,10 @@ func NewApp(
 	vapeModels *services.ModelService,
 	flavors *services.FlavorService,
 	promotions *services.PromotionService,
+	sessions *services.SessionService,
 	templateDir string,
-) *App {
-	return &App{
+) (*App, error) {
+	app := &App{
 		products:    products,
 		contacts:    contacts,
 		auth:        auth,
@@ -41,25 +48,62 @@ func NewApp(
 		vapeModels:  vapeModels,
 		flavors:     flavors,
 		promotions:  promotions,
+		sessions:    sessions,
 		templateDir: templateDir,
 	}
-}
 
-// render se encarga de procesar las plantillas HTML y enviar la respuesta al navegador.
-// Siempre incluye el 'layout.html' como base para mantener la cabecera y el pie de página consistentes.
-func (a *App) render(w http.ResponseWriter, r *http.Request, page string, data any) {
-	files := []string{
-		filepath.Join(a.templateDir, "layout.html"),
-		filepath.Join(a.templateDir, page),
+	if err := app.LoadTemplates(); err != nil {
+		return nil, fmt.Errorf("error cargando plantillas: %w", err)
 	}
 
-	tmpl, err := template.ParseFiles(files...)
+	return app, nil
+}
+
+// LoadTemplates recorre el directorio de plantillas, parsea cada archivo HTML
+// junto con layout.html y almacena el resultado en el mapa de caché.
+// Se excluye el propio layout.html ya que es una dependencia, no una página independiente.
+func (a *App) LoadTemplates() error {
+	layoutPath := filepath.Join(a.templateDir, "layout.html")
+
+	// Buscamos todos los archivos .html en el directorio de plantillas
+	pages, err := filepath.Glob(filepath.Join(a.templateDir, "*.html"))
 	if err != nil {
-		http.Error(w, "Error cargando la plantilla", http.StatusInternalServerError)
+		return err
+	}
+
+	a.templates = make(map[string]*template.Template, len(pages))
+
+	for _, page := range pages {
+		name := filepath.Base(page)
+
+		// El layout no es una página renderizable por sí sola, lo omitimos
+		if name == "layout.html" {
+			continue
+		}
+
+		// Parseamos layout + página juntos para que el template tenga acceso
+		// a los bloques definidos en ambos archivos
+		tmpl, err := template.ParseFiles(layoutPath, page)
+		if err != nil {
+			return fmt.Errorf("error parseando plantilla '%s': %w", name, err)
+		}
+
+		a.templates[name] = tmpl
+	}
+
+	return nil
+}
+
+// render busca la plantilla cacheada por nombre y ejecuta el template "layout".
+// Si la plantilla no se encuentra en el mapa devuelve un error 500.
+func (a *App) render(w http.ResponseWriter, r *http.Request, page string, data any) {
+	tmpl, ok := a.templates[page]
+	if !ok {
+		http.Error(w, fmt.Sprintf("plantilla '%s' no encontrada", page), http.StatusInternalServerError)
 		return
 	}
 
-	// Recuperamos el usuario para inyectarlo siempre
+	// Recuperamos el usuario para inyectarlo siempre en todas las vistas
 	user, _ := a.currentUser(r)
 
 	finalData := make(map[string]any)
@@ -71,13 +115,8 @@ func (a *App) render(w http.ResponseWriter, r *http.Request, page string, data a
 			finalData[k] = v
 		}
 	} else if data != nil {
-		// Si es un struct u otro tipo, lo pasamos bajo la clave "Data" 
-		// (aunque lo ideal es usar mapas para el layout global)
 		finalData["Data"] = data
 	}
-
-	// Si data es un struct, el layout accederá a .User solo si el struct lo tiene.
-	// Para asegurar que .User esté disponible en el layout siempre, lo mejor es usar mapas.
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	if err := tmpl.ExecuteTemplate(w, "layout", finalData); err != nil {
@@ -86,15 +125,20 @@ func (a *App) render(w http.ResponseWriter, r *http.Request, page string, data a
 }
 
 // currentUser intenta recuperar el usuario actual basado en la cookie de sesión.
-// Retorna el usuario y un booleano indicando si se encontró con éxito.
+// La cookie almacena un token opaco; SessionService lo resuelve al userID real.
 func (a *App) currentUser(r *http.Request) (models.User, bool) {
-	cookie, err := r.Cookie("user_id")
+	cookie, err := r.Cookie("session_token")
 	if err != nil || cookie.Value == "" {
 		return models.User{}, false
 	}
 
-	// Buscamos al usuario según el ID guardado en la cookie
-	user, err := a.auth.FindUserByID(cookie.Value)
+	// Resolvemos el token al userID (verifica existencia y expiración)
+	userID, err := a.sessions.GetUserID(cookie.Value)
+	if err != nil {
+		return models.User{}, false
+	}
+
+	user, err := a.auth.FindUserByID(userID)
 	if err != nil {
 		return models.User{}, false
 	}
@@ -132,22 +176,23 @@ func (a *App) requireSeller(w http.ResponseWriter, r *http.Request) (models.User
 	return user, true
 }
 
-// setSessionCookie crea una cookie de sesión con el ID del usuario.
-// HttpOnly se activa por seguridad para que no sea accesible desde JS.
-func setSessionCookie(w http.ResponseWriter, user models.User) {
+// setSessionCookie almacena el token opaco de sesión en una cookie HttpOnly.
+// El token no contiene información del usuario, solo es una clave de lookup.
+func setSessionCookie(w http.ResponseWriter, token string) {
 	http.SetCookie(w, &http.Cookie{
-		Name:     "user_id",
-		Value:    user.ID,
+		Name:     "session_token",
+		Value:    token,
 		Path:     "/",
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
+		MaxAge:   86400, // 24 horas en segundos
 	})
 }
 
 // clearSessionCookie borra la cookie de sesión (usado al hacer Logout).
 func clearSessionCookie(w http.ResponseWriter) {
 	http.SetCookie(w, &http.Cookie{
-		Name:     "user_id",
+		Name:     "session_token",
 		Value:    "",
 		Path:     "/",
 		MaxAge:   -1, // Fuerza la expiración inmediata de la cookie

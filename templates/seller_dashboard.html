@@ -222,28 +222,51 @@
      hasta que el JS las clona e inserta en el DOM.
      ===================================================== -->
 
-<!-- Plantilla: Fila de la tabla de productos -->
-<template id="tpl-product-row">
-  <tr class="dashboard__row" data-id="">
-    <td class="dashboard__cell--img">
-      <img src="" alt="" class="dashboard__product-thumb">
-    </td>
-    <td class="dashboard__cell--name" data-label="Nombre">
-      <span class="dashboard__product-name"></span>
-    </td>
-    <td class="dashboard__cell--subtitle" data-label="Subtítulo">
-      <span class="dashboard__product-subtitle"></span>
-    </td>
-    <td class="dashboard__cell--price" data-label="Precio">
-      <span class="dashboard__product-price"></span>
-    </td>
-    <td class="dashboard__cell--actions">
-      <button class="btn btn-secondary btn-sm btn-edit" aria-label="Editar producto">
-        <i class="fa-solid fa-pen-to-square"></i> Editar
-      </button>
-      <button class="btn btn-modern btn-sm btn-delete" aria-label="Eliminar producto">
+<!-- Plantilla: Fila de la tabla de Modelos -->
+<template id="tpl-model-row">
+  <tr>
+    <td class="model-name"><strong></strong></td>
+    <td class="model-subtitle"></td>
+    <td class="model-description"><small></small></td>
+    <td class="model-price dashboard__product-price"></td>
+    <td>
+      <button class="btn btn-modern btn-sm btn-delete">
         <i class="fa-solid fa-trash"></i> Eliminar
       </button>
+    </td>
+  </tr>
+</template>
+
+<!-- Plantilla: Fila de la tabla de Sabores -->
+<template id="tpl-flavor-row">
+  <tr>
+    <td><span class="flavor-model-id dashboard__badge dashboard__badge--normal"></span></td>
+    <td class="flavor-name"><strong></strong></td>
+    <td><img src="" class="flavor-image dashboard__product-thumb"></td>
+    <td>
+      <button class="btn btn-modern btn-sm btn-delete">
+        <i class="fa-solid fa-trash"></i> Eliminar
+      </button>
+    </td>
+  </tr>
+</template>
+
+<!-- Plantilla: Fila de la tabla de Promociones -->
+<template id="tpl-promotion-row">
+  <tr>
+    <td class="promo-name"><strong></strong></td>
+    <td class="promo-description"><small></small></td>
+    <td class="promo-price dashboard__product-price"></td>
+    <td class="promo-units"></td>
+    <td>
+      <div class="dashboard__cell--actions">
+        <button class="btn btn-secondary btn-sm btn-edit">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button class="btn btn-modern btn-sm btn-delete">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
     </td>
   </tr>
 </template>

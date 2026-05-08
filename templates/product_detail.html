@@ -2,39 +2,44 @@
 <article class="product-view">
   <div class="container">
     <header class="product-view__header">
-      <h1 class="product-view__title">{{.Product.Name}}</h1>
-      <p class="product-view__price">{{printf "%.2f" .Product.Price}}€</p>
+      <div class="product-view__badge">{{.Model.Subtitle}}</div>
+      <h1 class="product-view__title">{{.Model.Name}} - {{.Flavor.Name}}</h1>
+      <p class="product-view__price">{{printf "%.2f" .Model.Price}}€</p>
     </header>
 
     <div class="product-view__grid">
       <div class="product-view__gallery">
         <figure class="product-view__main-image">
-          <img src="{{.Product.Image}}" alt="{{.Product.Alt}}" id="main-product-img">
+          <img src="{{ if .Flavor.Image }}{{ .Flavor.Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ .Flavor.Name }}" id="main-product-img">
         </figure>
         
-        {{if .Variants}}
         <div class="product-view__thumbnails">
-          <a href="/products/{{.Product.ID}}" class="thumb-link thumb-link--active">
-            <img src="{{.Product.Image}}" alt="{{.Product.Name}}">
-          </a>
-          {{range .Variants}}
-          <a href="/products/{{.ID}}" class="thumb-link">
-            <img src="{{.Image}}" alt="{{.Name}}">
+          <!-- El sabor actual -->
+          <div class="thumb-link thumb-link--active">
+            <img src="{{ if .Flavor.Image }}{{ .Flavor.Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ .Flavor.Name }}">
+          </div>
+          <!-- Otros sabores del mismo modelo -->
+          {{range .Siblings}}
+          <a href="/products/flavor/{{.ID}}" class="thumb-link">
+            <img src="{{ if .Image }}{{ .Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ .Name }}">
             <span class="thumb-tooltip">{{.Name}}</span>
           </a>
           {{end}}
         </div>
-        {{end}}
       </div>
 
       <section class="product-view__info">
-        <p class="product-view__description">{{.Product.Description}}</p>
+        <h3 class="product-view__subtitle">Description</h3>
+        <p class="product-view__description">{{.Model.Description}}</p>
 
         <form class="product-view__form quick-add-form" id="add-to-cart-form">
-          <input type="hidden" name="product_id" value="{{.Product.ID}}">
-          {{range .Product.Flavors}}<input type="hidden" name="flavor" value="{{.}}">{{end}}
+          <input type="hidden" name="product_id" value="{{.Model.ID}}">
+          <input type="hidden" name="flavor_id" value="{{.Flavor.ID}}">
+          <input type="hidden" name="flavor_name" value="{{.Flavor.Name}}">
+          <input type="hidden" name="price" value="{{.Model.Price}}">
+          <input type="hidden" name="image" value="{{.Flavor.Image}}">
           
-          <div class="form-group form-group--inline">
+          <div class="form-group form-group--inline" style="margin-top: 30px;">
             <label class="form-label" for="quantity">Quantity</label>
             <div class="quantity-picker">
               <button type="button" class="btn-qty-adj" data-delta="-1">-</button>
@@ -43,7 +48,7 @@
             </div>
           </div>
 
-          <button type="submit" class="btn btn-primary btn-lg w-full">
+          <button type="submit" class="btn btn-primary btn-lg w-full" style="margin-top: 20px;">
             <i class="fa-solid fa-cart-plus"></i> Add to Cart
           </button>
         </form>
@@ -52,14 +57,12 @@
   </div>
 </article>
 
-<div id="toast-container" class="toast-container"></div>
-<script src="/js/cart.js"></script>
-
 <script>
   // Script rápido para el picker de cantidad en detalle
   document.querySelectorAll('.btn-qty-adj').forEach(btn => {
     btn.addEventListener('click', () => {
       const input = document.getElementById('cart-quantity');
+      if (!input) return;
       const delta = parseInt(btn.dataset.delta);
       const newVal = parseInt(input.value) + delta;
       if (newVal >= 1) input.value = newVal;

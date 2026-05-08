@@ -12,5 +12,12 @@
     "subtitle": "4000 Puffs - 5% Nicotine",
     "description": "TEST",
     "price": 20
+  },
+  {
+    "id": "tes1",
+    "name": "tes1",
+    "subtitle": "12000 Puffs - LED Screen",
+    "description": "test",
+    "price": 220
   }
 ]

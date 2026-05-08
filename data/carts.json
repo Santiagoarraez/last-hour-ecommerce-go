@@ -1,52 +1,6 @@
 [
   {
     "user_id": "seller-1",
-    "items": [
-      {
-        "product_id": "hqd-glaze",
-        "flavor_id": "hqd-glaze-peach-ice",
-        "flavor_name": "Peach Ice",
-        "price": 30,
-        "image": "",
-        "quantity": 1,
-        "flavors": [
-          "Peach Ice"
-        ]
-      },
-      {
-        "product_id": "hqd-glaze",
-        "flavor_id": "hqd-glaze-grapey",
-        "flavor_name": "Grapey",
-        "price": 30,
-        "image": "",
-        "quantity": 11,
-        "flavors": [
-          "Grapey"
-        ]
-      },
-      {
-        "product_id": "hqd-air",
-        "flavor_id": "hqd-air-strawberry-watermelom",
-        "flavor_name": "Strawberry Watermelom",
-        "price": 20,
-        "image": "",
-        "quantity": 3,
-        "flavors": [
-          "Strawberry Watermelom"
-        ]
-      },
-      {
-        "product_id": "promo",
-        "flavor_id": "promo-promo",
-        "flavor_name": "promo",
-        "price": 50,
-        "image": "",
-        "quantity": 2,
-        "flavors": [
-          "Black Ice",
-          "Lush ice"
-        ]
-      }
-    ]
+    "items": null
   }
 ]

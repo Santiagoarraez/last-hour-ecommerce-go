@@ -15,56 +15,61 @@
 <section class="featured">
   <div class="container">
 
-    <!-- ══ SPECIAL BUNDLES ══ -->
+    <!-- ══ SPECIAL BUNDLES (Promociones) ══ -->
+    {{ if .Promotions }}
     <h2 class="section-title"><i class="fa-solid fa-tags"></i> SPECIAL BUNDLES</h2>
     <div class="featured__grid">
-      {{range .Products}}{{if eq .Category "bundle"}}
+      {{ range .Promotions }}
       <div class="product-card product-card--bundle">
         <div class="product-card__badge product-card__badge--blue">PROMO!</div>
         <div class="product-card__image-container">
-          <img src="{{.Image}}" alt="{{.Alt}}" class="product-card__image">
+          <img src="{{ if .Image }}{{ .Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ .Name }}" class="product-card__image">
         </div>
-        <h3 class="product-card__title">{{.Name}}</h3>
-        <p class="product-card__price">{{printf "%.2f" .Price}}€</p>
+        <h3 class="product-card__title">{{ .Name }}</h3>
+        <p class="product-card__price">{{ printf "%.2f" .Price }}€ <small style="font-weight: normal; font-size: 0.7rem;">({{ .Units }} uds)</small></p>
         <div class="product-card__actions">
-          <form class="product-card__form quick-add-form">
-            <input type="hidden" name="product_id" value="{{.ID}}">
-            <div class="bundle-flavors">
-              {{if eq .Units 2}}
-              <select name="flavor_1"><option value="" disabled selected>Sabor 1</option>{{range .Flavors}}<option value="{{.}}">{{.}}</option>{{end}}</select>
-              <select name="flavor_2"><option value="" disabled selected>Sabor 2</option>{{range .Flavors}}<option value="{{.}}">{{.}}</option>{{end}}</select>
-              {{end}}
-            </div>
-            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-cart-plus"></i> Añadir al carrito</button>
-          </form>
-          <a href="/products/{{.ID}}" class="btn btn-secondary"><i class="fa-solid fa-circle-info"></i> Ver detalles</a>
+          <button class="btn btn-primary btn-block btn-open-promo" data-promo-id="{{ .ID }}">
+            <i class="fa-solid fa-gift"></i> Añadir al carrito
+          </button>
+          <a href="/products" class="btn btn-secondary"><i class="fa-solid fa-circle-info"></i> Ver catálogo</a>
         </div>
       </div>
-      {{end}}{{end}}
+      {{ end }}
     </div>
+    {{ end }}
 
     <!-- ══ HQD GLAZE CAROUSEL ══ -->
     <h2 class="section-title" style="margin-top:5rem"><i class="fa-solid fa-fire"></i> HQD GLAZE 12000</h2>
     <div class="carousel-wrapper">
       <div class="carousel-track" id="glaze-track">
-        {{range .Products}}{{if eq .Category "glaze"}}
-        <div class="product-card">
-          <div class="product-card__badge">12000 Puffs</div>
-          <div class="product-card__image-container">
-            <img src="{{.Image}}" alt="{{.Alt}}" class="product-card__image">
-          </div>
-          <h3 class="product-card__title">{{.Name}}</h3>
-          <p class="product-card__price">{{printf "%.2f" .Price}}€</p>
-          <div class="product-card__actions">
-            <form class="product-card__form quick-add-form">
-              <input type="hidden" name="product_id" value="{{.ID}}">
-              {{range .Flavors}}<input type="hidden" name="flavor" value="{{.}}">{{end}}
-              <button type="submit" class="btn btn-primary"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-            </form>
-            <a href="/products/{{.ID}}" class="btn btn-secondary"><i class="fa-solid fa-circle-info"></i> Detalles</a>
-          </div>
-        </div>
-        {{end}}{{end}}
+        {{ range .Flavors }}
+          {{ if eq .ModelID "hqd-glaze" }}
+            {{ $flavor := . }}
+            {{ range $.Models }}
+              {{ if eq .ID "hqd-glaze" }}
+              <div class="product-card">
+                <div class="product-card__badge">{{ .Subtitle }}</div>
+                <div class="product-card__image-container">
+                  <img src="{{ if $flavor.Image }}{{ $flavor.Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ $flavor.Name }}" class="product-card__image">
+                </div>
+                <h3 class="product-card__title">{{ $flavor.Name }}</h3>
+                <p class="product-card__price">{{ printf "%.2f" .Price }}€</p>
+                <div class="product-card__actions">
+                  <form class="product-card__form quick-add-form">
+                    <input type="hidden" name="product_id" value="{{ .ID }}">
+                    <input type="hidden" name="flavor_id" value="{{ $flavor.ID }}">
+                    <input type="hidden" name="flavor_name" value="{{ $flavor.Name }}">
+                    <input type="hidden" name="price" value="{{ .Price }}">
+                    <input type="hidden" name="image" value="{{ $flavor.Image }}">
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
+                  </form>
+                  <a href="/products" class="btn btn-secondary"><i class="fa-solid fa-circle-info"></i> Catálogo</a>
+                </div>
+              </div>
+              {{ end }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
       </div>
       <div class="carousel-nav">
         <button onclick="scrollCarousel('glaze-track',-1)" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
@@ -76,24 +81,34 @@
     <h2 class="section-title" style="margin-top:5rem"><i class="fa-solid fa-wind"></i> HQD AIR 4000</h2>
     <div class="carousel-wrapper">
       <div class="carousel-track" id="air-track">
-        {{range .Products}}{{if eq .Category "air"}}
-        <div class="product-card">
-          <div class="product-card__badge">4000 Puffs</div>
-          <div class="product-card__image-container">
-            <img src="{{.Image}}" alt="{{.Alt}}" class="product-card__image">
-          </div>
-          <h3 class="product-card__title">{{.Name}}</h3>
-          <p class="product-card__price">{{printf "%.2f" .Price}}€</p>
-          <div class="product-card__actions">
-            <form class="product-card__form quick-add-form">
-              <input type="hidden" name="product_id" value="{{.ID}}">
-              {{range .Flavors}}<input type="hidden" name="flavor" value="{{.}}">{{end}}
-              <button type="submit" class="btn btn-primary"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
-            </form>
-            <a href="/products/{{.ID}}" class="btn btn-secondary"><i class="fa-solid fa-circle-info"></i> Detalles</a>
-          </div>
-        </div>
-        {{end}}{{end}}
+        {{ range .Flavors }}
+          {{ if eq .ModelID "hqd-air" }}
+            {{ $flavor := . }}
+            {{ range $.Models }}
+              {{ if eq .ID "hqd-air" }}
+              <div class="product-card">
+                <div class="product-card__badge">{{ .Subtitle }}</div>
+                <div class="product-card__image-container">
+                  <img src="{{ if $flavor.Image }}{{ $flavor.Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ $flavor.Name }}" class="product-card__image">
+                </div>
+                <h3 class="product-card__title">{{ $flavor.Name }}</h3>
+                <p class="product-card__price">{{ printf "%.2f" .Price }}€</p>
+                <div class="product-card__actions">
+                  <form class="product-card__form quick-add-form">
+                    <input type="hidden" name="product_id" value="{{ .ID }}">
+                    <input type="hidden" name="flavor_id" value="{{ $flavor.ID }}">
+                    <input type="hidden" name="flavor_name" value="{{ $flavor.Name }}">
+                    <input type="hidden" name="price" value="{{ .Price }}">
+                    <input type="hidden" name="image" value="{{ $flavor.Image }}">
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-cart-plus"></i> Añadir</button>
+                  </form>
+                  <a href="/products" class="btn btn-secondary"><i class="fa-solid fa-circle-info"></i> Catálogo</a>
+                </div>
+              </div>
+              {{ end }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
       </div>
       <div class="carousel-nav">
         <button onclick="scrollCarousel('air-track',-1)" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
@@ -104,10 +119,41 @@
   </div>
 </section>
 
+<!-- Modal de Selección de Sabores para Promociones (Reutilizado de products.html) -->
+<div id="promo-modal" class="modal">
+  <div class="modal__content">
+    <span class="modal__close">&times;</span>
+    <div class="modal__header">
+      <img id="modal-promo-image" src="" alt="Promo" class="modal__image">
+      <div class="modal__info">
+        <h2 id="modal-promo-name">Nombre de la Promo</h2>
+        <p id="modal-promo-price" class="modal__price">0.00€</p>
+      </div>
+    </div>
+    <form id="promo-add-form" class="modal__form">
+      <input type="hidden" name="product_id" id="modal-promo-id">
+      <input type="hidden" name="flavor_name" id="modal-promo-name-input">
+      <input type="hidden" name="price" id="modal-promo-price-input">
+      <input type="hidden" name="image" id="modal-promo-image-input">
+      
+      <div id="modal-flavor-selectors" class="modal__selectors"></div>
+      
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top: 20px;">
+        <i class="fa-solid fa-cart-arrow-down"></i> Confirmar y añadir
+      </button>
+    </form>
+  </div>
+</div>
+
 <script>
   function scrollCarousel(id, dir) {
     const track = document.getElementById(id);
     if (track) track.scrollBy({ left: dir * 310, behavior: 'smooth' });
   }
+
+  // Exportamos los datos a JS para que el modal de promos funcione en la home
+  window.VAPE_MODELS = {{ .ModelsJSON }};
+  window.VAPE_FLAVORS = {{ .FlavorsJSON }};
+  window.PROMOTIONS = {{ .PromotionsJSON }};
 </script>
 {{end}}

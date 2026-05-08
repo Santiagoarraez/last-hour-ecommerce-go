@@ -23,7 +23,14 @@ func (a *App) Login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		setSessionCookie(w, user)
+		// Generamos un token de sesión seguro
+		token, err := a.sessions.CreateSession(user.ID)
+		if err != nil {
+			http.Error(w, "Error al crear la sesión", http.StatusInternalServerError)
+			return
+		}
+
+		setSessionCookie(w, token)
 		http.Redirect(w, r, "/account", http.StatusSeeOther)
 	default:
 		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
@@ -47,7 +54,14 @@ func (a *App) Register(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		setSessionCookie(w, user)
+		// Generamos un token de sesión seguro
+		token, err := a.sessions.CreateSession(user.ID)
+		if err != nil {
+			http.Error(w, "Error al crear la sesión", http.StatusInternalServerError)
+			return
+		}
+
+		setSessionCookie(w, token)
 		http.Redirect(w, r, "/account", http.StatusSeeOther)
 	default:
 		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
@@ -59,6 +73,11 @@ func (a *App) Logout(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
 		return
+	}
+
+	// Invalidamos el token en el servidor si existe la cookie
+	if cookie, err := r.Cookie("session_token"); err == nil {
+		a.sessions.DeleteSession(cookie.Value)
 	}
 
 	clearSessionCookie(w)
@@ -119,8 +138,9 @@ func (a *App) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Actualizamos la cookie de sesión con la nueva información del usuario
-	setSessionCookie(w, updatedUser)
+	// Nota: No es necesario actualizar la cookie porque el token sigue siendo válido
+	// y apunta al mismo userID. El método currentUser siempre recupera los datos
+	// frescos del servicio de autenticación usando ese userID.
 
 	a.render(w, r, "account.html", map[string]any{
 		"Title":   "Account - Last Hour",

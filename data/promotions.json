@@ -16,5 +16,49 @@
         "model_name": "HQD AIR"
       }
     ]
+  },
+  {
+    "id": "test",
+    "name": "test",
+    "description": "test 2",
+    "price": 2000,
+    "image": "",
+    "units": 5,
+    "items": [
+      {
+        "model_id": "hqd-glaze",
+        "model_name": "HQD GLAZE"
+      },
+      {
+        "model_id": "hqd-glaze",
+        "model_name": "HQD GLAZE"
+      },
+      {
+        "model_id": "hqd-glaze",
+        "model_name": "HQD GLAZE"
+      },
+      {
+        "model_id": "hqd-glaze",
+        "model_name": "HQD GLAZE"
+      }
+    ]
+  },
+  {
+    "id": "promotest",
+    "name": "promotest",
+    "description": "test",
+    "price": 123,
+    "image": "",
+    "units": 2,
+    "items": [
+      {
+        "model_id": "tes1",
+        "model_name": "tes1"
+      },
+      {
+        "model_id": "hqd-air",
+        "model_name": "HQD AIR"
+      }
+    ]
   }
 ]

@@ -31,8 +31,8 @@ func (a *App) ApiAccountUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Actualizamos la sesión
-	setSessionCookie(w, updatedUser)
+	// No es necesario actualizar la sesión porque el token no cambia
+	// y sigue apuntando al mismo ID de usuario.
 
 	writeJSON(w, http.StatusOK, map[string]any{
 		"message": "Perfil actualizado",
