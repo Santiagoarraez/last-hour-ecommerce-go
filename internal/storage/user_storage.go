@@ -19,6 +19,8 @@ func NewUserStorage(filePath string) *UserStorage {
 	return &UserStorage{filePath: filePath}
 }
 
+// FindAll lee todos los usuarios del archivo JSON.
+// Devuelve un slice vacío si el archivo no existe todavía.
 func (s *UserStorage) FindAll() ([]models.User, error) {
 	data, err := os.ReadFile(s.filePath)
 	if err != nil {
@@ -40,6 +42,8 @@ func (s *UserStorage) FindAll() ([]models.User, error) {
 	return users, nil
 }
 
+// SaveAll persiste la lista completa de usuarios en el archivo JSON.
+// Los hashes de bcrypt se guardan tal cual, nunca contraseñas en plano.
 func (s *UserStorage) SaveAll(users []models.User) error {
 	data, err := json.MarshalIndent(users, "", "  ")
 	if err != nil {

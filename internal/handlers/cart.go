@@ -11,6 +11,7 @@ import (
 )
 
 
+// Cart renderiza la página del carrito del usuario autenticado.
 func (a *App) Cart(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
@@ -35,6 +36,7 @@ func (a *App) Cart(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// CartAdd añade un producto al carrito. Acepta tanto JSON (AJAX) como form-data (HTML form).
 func (a *App) CartAdd(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
@@ -108,6 +110,7 @@ func (a *App) CartAdd(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// CartRemove elimina un item del carrito y redirige de vuelta a /cart.
 func (a *App) CartRemove(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)

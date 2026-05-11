@@ -18,6 +18,8 @@ func NewCartStorage(filePath string) *CartStorage {
 	return &CartStorage{filePath: filePath}
 }
 
+// FindAll lee todos los carritos activos del archivo JSON.
+// Devuelve un slice vacío si el archivo no existe todavía.
 func (s *CartStorage) FindAll() ([]models.Cart, error) {
 	data, err := os.ReadFile(s.filePath)
 	if err != nil {
@@ -39,6 +41,7 @@ func (s *CartStorage) FindAll() ([]models.Cart, error) {
 	return carts, nil
 }
 
+// SaveAll persiste todos los carritos en el archivo JSON.
 func (s *CartStorage) SaveAll(carts []models.Cart) error {
 	data, err := json.MarshalIndent(carts, "", "  ")
 	if err != nil {

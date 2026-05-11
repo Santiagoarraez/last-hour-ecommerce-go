@@ -2721,3 +2721,152 @@ p, span, li, td, th, small, label {
     padding: 30px 20px;
   }
 }
+
+/* — Smoke background animation --------------------------------- */
+#smoke-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.smoke-particle {
+  position: absolute;
+  bottom: -200px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(200,200,220,0.10) 50%, rgba(255,255,255,0) 75%);
+  filter: blur(18px);
+  animation: smokeRise linear infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes smokeRise {
+  0% {
+    transform: translateY(0) scale(1) translateX(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  45% {
+    transform: translateY(-45vh) scale(3) translateX(50px);
+    opacity: 0.75;
+  }
+  75% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-110vh) scale(5.5) translateX(-30px);
+    opacity: 0;
+  }
+}
+
+/* El contenido queda por encima del humo */
+body > header,
+body > main,
+body > footer,
+#toast-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* — Product Detail (product-view) dark theme ------------------- */
+.product-view {
+  background: transparent !important;
+}
+
+.product-view__header {
+  background: #1e1e1e !important;
+  border-radius: 16px !important;
+  padding: 2rem !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+  border-top: 3px solid #DA4D5A !important;
+  margin-bottom: 2rem !important;
+}
+
+.product-view__badge {
+  display: inline-block;
+  background: #DA4D5A !important;
+  color: #fff !important;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 0.75rem;
+}
+
+.product-view__title {
+  color: #F5F5F5 !important;
+}
+
+.product-view__price {
+  color: #DA4D5A !important;
+}
+
+.product-view__main-image {
+  background: #1e1e1e !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+  border-radius: 20px !important;
+}
+
+.product-view__thumbnails .thumb-link {
+  background: #1e1e1e !important;
+  border-color: rgba(255,255,255,0.1) !important;
+}
+
+.product-view__thumbnails .thumb-link--active {
+  border-color: #DA4D5A !important;
+  background: #2a2a2a !important;
+}
+
+.product-view__info {
+  background: #1e1e1e !important;
+  border: 1px solid rgba(255,255,255,0.07) !important;
+  border-top: 3px solid #DA4D5A !important;
+  border-radius: 16px !important;
+  padding: 2rem !important;
+}
+
+.product-view__subtitle {
+  color: rgba(245,245,245,0.6) !important;
+  font-size: 0.75rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.product-view__description {
+  color: rgba(245,245,245,0.85) !important;
+  line-height: 1.7 !important;
+}
+
+.product-view .quantity-picker {
+  background: #2a2a2a !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+
+.product-view .quantity-picker .btn-qty-adj {
+  background: #2a2a2a !important;
+  color: #F5F5F5 !important;
+}
+
+.product-view .quantity-picker .btn-qty-adj:hover {
+  background: #DA4D5A !important;
+  color: #fff !important;
+}
+
+.product-view .quantity-picker .form-input {
+  background: #1e1e1e !important;
+  color: #F5F5F5 !important;
+  border-color: rgba(255,255,255,0.12) !important;
+}
+
+.product-view .form-label {
+  color: rgba(245,245,245,0.7) !important;
+  font-weight: 600;
+}

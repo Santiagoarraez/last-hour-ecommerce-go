@@ -17,6 +17,7 @@ func NewProductStorage(filePath string) *ProductStorage {
 	return &ProductStorage{filePath: filePath}
 }
 
+// FindAll lee y deserializa todos los productos del archivo JSON.
 func (s *ProductStorage) FindAll() ([]models.Product, error) {
 	data, err := os.ReadFile(s.filePath)
 	if err != nil {
@@ -31,6 +32,7 @@ func (s *ProductStorage) FindAll() ([]models.Product, error) {
 	return products, nil
 }
 
+// SaveAll serializa y persiste la lista completa de productos en el archivo JSON.
 func (s *ProductStorage) SaveAll(products []models.Product) error {
 	data, err := json.MarshalIndent(products, "", "  ")
 	if err != nil {

@@ -27,9 +27,12 @@
                   <input type="hidden" name="price" value="{{ $model.Price }}">
                   <input type="hidden" name="image" value="{{ .Image }}">
                   <button type="submit" class="btn btn-primary">
-                    <i class="fa-solid fa-cart-plus"></i> Add
+                    <i class="fa-solid fa-cart-plus"></i> Añadir
                   </button>
                 </form>
+                <a href="/products/flavor/{{ .ID }}" class="btn btn-secondary">
+                  <i class="fa-solid fa-circle-info"></i> Ver detalles
+                </a>
               </div>
             </div>
           {{ end }}
