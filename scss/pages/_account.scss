@@ -1,0 +1,198 @@
+@use "../base/variables" as v;
+
+// =============================================
+// ACCOUNT PAGE — Dark theme panel de usuario
+// =============================================
+
+.account-section {
+  background: v.$color-dark-1;
+  min-height: 100vh;
+}
+
+.account__title {
+  color: v.$color-light;
+  margin-bottom: 2.5rem;
+}
+
+// Grid de 3 columnas: perfil | contraseña | acciones
+.account-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 300px;
+  gap: 24px;
+  align-items: start;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Panel base oscuro
+.account-panel {
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 28px;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: rgba(v.$color-red, 0.25);
+  }
+}
+
+.account-panel__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(v.$color-red, 0.2);
+}
+
+.account-panel__icon {
+  color: v.$color-red;
+  font-size: 1.1rem;
+}
+
+.account-panel__title {
+  font-family: "Anton", sans-serif;
+  font-size: 1.1rem;
+  color: v.$color-light;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+// Inputs con tema oscuro
+.account-input {
+  background: #111 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: v.$color-light !important;
+
+  &:focus {
+    border-color: v.$color-red !important;
+    box-shadow: 0 0 0 4px rgba(v.$color-red, 0.12) !important;
+  }
+
+  &::placeholder {
+    color: #555 !important;
+  }
+}
+
+.account-input--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.account-label {
+  font-weight: 700;
+  color: rgba(v.$color-light, 0.75);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.account-hint {
+  color: #555;
+  font-size: 0.8rem;
+}
+
+.account-btn {
+  width: 100%;
+  margin-top: 8px;
+  justify-content: center;
+}
+
+// Tarjeta de usuario en panel de acciones
+.account-user-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.account-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: v.$color-red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Anton", sans-serif;
+  font-size: 1.5rem;
+  color: white;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.account-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.account-user-name {
+  color: v.$color-light;
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account-user-email {
+  color: #666;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.1);
+  color: #aaa;
+  align-self: flex-start;
+}
+
+.account-badge--seller {
+  background: rgba(v.$color-red, 0.2);
+  color: v.$color-red;
+}
+
+// Botones de acciones apilados
+.account-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+// Notificación de cuenta
+.account-section .dashboard__notification {
+  margin-bottom: 1.5rem;
+}
+
+// Botón outline para "Browse Products"
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: v.$color-light;
+
+  &:hover {
+    border-color: v.$color-red;
+    color: v.$color-red;
+  }
+}

@@ -25,9 +25,9 @@ func main() {
 	productService := services.NewProductService(productStorage)
 	contactService := services.NewContactService(contactStorage)
 	authService := services.NewAuthService(userStorage)
-	cartService := services.NewCartService(cartStorage, productService)
 	modelService := services.NewModelService(modelStorage, flavorStorage)
 	flavorService := services.NewFlavorService(flavorStorage)
+	cartService := services.NewCartService(cartStorage, productService, flavorService)
 	promotionService := services.NewPromotionService(promotionStorage)
 	sessionService := services.NewSessionService()
 
@@ -43,6 +43,11 @@ func main() {
 
 	// 4. Configuración del Enrutador (Multiplexor)
 	mux := http.NewServeMux()
+
+	// Evita el 404 del favicon que los navegadores piden automáticamente
+	mux.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "assets/images/last_hour_logo.png")
+	})
 
 	// Definición de rutas públicas
 	mux.HandleFunc("/", app.Home)
@@ -86,6 +91,14 @@ func main() {
 	mux.HandleFunc("/api/account", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPut {
 			app.ApiAccountUpdate(w, r)
+		} else {
+			http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
+		}
+	})
+
+	mux.HandleFunc("/api/account/password", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPut {
+			app.ApiAccountChangePassword(w, r)
 		} else {
 			http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
 		}

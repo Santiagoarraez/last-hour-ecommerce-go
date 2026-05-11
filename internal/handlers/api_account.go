@@ -39,3 +39,30 @@ func (a *App) ApiAccountUpdate(w http.ResponseWriter, r *http.Request) {
 		"user":    updatedUser,
 	})
 }
+
+// ApiAccountChangePassword cambia la contraseña del usuario autenticado.
+// PUT /api/account/password
+func (a *App) ApiAccountChangePassword(w http.ResponseWriter, r *http.Request) {
+	user, ok := a.currentUser(r)
+	if !ok {
+		writeError(w, http.StatusUnauthorized, "debes iniciar sesión")
+		return
+	}
+
+	var input struct {
+		CurrentPassword string `json:"current_password"`
+		NewPassword     string `json:"new_password"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		writeError(w, http.StatusBadRequest, "JSON inválido")
+		return
+	}
+
+	if err := a.auth.ChangePassword(user.ID, input.CurrentPassword, input.NewPassword); err != nil {
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	writeJSON(w, http.StatusOK, map[string]any{"message": "Contraseña actualizada correctamente"})
+}

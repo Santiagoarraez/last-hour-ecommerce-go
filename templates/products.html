@@ -13,7 +13,7 @@
             <div class="product-card">
               <div class="product-card__badge">{{ $model.Subtitle }}</div>
               <div class="product-card__image-container">
-                <img src="{{ if .Image }}{{ .Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ .Name }}" class="product-card__image">
+                <img src="{{ if .Image }}{{ .Image | safeURL }}{{ else }}/assets/images/hqd-product.png{{ end }}" alt="{{ .Name }}" class="product-card__image">
               </div>
               <h3 class="product-card__title">{{ .Name }}</h3>
               <p class="product-card__description" style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 10px;">{{ $model.Name }} - {{ $model.Description }}</p>
@@ -45,7 +45,7 @@
       <div class="product-card product-card--promo">
         <div class="product-card__badge product-card__badge--blue">¡OFERTA!</div>
         <div class="product-card__image-container">
-          <img src="{{ if .Image }}{{ .Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ .Name }}" class="product-card__image">
+          <img src="{{ if .Image }}{{ .Image | safeURL }}{{ else }}/assets/images/hqd-product.png{{ end }}" alt="{{ .Name }}" class="product-card__image">
         </div>
         <h3 class="product-card__title">{{ .Name }}</h3>
         <p class="product-card__description" style="font-size: 0.85rem; height: 3em; overflow: hidden;">{{ .Description }}</p>

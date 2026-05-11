@@ -106,6 +106,40 @@ func (s *AuthService) FindUserByID(id string) (models.User, error) {
 	return models.User{}, errors.New("usuario no encontrado")
 }
 
+// ChangePassword verifica la contraseña actual y actualiza a la nueva.
+func (s *AuthService) ChangePassword(id, currentPassword, newPassword string) error {
+	currentPassword = strings.TrimSpace(currentPassword)
+	newPassword = strings.TrimSpace(newPassword)
+
+	if currentPassword == "" || newPassword == "" {
+		return errors.New("todos los campos son obligatorios")
+	}
+	if len(newPassword) < 6 {
+		return errors.New("la nueva contraseña debe tener al menos 6 caracteres")
+	}
+
+	users, err := s.storage.FindAll()
+	if err != nil {
+		return err
+	}
+
+	for i := range users {
+		if users[i].ID == id {
+			if err := bcrypt.CompareHashAndPassword([]byte(users[i].Password), []byte(currentPassword)); err != nil {
+				return errors.New("la contraseña actual no es correcta")
+			}
+			hashed, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+			if err != nil {
+				return err
+			}
+			users[i].Password = string(hashed)
+			return s.storage.SaveAll(users)
+		}
+	}
+
+	return errors.New("usuario no encontrado")
+}
+
 // UpdateProfile permite a un usuario actualizar su información personal.
 // Funcionalidad añadida para cumplir con la gestión del perfil de usuario.
 func (s *AuthService) UpdateProfile(id, name, email, phone string) (models.User, error) {

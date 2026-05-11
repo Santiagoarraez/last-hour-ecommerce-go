@@ -1,62 +1,105 @@
 {{define "content"}}
-<section class="about page-section">
+<section class="account-section page-section">
   <div class="container">
-    <h1 class="section-title"><i class="fa-solid fa-user-gear"></i> My Account</h1>
 
-    {{if .Success}}
-    <div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> {{.Success}}</div>
-    {{end}}
-    {{if .Error}}
-    <div class="alert alert-danger"><i class="fa-solid fa-circle-exclamation"></i> {{.Error}}</div>
-    {{end}}
+    <h1 class="section-title account__title">
+      <i class="fa-solid fa-user-gear"></i> My Account
+    </h1>
 
     <div id="account-notification" class="dashboard__notification" hidden></div>
 
-    <div class="app-grid">
-      <section class="app-panel">
-        <h2 class="app-panel__title">Profile Details</h2>
-        <form id="account-form" class="form">
-          <div class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" id="acc-name" name="name" value="{{.User.Name}}" class="form-input" required>
-          </div>
-          <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="acc-email" name="email" value="{{.User.Email}}" class="form-input" required>
-          </div>
-          <div class="form-group">
-            <label for="phone">Phone Number</label>
-            <input type="text" id="acc-phone" name="phone" value="{{.User.Phone}}" class="form-input" placeholder="+34 ...">
-          </div>
-          <div class="form-group">
-            <label>Role</label>
-            <input type="text" value="{{.User.Role}}" class="form-input" disabled>
-            <small>Roles can only be changed by administrators.</small>
-          </div>
-          <button type="submit" id="btn-save-account" class="btn btn-primary"><i class="fa-solid fa-save"></i> Save Changes</button>
-        </form>
-      </section>
+    <div class="account-grid">
 
-      <section class="app-panel">
-        <h2 class="app-panel__title">Actions</h2>
-        <div class="app-actions">
-          <a href="/cart" class="btn btn-primary btn-link">
+      <!-- Panel 1: Perfil -->
+      <div class="account-panel">
+        <div class="account-panel__header">
+          <i class="fa-solid fa-user account-panel__icon"></i>
+          <h2 class="account-panel__title">Profile Details</h2>
+        </div>
+        <form id="account-form" class="form" novalidate>
+          <div class="form-group">
+            <label class="account-label">Full Name</label>
+            <input type="text" id="acc-name" name="name" value="{{.User.Name}}" class="form-input account-input" required>
+          </div>
+          <div class="form-group">
+            <label class="account-label">Email Address</label>
+            <input type="email" id="acc-email" name="email" value="{{.User.Email}}" class="form-input account-input" required>
+          </div>
+          <div class="form-group">
+            <label class="account-label">Phone Number</label>
+            <input type="text" id="acc-phone" name="phone" value="{{.User.Phone}}" class="form-input account-input" placeholder="+34 ...">
+          </div>
+          <button type="submit" id="btn-save-account" class="btn btn-primary account-btn">
+            <i class="fa-solid fa-floppy-disk"></i> Save Changes
+          </button>
+        </form>
+      </div>
+
+      <!-- Panel 2: Cambio de contraseña -->
+      <div class="account-panel">
+        <div class="account-panel__header">
+          <i class="fa-solid fa-lock account-panel__icon"></i>
+          <h2 class="account-panel__title">Change Password</h2>
+        </div>
+        <form id="password-form" class="form" novalidate>
+          <div class="form-group">
+            <label class="account-label">Current Password</label>
+            <input type="password" id="pwd-current" name="current_password" class="form-input account-input" required>
+          </div>
+          <div class="form-group">
+            <label class="account-label">New Password</label>
+            <input type="password" id="pwd-new" name="new_password" class="form-input account-input" required minlength="6">
+          </div>
+          <div class="form-group">
+            <label class="account-label">Confirm New Password</label>
+            <input type="password" id="pwd-confirm" name="confirm_password" class="form-input account-input" required>
+          </div>
+          <button type="submit" id="btn-save-password" class="btn btn-primary account-btn">
+            <i class="fa-solid fa-key"></i> Update Password
+          </button>
+        </form>
+      </div>
+
+      <!-- Panel 3: Acciones rápidas -->
+      <div class="account-panel account-panel--actions">
+        <div class="account-panel__header">
+          <i class="fa-solid fa-bolt account-panel__icon"></i>
+          <h2 class="account-panel__title">Quick Actions</h2>
+        </div>
+
+        <div class="account-user-card">
+          <div class="account-avatar">{{slice .User.Name 0 1}}</div>
+          <div class="account-user-info">
+            <strong class="account-user-name">{{.User.Name}}</strong>
+            <span class="account-user-email">{{.User.Email}}</span>
+            <span class="account-badge {{if .User.IsSeller}}account-badge--seller{{end}}">
+              {{.User.Role}}
+            </span>
+          </div>
+        </div>
+
+        <div class="account-actions">
+          <a href="/cart" class="btn btn-primary btn-link account-btn">
             <i class="fa-solid fa-cart-shopping"></i> View Cart
           </a>
           {{if .User.IsSeller}}
-          <a href="/seller/dashboard" class="btn btn-secondary btn-link">
+          <a href="/seller/dashboard" class="btn btn-secondary btn-link account-btn">
             <i class="fa-solid fa-store"></i> Admin Panel
           </a>
           {{end}}
-          <form action="/logout" method="POST" class="w-full">
-            <button type="submit" class="btn btn-modern w-full">
+          <a href="/products" class="btn btn-outline btn-link account-btn">
+            <i class="fa-solid fa-bag-shopping"></i> Browse Products
+          </a>
+          <form action="/logout" method="POST">
+            <button type="submit" class="btn btn-modern account-btn w-full">
               <i class="fa-solid fa-right-from-bracket"></i> Logout
             </button>
           </form>
         </div>
-      </section>
+      </div>
+
     </div>
-    <script src="/js/account.js"></script>
   </div>
 </section>
+<script src="/js/account.js"></script>
 {{end}}

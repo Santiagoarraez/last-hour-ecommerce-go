@@ -23,7 +23,7 @@
       <div class="product-card product-card--bundle">
         <div class="product-card__badge product-card__badge--blue">PROMO!</div>
         <div class="product-card__image-container">
-          <img src="{{ if .Image }}{{ .Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ .Name }}" class="product-card__image">
+          <img src="{{ if .Image }}{{ .Image | safeURL }}{{ else }}/assets/images/hqd-product.png{{ end }}" alt="{{ .Name }}" class="product-card__image">
         </div>
         <h3 class="product-card__title">{{ .Name }}</h3>
         <p class="product-card__price">{{ printf "%.2f" .Price }}€ <small style="font-weight: normal; font-size: 0.7rem;">({{ .Units }} uds)</small></p>
@@ -50,7 +50,7 @@
               <div class="product-card">
                 <div class="product-card__badge">{{ .Subtitle }}</div>
                 <div class="product-card__image-container">
-                  <img src="{{ if $flavor.Image }}{{ $flavor.Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ $flavor.Name }}" class="product-card__image">
+                  <img src="{{ if $flavor.Image }}{{ $flavor.Image | safeURL }}{{ else }}/assets/images/hqd-product.png{{ end }}" alt="{{ $flavor.Name }}" class="product-card__image">
                 </div>
                 <h3 class="product-card__title">{{ $flavor.Name }}</h3>
                 <p class="product-card__price">{{ printf "%.2f" .Price }}€</p>
@@ -89,7 +89,7 @@
               <div class="product-card">
                 <div class="product-card__badge">{{ .Subtitle }}</div>
                 <div class="product-card__image-container">
-                  <img src="{{ if $flavor.Image }}{{ $flavor.Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ $flavor.Name }}" class="product-card__image">
+                  <img src="{{ if $flavor.Image }}{{ $flavor.Image | safeURL }}{{ else }}/assets/images/hqd-product.png{{ end }}" alt="{{ $flavor.Name }}" class="product-card__image">
                 </div>
                 <h3 class="product-card__title">{{ $flavor.Name }}</h3>
                 <p class="product-card__price">{{ printf "%.2f" .Price }}€</p>

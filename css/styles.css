@@ -174,11 +174,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .footer__brand .footer__logo {
-  max-width: 150px;
+  max-width: 180px;
   margin-bottom: 20px;
-  background: #0D0D0D;
-  border-radius: 12px;
-  padding: 8px;
+  mix-blend-mode: screen;
   box-sizing: content-box;
 }
 .footer__brand .footer__description {
@@ -318,20 +316,24 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(1.1);
 }
 
-.navbar__logo img {
-  height: clamp(40px, 8vw, 70px);
-  max-width: 50vw;
-  width: auto;
-  object-fit: contain;
-  display: block;
-  margin: 0 auto;
-  padding: 4px;
-}
-
 .navbar__logo {
   padding-left: 2vw;
   padding-right: 2vw;
   min-width: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar__logo img {
+  height: clamp(110px, 18vw, 180px);
+  max-width: 60vw;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  margin: -25% auto;
+  mix-blend-mode: screen;
 }
 
 .navbar__right {
@@ -407,9 +409,9 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
   }
   .navbar__logo img {
-    height: clamp(28px, 7vw, 45px);
+    height: clamp(90px, 14vw, 150px);
     max-width: 100%;
-    padding: 0;
+    margin: -25% auto;
   }
 }
 .btn {
@@ -2012,6 +2014,209 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* =============================================
+   ACCOUNT PAGE — Dark theme panel de usuario
+   ============================================= */
+.account-section {
+  background: #141414;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(218, 77, 90, 0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(218, 77, 90, 0.1) 0%, transparent 60%);
+  min-height: 100vh;
+}
+
+.account__title {
+  color: #F5F5F5;
+  margin-bottom: 2.5rem;
+}
+
+.account-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 300px;
+  gap: 24px;
+  align-items: stretch;
+}
+
+@media (max-width: 1024px) {
+  .account-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .account-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.account-panel {
+  background: #2a2a2a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 3px solid #DA4D5A;
+  border-radius: 16px;
+  padding: 28px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
+.account-panel:hover {
+  box-shadow: 0 8px 32px rgba(218, 77, 90, 0.15);
+  transform: translateY(-2px);
+}
+
+.account-panel__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.account-panel__icon {
+  color: #DA4D5A;
+  font-size: 1.1rem;
+}
+
+.account-panel__title {
+  font-family: "Anton", sans-serif;
+  font-size: 1.1rem;
+  color: #F5F5F5;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.account-input {
+  background: #1e1e1e !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: #F5F5F5 !important;
+}
+
+.account-input:focus {
+  border-color: #DA4D5A !important;
+  box-shadow: 0 0 0 4px rgba(218, 77, 90, 0.12) !important;
+}
+
+.account-input::placeholder {
+  color: #555 !important;
+}
+
+.account-input--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.account-section .form-group label,
+.account-label {
+  font-weight: 700;
+  color: rgba(245, 245, 245, 0.7) !important;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.account-hint {
+  color: #555;
+  font-size: 0.8rem;
+}
+
+.account-btn {
+  width: 100%;
+  margin-top: 8px;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.account-user-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(218, 77, 90, 0.08);
+  border: 1px solid rgba(218, 77, 90, 0.15);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.account-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #DA4D5A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Anton", sans-serif;
+  font-size: 1.5rem;
+  color: white;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.account-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.account-user-name {
+  color: #F5F5F5;
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account-user-email {
+  color: #666;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.1);
+  color: #aaa;
+  align-self: flex-start;
+}
+
+.account-badge--seller {
+  background: rgba(218, 77, 90, 0.2);
+  color: #DA4D5A;
+}
+
+.account-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.account-section .dashboard__notification {
+  margin-bottom: 1.5rem;
+}
+
+.btn-outline {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #F5F5F5;
+}
+
+.btn-outline:hover {
+  background: rgba(218, 77, 90, 0.12);
+  border-color: #DA4D5A;
+  color: #DA4D5A;
+}
+
 /* Dashboard Tabs */
 .dashboard__tabs {
   display: flex;
@@ -2190,6 +2395,306 @@ h1, h2, h3, h4, h5, h6 {
   background: #F9F9F9;
   cursor: pointer;
   transition: border-color 0.3s;
+}
+
+/* =============================================
+   DARK THEME GLOBAL — Overrides de tema oscuro
+   Aplica el mismo estilo que el panel de cuenta
+   a toda la web.
+   ============================================= */
+
+/* — Base -------------------------------------------------------- */
+body {
+  background: #141414 !important;
+  color: #F5F5F5 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #F5F5F5 !important;
+}
+
+.section-title,
+.featured .section-title {
+  color: #F5F5F5 !important;
+}
+
+p, span, li, td, th, small, label {
+  color: inherit;
+}
+
+/* — Sections ---------------------------------------------------- */
+.page-section,
+.about,
+.featured {
+  background: transparent;
+}
+
+/* — Forms globales ---------------------------------------------- */
+.form-input,
+.form-select,
+.form-textarea {
+  background-color: #1e1e1e !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: #F5F5F5 !important;
+}
+
+.form-input::placeholder,
+.form-select::placeholder,
+.form-textarea::placeholder {
+  color: #555 !important;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: #DA4D5A !important;
+  box-shadow: 0 0 0 4px rgba(218, 77, 90, 0.12) !important;
+}
+
+.form-group label {
+  color: rgba(245, 245, 245, 0.7) !important;
+}
+
+.form-group small {
+  color: #666 !important;
+}
+
+/* — Product Cards ----------------------------------------------- */
+.product-card {
+  background: #2a2a2a !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-top: 3px solid #DA4D5A !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+.product-card:hover {
+  box-shadow: 0 12px 35px rgba(218, 77, 90, 0.18) !important;
+  transform: translateY(-6px);
+}
+
+.product-card__image-wrapper {
+  background: #1e1e1e !important;
+}
+
+.product-card__title {
+  color: #F5F5F5 !important;
+}
+
+.product-card__flavors,
+.product-card__subtitle {
+  color: #999 !important;
+}
+
+/* — App Panels (dashboard y otros) ------------------------------ */
+.app-panel {
+  background: #2a2a2a !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-top: 3px solid #DA4D5A !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+.app-panel__title {
+  color: #F5F5F5 !important;
+}
+
+/* — Dashboard --------------------------------------------------- */
+.dashboard__tabs {
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.dashboard__tab-btn {
+  color: #aaa !important;
+  background: transparent !important;
+}
+
+.dashboard__tab-btn.active,
+.dashboard__tab-btn:hover {
+  color: #F5F5F5 !important;
+}
+
+.dashboard__subtitle {
+  color: #999 !important;
+}
+
+/* Tabla desktop — celdas y filas */
+.dashboard__table td {
+  color: #ccc !important;
+}
+
+.dashboard__table td strong {
+  color: #F5F5F5 !important;
+}
+
+.dashboard__table tbody tr {
+  border-bottom-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.dashboard__table tbody tr:hover {
+  background: rgba(218, 77, 90, 0.07) !important;
+}
+
+/* Tabla mobile — cards oscuras en lugar de blancas */
+@media (max-width: 767px) {
+  .dashboard__table tr {
+    background: #2a2a2a !important;
+    border: 1px solid rgba(255, 255, 255, 0.07) !important;
+    border-top: 2px solid #DA4D5A !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .dashboard__table td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .dashboard__table td::before {
+    color: #DA4D5A !important;
+  }
+}
+
+.dashboard__promo-items-section {
+  background: #1e1e1e !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* — Cart -------------------------------------------------------- */
+.cart-item,
+.cart-summary,
+.cart-empty {
+  background: #2a2a2a !important;
+  border-color: rgba(255, 255, 255, 0.07) !important;
+  color: #F5F5F5 !important;
+}
+
+.cart-item__name,
+.cart-item__price,
+.cart-summary__title {
+  color: #F5F5F5 !important;
+}
+
+.quantity-picker {
+  background: #1e1e1e !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.quantity-picker .form-input {
+  background: #1e1e1e !important;
+  color: #F5F5F5 !important;
+}
+
+/* — About ------------------------------------------------------- */
+.about__paragraph {
+  color: rgba(245, 245, 245, 0.75) !important;
+}
+
+/* — Contact / Login / Register — panel y formulario ------------ */
+.contact__panel {
+  background: #2a2a2a !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-top: 3px solid #DA4D5A !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+.contact-form__label {
+  color: rgba(245, 245, 245, 0.7) !important;
+}
+
+.contact-form__control {
+  background: #1e1e1e !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: #F5F5F5 !important;
+}
+
+.contact-form__control:focus {
+  border-color: #DA4D5A !important;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(218, 77, 90, 0.12) !important;
+}
+
+.app-note {
+  color: #777 !important;
+}
+
+.app-note a {
+  color: #DA4D5A !important;
+}
+
+/* — Cart — tabla y filas --------------------------------------- */
+.app-table {
+  background: #2a2a2a !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-top: 3px solid #DA4D5A !important;
+}
+
+.app-row {
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.app-row__image {
+  background: #1e1e1e !important;
+  border-radius: 8px;
+}
+
+.app-row__title {
+  color: #F5F5F5 !important;
+}
+
+.app-row__subtotal {
+  color: #ccc !important;
+}
+
+.app-row__flavors {
+  color: #888 !important;
+}
+
+.app-row__quantity-control .btn-qty {
+  background: #1e1e1e !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #F5F5F5 !important;
+}
+
+.app-row__quantity-control .btn-qty:hover {
+  background: #DA4D5A !important;
+  border-color: #DA4D5A !important;
+  color: white !important;
+}
+
+.app-row__quantity-control .qty-value {
+  color: #F5F5F5 !important;
+}
+
+.app-row__quantity-control .qty-multiplier {
+  color: #999 !important;
+}
+
+/* — Cart Summary ----------------------------------------------- */
+.app-summary {
+  background: #2a2a2a !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-top: 3px solid #DA4D5A !important;
+}
+
+.app-summary h2 {
+  color: #F5F5F5 !important;
+}
+
+/* — Misc -------------------------------------------------------- */
+.alert-success {
+  background: rgba(34, 197, 94, 0.15) !important;
+  border-color: rgba(34, 197, 94, 0.3) !important;
+  color: #86efac !important;
+}
+
+.alert-danger,
+.alert--error {
+  background: rgba(218, 77, 90, 0.15) !important;
+  border-color: rgba(218, 77, 90, 0.3) !important;
+  color: #fca5a5 !important;
+}
+
+.alert--success {
+  background: rgba(34, 197, 94, 0.15) !important;
+  border-color: rgba(34, 197, 94, 0.3) !important;
+  color: #86efac !important;
 }
 
 .modal__selector-item select:focus {

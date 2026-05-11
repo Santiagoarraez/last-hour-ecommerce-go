@@ -59,13 +59,18 @@ func NewApp(
 	return app, nil
 }
 
+// templateFuncs registra funciones disponibles en todos los templates.
+// safeURL permite que las data URLs (base64) pasen sin ser sanitizadas por html/template.
+var templateFuncs = template.FuncMap{
+	"safeURL": func(s string) template.URL { return template.URL(s) },
+}
+
 // LoadTemplates recorre el directorio de plantillas, parsea cada archivo HTML
 // junto con layout.html y almacena el resultado en el mapa de caché.
 // Se excluye el propio layout.html ya que es una dependencia, no una página independiente.
 func (a *App) LoadTemplates() error {
 	layoutPath := filepath.Join(a.templateDir, "layout.html")
 
-	// Buscamos todos los archivos .html en el directorio de plantillas
 	pages, err := filepath.Glob(filepath.Join(a.templateDir, "*.html"))
 	if err != nil {
 		return err
@@ -76,14 +81,12 @@ func (a *App) LoadTemplates() error {
 	for _, page := range pages {
 		name := filepath.Base(page)
 
-		// El layout no es una página renderizable por sí sola, lo omitimos
 		if name == "layout.html" {
 			continue
 		}
 
-		// Parseamos layout + página juntos para que el template tenga acceso
-		// a los bloques definidos en ambos archivos
-		tmpl, err := template.ParseFiles(layoutPath, page)
+		// Usamos New+Funcs antes de ParseFiles para que las funciones estén disponibles
+		tmpl, err := template.New(filepath.Base(layoutPath)).Funcs(templateFuncs).ParseFiles(layoutPath, page)
 		if err != nil {
 			return fmt.Errorf("error parseando plantilla '%s': %w", name, err)
 		}

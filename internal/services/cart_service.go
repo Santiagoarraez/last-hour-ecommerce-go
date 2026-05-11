@@ -10,11 +10,12 @@ import (
 // CartService gestiona la persistencia y la lógica del carrito de compras de los usuarios.
 type CartService struct {
 	carts    *storage.CartStorage
-	products *ProductService // Lo necesitamos para obtener detalles de precios y nombres
+	products *ProductService
+	flavors  *FlavorService
 }
 
-func NewCartService(carts *storage.CartStorage, products *ProductService) *CartService {
-	return &CartService{carts: carts, products: products}
+func NewCartService(carts *storage.CartStorage, products *ProductService, flavors *FlavorService) *CartService {
+	return &CartService{carts: carts, products: products, flavors: flavors}
 }
 
 // AddItem añade un producto al carrito. Si el producto con el mismo sabor ya existe, incrementa cantidad.
@@ -185,11 +186,18 @@ func (s *CartService) buildCartView(cart models.Cart) (models.CartView, error) {
 
 		// Intentamos reconstruir el objeto Product desde la metadata del item (nuevo sistema modular)
 		if item.FlavorName != "" {
+			// Usamos la imagen actual del sabor en lugar de la snapshot guardada en el carrito.
+			image := item.Image
+			if s.flavors != nil {
+				if fresh, err := s.flavors.FindFlavorByID(item.FlavorID); err == nil && fresh.Image != "" {
+					image = fresh.Image
+				}
+			}
 			product = models.Product{
 				ID:    item.FlavorID,
 				Name:  item.FlavorName,
 				Price: item.Price,
-				Image: item.Image,
+				Image: image,
 			}
 		} else {
 			// Fallback al sistema antiguo buscando en el storage de productos

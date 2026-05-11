@@ -10,18 +10,18 @@
     <div class="product-view__grid">
       <div class="product-view__gallery">
         <figure class="product-view__main-image">
-          <img src="{{ if .Flavor.Image }}{{ .Flavor.Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ .Flavor.Name }}" id="main-product-img">
+          <img src="{{ if .Flavor.Image }}{{ .Flavor.Image | safeURL }}{{ else }}/assets/images/hqd-product.png{{ end }}" alt="{{ .Flavor.Name }}" id="main-product-img">
         </figure>
         
         <div class="product-view__thumbnails">
           <!-- El sabor actual -->
           <div class="thumb-link thumb-link--active">
-            <img src="{{ if .Flavor.Image }}{{ .Flavor.Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ .Flavor.Name }}">
+            <img src="{{ if .Flavor.Image }}{{ .Flavor.Image | safeURL }}{{ else }}/assets/images/hqd-product.png{{ end }}" alt="{{ .Flavor.Name }}">
           </div>
           <!-- Otros sabores del mismo modelo -->
           {{range .Siblings}}
           <a href="/products/flavor/{{.ID}}" class="thumb-link">
-            <img src="{{ if .Image }}{{ .Image }}{{ else }}/assets/images/placeholder.png{{ end }}" alt="{{ .Name }}">
+            <img src="{{ if .Image }}{{ .Image | safeURL }}{{ else }}/assets/images/hqd-product.png{{ end }}" alt="{{ .Name }}">
             <span class="thumb-tooltip">{{.Name}}</span>
           </a>
           {{end}}
