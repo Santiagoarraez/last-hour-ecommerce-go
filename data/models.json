@@ -4,7 +4,12 @@
     "name": "HQD GLAZE",
     "subtitle": "12000 Puffs - 5% Nicotine",
     "description": "TEST",
-    "price": 30
+    "price": 30,
+    "puffs": 12000,
+    "battery": "650am",
+    "liquid": "12ml",
+    "nicotine": "5%",
+    "best_seller": true
   },
   {
     "id": "hqd-air",
@@ -15,7 +20,7 @@
   },
   {
     "id": "tes1",
-    "name": "tes3333",
+    "name": "tes332",
     "subtitle": "12000 Puffs - LED Screen",
     "description": "test11",
     "price": 2202

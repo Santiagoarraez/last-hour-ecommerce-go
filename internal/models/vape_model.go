@@ -7,4 +7,9 @@ type VapeModel struct {
 	Subtitle    string  `json:"subtitle"`
 	Description string  `json:"description"`
 	Price       float64 `json:"price"`
+	Puffs       int     `json:"puffs,omitempty"`
+	Battery     string  `json:"battery,omitempty"`
+	Liquid      string  `json:"liquid,omitempty"`
+	Nicotine    string  `json:"nicotine,omitempty"`
+	BestSeller  bool    `json:"best_seller,omitempty"`
 }

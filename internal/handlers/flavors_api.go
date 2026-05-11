@@ -31,6 +31,8 @@ func (a *App) ApiFlavorByID(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPut:
 		a.ApiUpdateFlavor(w, r, id)
+	case http.MethodPatch:
+		a.ApiSetFlavorStock(w, r, id)
 	case http.MethodDelete:
 		a.ApiDeleteFlavor(w, r, id)
 	default:
@@ -116,6 +118,30 @@ func (a *App) ApiDeleteFlavor(w http.ResponseWriter, r *http.Request, id string)
 	}
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+// ApiSetFlavorStock marca un sabor como agotado o disponible.
+// PATCH /api/flavors/{id} → { "out_of_stock": true|false }
+func (a *App) ApiSetFlavorStock(w http.ResponseWriter, r *http.Request, id string) {
+	if _, ok := a.requireSellerAPI(w, r); !ok {
+		return
+	}
+
+	var input struct {
+		OutOfStock bool `json:"out_of_stock"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		writeError(w, http.StatusBadRequest, "JSON inválido")
+		return
+	}
+
+	if err := a.flavors.SetStock(id, input.OutOfStock); err != nil {
+		writeError(w, http.StatusNotFound, err.Error())
+		return
+	}
+
+	updated, _ := a.flavors.FindFlavorByID(id)
+	writeJSON(w, http.StatusOK, updated)
 }
 
 // ApiUpdateFlavor actualiza un sabor existente.

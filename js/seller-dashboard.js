@@ -118,13 +118,26 @@ document.addEventListener('DOMContentLoaded', () => {
     models.forEach(m => {
       const clone = template.content.cloneNode(true);
       
-      // Relleno de valores usando querySelector y textContent
       clone.querySelector('.model-name strong').textContent = m.name;
       clone.querySelector('.model-subtitle').textContent = m.subtitle;
       clone.querySelector('.model-description small').textContent = m.description;
       clone.querySelector('.model-price').textContent = m.price.toFixed(2) + ' €';
-      
-      // Asignación de eventos
+
+      // Badge de destacado
+      const bsBadge = clone.querySelector('.model-bestseller-badge');
+      bsBadge.textContent = m.best_seller ? '★ Más vendido' : '—';
+      bsBadge.style.cssText = m.best_seller
+        ? 'background:rgba(218,77,90,0.2);color:#DA4D5A;padding:2px 8px;border-radius:10px;font-size:0.75rem;font-weight:700;'
+        : 'color:#555;font-size:0.75rem;';
+
+      // Botón toggle destacado
+      const btnBs = clone.querySelector('.btn-bestseller');
+      btnBs.title = m.best_seller ? 'Quitar destacado' : 'Marcar como más vendido';
+      btnBs.style.background = m.best_seller ? 'rgba(218,77,90,0.2)' : 'rgba(255,255,255,0.05)';
+      btnBs.style.color = m.best_seller ? '#DA4D5A' : '#666';
+      btnBs.style.border = 'none';
+      btnBs.addEventListener('click', () => toggleModelBestSeller(m.id, m.best_seller));
+
       clone.querySelector('.btn-edit').addEventListener('click', () => editModel(m));
       clone.querySelector('.btn-delete').addEventListener('click', () => deleteModel(m.id));
 
@@ -138,6 +151,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('model-subtitle').value = m.subtitle;
     document.getElementById('model-description').value = m.description;
     document.getElementById('model-price').value = m.price;
+    document.getElementById('model-puffs').value = m.puffs || '';
+    document.getElementById('model-battery').value = m.battery || '';
+    document.getElementById('model-liquid').value = m.liquid || '';
+    document.getElementById('model-nicotine').value = m.nicotine || '';
     
     const submitBtn = document.getElementById('btn-submit-model');
     if (submitBtn) {
@@ -156,7 +173,11 @@ document.addEventListener('DOMContentLoaded', () => {
         name: document.getElementById('model-name').value,
         subtitle: document.getElementById('model-subtitle').value,
         description: document.getElementById('model-description').value,
-        price: parseFloat(document.getElementById('model-price').value)
+        price: parseFloat(document.getElementById('model-price').value),
+        puffs: parseInt(document.getElementById('model-puffs').value) || 0,
+        battery: document.getElementById('model-battery').value,
+        liquid: document.getElementById('model-liquid').value,
+        nicotine: document.getElementById('model-nicotine').value
       };
 
       const method = id ? 'PUT' : 'POST';
@@ -174,6 +195,21 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => showNotification('error', err.message));
     });
+  }
+
+  function toggleModelBestSeller(id, current) {
+    const newVal = !current;
+    const msg = newVal ? '¿Marcar este modelo como MÁS VENDIDO?' : '¿Quitar el destacado de este modelo?';
+    if (!confirm(msg)) return;
+    apiFetch(`${API_MODELS}/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ best_seller: newVal })
+    })
+      .then(() => {
+        showNotification('success', newVal ? 'Modelo marcado como más vendido' : 'Destacado eliminado');
+        loadModels();
+      })
+      .catch(err => showNotification('error', err.message));
   }
 
   function deleteModel(id) {
@@ -216,14 +252,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     flavors.forEach(f => {
       const clone = template.content.cloneNode(true);
-      
+
       clone.querySelector('.flavor-model-id').textContent = f.model_name;
       clone.querySelector('.flavor-name strong').textContent = f.name;
-      
+
       const img = clone.querySelector('.flavor-image');
       img.src = f.image || '/assets/images/placeholder.png';
       img.alt = f.name;
-      
+
+      // Badge de stock
+      const badge = clone.querySelector('.flavor-stock-badge');
+      badge.textContent = f.out_of_stock ? 'Agotado' : 'En stock';
+      badge.style.cssText = f.out_of_stock
+        ? 'background:#555;color:#ccc;padding:2px 8px;border-radius:10px;font-size:0.75rem;'
+        : 'background:rgba(34,197,94,0.2);color:#86efac;padding:2px 8px;border-radius:10px;font-size:0.75rem;';
+
+      // Botón de toggle stock
+      const btnStock = clone.querySelector('.btn-stock');
+      btnStock.title = f.out_of_stock ? 'Marcar como disponible' : 'Marcar como agotado';
+      btnStock.style.background = f.out_of_stock ? 'rgba(34,197,94,0.2)' : 'rgba(218,77,90,0.2)';
+      btnStock.style.color = f.out_of_stock ? '#86efac' : '#fca5a5';
+      btnStock.style.border = 'none';
+      btnStock.querySelector('i').className = f.out_of_stock ? 'fa-solid fa-box-open' : 'fa-solid fa-box';
+      btnStock.addEventListener('click', () => toggleFlavorStock(f.id, f.out_of_stock));
+
       // Asignación de eventos
       clone.querySelector('.btn-edit').addEventListener('click', () => editFlavor(f));
       clone.querySelector('.btn-delete').addEventListener('click', () => deleteFlavor(f.id));
@@ -282,6 +334,21 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => showNotification('error', err.message));
     });
+  }
+
+  function toggleFlavorStock(id, currentlyOutOfStock) {
+    const newState = !currentlyOutOfStock;
+    const msg = newState ? '¿Marcar este sabor como AGOTADO?' : '¿Marcar este sabor como DISPONIBLE?';
+    if (!confirm(msg)) return;
+    apiFetch(`${API_FLAVORS}/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ out_of_stock: newState })
+    })
+      .then(() => {
+        showNotification('success', newState ? 'Sabor marcado como agotado' : 'Sabor marcado como disponible');
+        loadFlavors();
+      })
+      .catch(err => showNotification('error', err.message));
   }
 
   function deleteFlavor(id) {

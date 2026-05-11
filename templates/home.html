@@ -37,24 +37,211 @@
     </div>
     {{ end }}
 
+    <!-- ══ BARRA DE BENEFICIOS ══ -->
+    <div class="benefits-bar">
+      <div class="benefits-bar__item">
+        <i class="fa-solid fa-truck-fast benefits-bar__icon"></i>
+        <div>
+          <p class="benefits-bar__title">Envío exprés Madrid</p>
+          <p class="benefits-bar__desc">Recibe en 24h dentro de la M-30. 48h al resto de España.</p>
+        </div>
+      </div>
+      <div class="benefits-bar__item">
+        <i class="fa-solid fa-lock benefits-bar__icon"></i>
+        <div>
+          <p class="benefits-bar__title">Pago 100% seguro</p>
+          <p class="benefits-bar__desc">Checkout por WhatsApp. Bizum, transferencia o contra reembolso.</p>
+        </div>
+      </div>
+      <div class="benefits-bar__item">
+        <i class="fa-solid fa-circle-check benefits-bar__icon"></i>
+        <div>
+          <p class="benefits-bar__title">Producto original</p>
+          <p class="benefits-bar__desc">Solo HQD oficial. Cada unidad con sello holográfico verificable.</p>
+        </div>
+      </div>
+      <div class="benefits-bar__item">
+        <i class="fa-brands fa-whatsapp benefits-bar__icon"></i>
+        <div>
+          <p class="benefits-bar__title">Atención WhatsApp</p>
+          <p class="benefits-bar__desc">Resolvemos dudas en minutos, todos los días de 10:00 a 22:00.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ COMPARA MODELOS ══ -->
+    <div class="compare-section">
+      <h2 class="section-title">Compara Modelos</h2>
+      <div class="compare-slider">
+        <button class="compare-arrow compare-arrow--prev" id="cmp-prev" aria-label="Anterior">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <div class="compare-viewport" id="cmp-viewport">
+          <div class="compare-track" id="cmp-track">
+            <!-- Generado por JS -->
+          </div>
+        </div>
+        <button class="compare-arrow compare-arrow--next" id="cmp-next" aria-label="Siguiente">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+      <div class="compare-dots" id="cmp-dots"></div>
+    </div>
+
+    <script>
+    (function () {
+      const SPECS_ICONS = {
+        puffs:    'fa-wind',
+        battery:  'fa-battery-full',
+        liquid:   'fa-droplet',
+        nicotine: 'fa-flask',
+        flavors:  'fa-layer-group',
+      };
+      const SPECS_LABELS = {
+        puffs:    'Caladas',
+        battery:  'Batería',
+        liquid:   'Líquido',
+        nicotine: 'Nicotina',
+        flavors:  'Sabores',
+      };
+
+      let models   = [];
+      let flavors  = [];
+      let current  = 0;
+
+      function perPage() {
+        return window.innerWidth >= 900 ? 3 : 1;
+      }
+
+      function maxIndex() {
+        return Math.max(0, models.length - perPage());
+      }
+
+      function buildCard(m, index) {
+        const mFlavors   = flavors.filter(f => f.model_id === m.id);
+        const firstFlavor = mFlavors[0];
+        const image      = firstFlavor?.image || '/assets/images/hqd-product.png';
+        const detailHref = firstFlavor ? `/products/flavor/${firstFlavor.id}` : '/products';
+        const isFeatured = m.best_seller === true;
+
+        const specs = [
+          { key: 'puffs',    val: m.puffs    ? m.puffs.toLocaleString() : '—' },
+          { key: 'battery',  val: m.battery  || '—' },
+          { key: 'liquid',   val: m.liquid   || '—' },
+          { key: 'nicotine', val: m.nicotine || '—' },
+          { key: 'flavors',  val: mFlavors.length > 0 ? mFlavors.length : '—' },
+        ];
+
+        const rows = specs.map(s => `
+          <tr>
+            <td class="compare-card__spec-label">
+              <i class="fa-solid ${SPECS_ICONS[s.key]}"></i> ${SPECS_LABELS[s.key]}
+            </td>
+            <td class="compare-card__spec-val">${s.val}</td>
+          </tr>`).join('');
+
+        return `
+          <div class="compare-card ${isFeatured ? 'compare-card--featured' : ''}">
+            ${isFeatured ? '<div class="compare-card__badge">★ Más vendido</div>' : ''}
+            <div class="compare-card__image-wrap">
+              <img src="${image.startsWith('data:') ? image : image}" alt="${m.name}" class="compare-card__image">
+            </div>
+            <h3 class="compare-card__name">${m.name}</h3>
+            <p class="compare-card__price">${m.price.toFixed(2)}€</p>
+            <table class="compare-card__specs"><tbody>${rows}</tbody></table>
+            <a href="${detailHref}" class="btn btn-primary compare-card__btn">VER SABORES →</a>
+          </div>`;
+      }
+
+      function render() {
+        const track = document.getElementById('cmp-track');
+        const dots  = document.getElementById('cmp-dots');
+        if (!track || !dots) return;
+
+        track.innerHTML = models.map((m, i) => buildCard(m, i)).join('');
+        track.style.transform = 'translateX(0)';
+        current = 0;
+
+        // Dots
+        dots.innerHTML = models.map((_, i) =>
+          `<button class="compare-dot ${i === 0 ? 'compare-dot--active' : ''}" data-i="${i}" aria-label="Ir al modelo ${i+1}"></button>`
+        ).join('');
+        dots.querySelectorAll('.compare-dot').forEach(btn => {
+          btn.addEventListener('click', () => goTo(parseInt(btn.dataset.i)));
+        });
+
+        updateArrows();
+      }
+
+      function goTo(index) {
+        current = Math.max(0, Math.min(index, maxIndex()));
+        const cardWidth = document.querySelector('.compare-card')?.offsetWidth || 0;
+        const gap = 20;
+        document.getElementById('cmp-track').style.transform =
+          `translateX(-${current * (cardWidth + gap)}px)`;
+
+        document.querySelectorAll('.compare-dot').forEach((d, i) =>
+          d.classList.toggle('compare-dot--active', i === current));
+        updateArrows();
+      }
+
+      function updateArrows() {
+        const prev = document.getElementById('cmp-prev');
+        const next = document.getElementById('cmp-next');
+        if (prev) prev.disabled = current === 0;
+        if (next) next.disabled = current >= maxIndex();
+      }
+
+      document.getElementById('cmp-prev')?.addEventListener('click', () => goTo(current - 1));
+      document.getElementById('cmp-next')?.addEventListener('click', () => goTo(current + 1));
+      window.addEventListener('resize', () => goTo(current));
+
+      // Touch/swipe on mobile
+      let touchStartX = 0;
+      const viewport = document.getElementById('cmp-viewport');
+      viewport?.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+      viewport?.addEventListener('touchend', e => {
+        const dx = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(dx) > 40) goTo(current + (dx > 0 ? 1 : -1));
+      });
+
+      Promise.all([
+        fetch('/api/models').then(r => r.json()),
+        fetch('/api/flavors').then(r => r.json()),
+      ]).then(([m, f]) => {
+        models  = m || [];
+        flavors = f || [];
+        render();
+      }).catch(() => {
+        document.querySelector('.compare-section').style.display = 'none';
+      });
+    })();
+    </script>
+
     <!-- ══ CARRUSELES DINÁMICOS POR MODELO ══ -->
     {{ range .Models }}
     {{ $model := . }}
-    <h2 class="section-title" style="margin-top:5rem">
-      <i class="fa-solid fa-layer-group"></i> {{ $model.Name }}
-    </h2>
+    <h2 class="section-title" style="margin-top:5rem">{{ $model.Name }}</h2>
     <div class="carousel-wrapper">
       <div class="carousel-track" id="carousel-{{ $model.ID }}">
         {{ range $.Flavors }}
           {{ if eq .ModelID $model.ID }}
           {{ $flavor := . }}
-          <div class="product-card">
+          <div class="product-card {{ if $flavor.OutOfStock }}product-card--out-of-stock{{ end }}">
             <div class="product-card__badge">{{ $model.Subtitle }}</div>
             <div class="product-card__image-container">
               <img src="{{ if $flavor.Image }}{{ $flavor.Image | safeURL }}{{ else }}/assets/images/hqd-product.png{{ end }}" alt="{{ $flavor.Name }}" class="product-card__image">
             </div>
             <h3 class="product-card__title">{{ $flavor.Name }}</h3>
             <p class="product-card__price">{{ printf "%.2f" $model.Price }}€</p>
+            {{ if $flavor.OutOfStock }}
+            <div class="product-card__actions">
+              <button class="btn btn-oos" disabled>
+                <i class="fa-solid fa-ban"></i> Agotado
+              </button>
+              <a href="/products/flavor/{{ $flavor.ID }}" class="btn btn-secondary"><i class="fa-solid fa-circle-info"></i> Ver detalles</a>
+            </div>
+            {{ else }}
             <div class="product-card__actions">
               <form class="product-card__form quick-add-form">
                 <input type="hidden" name="product_id" value="{{ $model.ID }}">
@@ -66,6 +253,7 @@
               </form>
               <a href="/products/flavor/{{ $flavor.ID }}" class="btn btn-secondary"><i class="fa-solid fa-circle-info"></i> Ver detalles</a>
             </div>
+            {{ end }}
           </div>
           {{ end }}
         {{ end }}

@@ -10,7 +10,7 @@
       <div class="featured__grid">
         {{ range $.Flavors }}
           {{ if eq .ModelID $model.ID }}
-            <div class="product-card">
+            <div class="product-card {{ if .OutOfStock }}product-card--out-of-stock{{ end }}">
               <div class="product-card__badge">{{ $model.Subtitle }}</div>
               <div class="product-card__image-container">
                 <img src="{{ if .Image }}{{ .Image | safeURL }}{{ else }}/assets/images/hqd-product.png{{ end }}" alt="{{ .Name }}" class="product-card__image">
@@ -20,6 +20,11 @@
               <p class="product-card__price">{{ printf "%.2f" $model.Price }}€</p>
               
               <div class="product-card__actions">
+                {{ if .OutOfStock }}
+                <button class="btn btn-oos" disabled>
+                  <i class="fa-solid fa-ban"></i> Agotado
+                </button>
+                {{ else }}
                 <form class="product-card__form quick-add-form">
                   <input type="hidden" name="product_id" value="{{ $model.ID }}">
                   <input type="hidden" name="flavor_id" value="{{ .ID }}">
@@ -30,6 +35,7 @@
                     <i class="fa-solid fa-cart-plus"></i> Añadir
                   </button>
                 </form>
+                {{ end }}
                 <a href="/products/flavor/{{ .ID }}" class="btn btn-secondary">
                   <i class="fa-solid fa-circle-info"></i> Ver detalles
                 </a>

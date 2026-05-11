@@ -31,6 +31,8 @@ func (a *App) ApiModelByID(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPut:
 		a.ApiUpdateModel(w, r, id)
+	case http.MethodPatch:
+		a.ApiSetModelBestSeller(w, r, id)
 	case http.MethodDelete:
 		a.ApiDeleteModel(w, r, id)
 	default:
@@ -58,10 +60,14 @@ func (a *App) ApiCreateModel(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var input struct {
-		Name        string `json:"name"`
-		Subtitle    string `json:"subtitle"`
-		Description string `json:"description"`
+		Name        string  `json:"name"`
+		Subtitle    string  `json:"subtitle"`
+		Description string  `json:"description"`
 		Price       float64 `json:"price"`
+		Puffs       int     `json:"puffs"`
+		Battery     string  `json:"battery"`
+		Liquid      string  `json:"liquid"`
+		Nicotine    string  `json:"nicotine"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
@@ -69,7 +75,7 @@ func (a *App) ApiCreateModel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := a.vapeModels.CreateModel(input.Name, input.Subtitle, input.Description, input.Price)
+	err := a.vapeModels.CreateModel(input.Name, input.Subtitle, input.Description, input.Price, input.Puffs, input.Battery, input.Liquid, input.Nicotine)
 	if err != nil {
 		writeError(w, http.StatusBadRequest, err.Error())
 		return
@@ -93,10 +99,14 @@ func (a *App) ApiUpdateModel(w http.ResponseWriter, r *http.Request, id string) 
 	}
 
 	var input struct {
-		Name        string `json:"name"`
-		Subtitle    string `json:"subtitle"`
-		Description string `json:"description"`
+		Name        string  `json:"name"`
+		Subtitle    string  `json:"subtitle"`
+		Description string  `json:"description"`
 		Price       float64 `json:"price"`
+		Puffs       int     `json:"puffs"`
+		Battery     string  `json:"battery"`
+		Liquid      string  `json:"liquid"`
+		Nicotine    string  `json:"nicotine"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
@@ -105,8 +115,32 @@ func (a *App) ApiUpdateModel(w http.ResponseWriter, r *http.Request, id string) 
 	}
 
 	// Usamos UpdateModel del servicio para activar la actualización en cascada de sabores
-	if err := a.vapeModels.UpdateModel(id, input.Name, input.Subtitle, input.Description, input.Price); err != nil {
+	if err := a.vapeModels.UpdateModel(id, input.Name, input.Subtitle, input.Description, input.Price, input.Puffs, input.Battery, input.Liquid, input.Nicotine); err != nil {
 		writeError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	updated, _ := a.vapeModels.FindModelByID(id)
+	writeJSON(w, http.StatusOK, updated)
+}
+
+// ApiSetModelBestSeller marca o desmarca un modelo como más vendido.
+// PATCH /api/models/{id} → { "best_seller": true|false }
+func (a *App) ApiSetModelBestSeller(w http.ResponseWriter, r *http.Request, id string) {
+	if _, ok := a.requireSellerAPI(w, r); !ok {
+		return
+	}
+
+	var input struct {
+		BestSeller bool `json:"best_seller"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		writeError(w, http.StatusBadRequest, "JSON inválido")
+		return
+	}
+
+	if err := a.vapeModels.SetBestSeller(id, input.BestSeller); err != nil {
+		writeError(w, http.StatusNotFound, err.Error())
 		return
 	}
 

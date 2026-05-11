@@ -346,30 +346,26 @@ h1, h2, h3, h4, h5, h6 {
   flex: 0 0 auto;
 }
 
-.navbar__icon {
+.navbar__icon-btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: #F5F5F5;
-  padding: 8px 16px;
-  border-radius: 50px;
-  font-family: "Montserrat", sans-serif;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  white-space: nowrap;
-}
-.navbar__icon i {
   font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  text-decoration: none;
 }
-.navbar__icon:hover {
-  background: #FFFFFF;
-  color: #0D0D0D;
+.navbar__icon-btn:hover {
+  background: #DA4D5A;
+  border-color: #DA4D5A;
+  color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
 }
 
 .navbar__checkbox:checked ~ .navbar__menu {
@@ -2763,6 +2759,264 @@ p, span, li, td, th, small, label {
     opacity: 0;
   }
 }
+
+/* — Out of stock ------------------------------------------------ */
+/* — Compare Models --------------------------------------------- */
+.compare-section {
+  margin: 4rem 0 2rem;
+}
+
+.compare-slider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.compare-viewport {
+  flex: 1;
+  overflow: hidden;
+}
+
+.compare-track {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.compare-card {
+  flex: 0 0 calc((100% - 40px) / 3);
+  background: #1e1e1e;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-top: 3px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.compare-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+}
+
+.compare-card--featured {
+  border-top-color: #DA4D5A;
+  box-shadow: 0 0 0 1px rgba(218,77,90,0.25), 0 8px 28px rgba(218,77,90,0.12);
+}
+
+.compare-card__badge {
+  display: inline-block;
+  align-self: center;
+  background: #DA4D5A;
+  color: #fff;
+  font-family: "Anton", sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  padding: 4px 16px;
+  border-radius: 20px;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(218,77,90,0.35);
+  margin-bottom: 0.25rem;
+}
+
+.compare-card__image-wrap {
+  background: #141414;
+  border-radius: 10px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 160px;
+}
+
+.compare-card__image {
+  max-height: 130px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.compare-card__name {
+  font-family: "Anton", sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  color: #F5F5F5 !important;
+  text-align: center;
+}
+
+.compare-card__price {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #DA4D5A !important;
+  text-align: center;
+}
+
+.compare-card__specs {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin: 0.25rem 0;
+}
+
+.compare-card__specs tr {
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.compare-card__specs tr:last-child {
+  border-bottom: none;
+}
+
+.compare-card__spec-label {
+  color: #888 !important;
+  padding: 6px 0;
+  white-space: nowrap;
+}
+
+.compare-card__spec-label i {
+  color: #DA4D5A;
+  width: 16px;
+  margin-right: 6px;
+}
+
+.compare-card__spec-val {
+  color: #F5F5F5 !important;
+  text-align: right;
+  font-weight: 600;
+  padding: 6px 0;
+}
+
+.compare-card__btn {
+  margin-top: auto;
+  text-align: center;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+}
+
+.compare-arrow {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: #1e1e1e;
+  color: #F5F5F5;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.compare-arrow:hover:not(:disabled) {
+  background: #DA4D5A;
+  border-color: #DA4D5A;
+}
+
+.compare-arrow:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.compare-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+.compare-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.2);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.compare-dot--active {
+  background: #DA4D5A;
+  transform: scale(1.3);
+}
+
+@media (max-width: 900px) {
+  .compare-card {
+    flex: 0 0 100%;
+  }
+}
+
+/* — Benefits bar ----------------------------------------------- */
+.benefits-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: #DA4D5A;
+  border-top: 2px solid #DA4D5A;
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 3rem 0;
+}
+
+.benefits-bar__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: #1a1a1a;
+  padding: 1.5rem 1.25rem;
+}
+
+.benefits-bar__icon {
+  font-size: 1.6rem;
+  color: #DA4D5A;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.benefits-bar__title {
+  font-family: "Anton", sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #F5F5F5 !important;
+  margin-bottom: 0.3rem;
+}
+
+.benefits-bar__desc {
+  font-size: 0.78rem;
+  color: #888 !important;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .benefits-bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .benefits-bar {
+    grid-template-columns: 1fr;
+  }
+}
+
+.btn-oos {
+  width: 100%;
+  background: #333 !important;
+  color: #777 !important;
+  border: 1px solid #444 !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 10px 20px;
+  border-radius: 50px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
 
 /* El contenido queda por encima del humo */
 body > header,

@@ -32,7 +32,7 @@ func (s *ModelService) FindModelByID(id string) (models.VapeModel, error) {
 }
 
 // CreateModel valida los datos y crea un nuevo modelo de vape.
-func (s *ModelService) CreateModel(name, subtitle, description string, price float64) error {
+func (s *ModelService) CreateModel(name, subtitle, description string, price float64, puffs int, battery, liquid, nicotine string) error {
 	name = strings.TrimSpace(name)
 	subtitle = strings.TrimSpace(subtitle)
 	description = strings.TrimSpace(description)
@@ -54,13 +54,17 @@ func (s *ModelService) CreateModel(name, subtitle, description string, price flo
 		Subtitle:    subtitle,
 		Description: description,
 		Price:       price,
+		Puffs:       puffs,
+		Battery:     strings.TrimSpace(battery),
+		Liquid:      strings.TrimSpace(liquid),
+		Nicotine:    strings.TrimSpace(nicotine),
 	}
 
 	return s.storage.Save(model)
 }
 
 // UpdateModel actualiza un modelo y propaga el cambio de nombre a sus sabores.
-func (s *ModelService) UpdateModel(id, name, subtitle, description string, price float64) error {
+func (s *ModelService) UpdateModel(id, name, subtitle, description string, price float64, puffs int, battery, liquid, nicotine string) error {
 	name = strings.TrimSpace(name)
 	subtitle = strings.TrimSpace(subtitle)
 	description = strings.TrimSpace(description)
@@ -79,6 +83,10 @@ func (s *ModelService) UpdateModel(id, name, subtitle, description string, price
 		Subtitle:    subtitle,
 		Description: description,
 		Price:       price,
+		Puffs:       puffs,
+		Battery:     strings.TrimSpace(battery),
+		Liquid:      strings.TrimSpace(liquid),
+		Nicotine:    strings.TrimSpace(nicotine),
 	}
 
 	// 1. Guardar el modelo actualizado
@@ -105,6 +113,16 @@ func (s *ModelService) UpdateModel(id, name, subtitle, description string, price
 	}
 
 	return nil
+}
+
+// SetBestSeller marca un modelo como favorito/más vendido o lo desmarca.
+func (s *ModelService) SetBestSeller(id string, value bool) error {
+	model, err := s.storage.GetByID(id)
+	if err != nil {
+		return err
+	}
+	model.BestSeller = value
+	return s.storage.Save(model)
 }
 
 // DeleteModel elimina un modelo del sistema.

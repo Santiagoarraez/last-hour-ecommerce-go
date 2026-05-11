@@ -60,6 +60,22 @@
                 <label for="model-price" class="form-label">Precio base (€) *</label>
                 <input type="number" id="model-price" name="price" class="form-input" required step="0.01" min="0.01" placeholder="ej. 24.99">
               </div>
+              <div class="form-group">
+                <label for="model-puffs" class="form-label">Puffs</label>
+                <input type="number" id="model-puffs" name="puffs" class="form-input" min="0" placeholder="ej. 12000">
+              </div>
+              <div class="form-group">
+                <label for="model-battery" class="form-label">Batería</label>
+                <input type="text" id="model-battery" name="battery" class="form-input" placeholder="ej. 650 mAh">
+              </div>
+              <div class="form-group">
+                <label for="model-liquid" class="form-label">Líquido</label>
+                <input type="text" id="model-liquid" name="liquid" class="form-input" placeholder="ej. 12 ml">
+              </div>
+              <div class="form-group">
+                <label for="model-nicotine" class="form-label">Nicotina</label>
+                <input type="text" id="model-nicotine" name="nicotine" class="form-input" placeholder="ej. 2% / 20mg">
+              </div>
             </div>
             <div class="dashboard__form-actions">
               <button type="submit" id="btn-submit-model" class="btn btn-primary">
@@ -81,6 +97,7 @@
                 <th>Subtítulo</th>
                 <th>Descripción</th>
                 <th>Precio</th>
+                <th>Destacado</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -133,6 +150,7 @@
                 <th>Modelo</th>
                 <th>Nombre</th>
                 <th>Imagen</th>
+                <th>Stock</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -226,10 +244,14 @@
     <td class="model-subtitle"></td>
     <td class="model-description"><small></small></td>
     <td class="model-price dashboard__product-price"></td>
+    <td><span class="model-bestseller-badge"></span></td>
     <td>
       <div class="dashboard__cell--actions">
         <button class="btn btn-secondary btn-sm btn-edit">
           <i class="fa-solid fa-pen"></i>
+        </button>
+        <button class="btn btn-sm btn-bestseller">
+          <i class="fa-solid fa-star"></i>
         </button>
         <button class="btn btn-modern btn-sm btn-delete">
           <i class="fa-solid fa-trash"></i>
@@ -245,10 +267,14 @@
     <td><span class="flavor-model-id dashboard__badge dashboard__badge--normal"></span></td>
     <td class="flavor-name"><strong></strong></td>
     <td><img src="" class="flavor-image dashboard__product-thumb"></td>
+    <td><span class="flavor-stock-badge"></span></td>
     <td>
       <div class="dashboard__cell--actions">
         <button class="btn btn-secondary btn-sm btn-edit">
           <i class="fa-solid fa-pen"></i>
+        </button>
+        <button class="btn btn-sm btn-stock">
+          <i class="fa-solid fa-box"></i>
         </button>
         <button class="btn btn-modern btn-sm btn-delete">
           <i class="fa-solid fa-trash"></i>

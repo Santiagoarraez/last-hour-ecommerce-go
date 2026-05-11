@@ -76,6 +76,16 @@ func (s *FlavorService) UpdateFlavor(id, name, image string) error {
 	return s.storage.Save(flavor)
 }
 
+// SetStock marca un sabor como agotado o disponible.
+func (s *FlavorService) SetStock(id string, outOfStock bool) error {
+	flavor, err := s.storage.GetByID(id)
+	if err != nil {
+		return err
+	}
+	flavor.OutOfStock = outOfStock
+	return s.storage.Save(flavor)
+}
+
 // DeleteFlavor elimina un sabor del sistema.
 func (s *FlavorService) DeleteFlavor(id string) error {
 	return s.storage.Delete(id)
