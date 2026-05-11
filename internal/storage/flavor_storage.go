@@ -90,7 +90,7 @@ func (s *FlavorStorage) Save(flavor models.Flavor) error {
 		all = append(all, flavor)
 	}
 
-	return s.saveAll(all)
+	return s.SaveAll(all)
 }
 
 // Delete elimina un sabor por su ID.
@@ -111,11 +111,11 @@ func (s *FlavorStorage) Delete(id string) error {
 		return errors.New("sabor no encontrado")
 	}
 
-	return s.saveAll(filtered)
+	return s.SaveAll(filtered)
 }
 
-// saveAll persiste la lista completa de sabores en el archivo JSON.
-func (s *FlavorStorage) saveAll(flavors []models.Flavor) error {
+// SaveAll persiste la lista completa de sabores en el archivo JSON.
+func (s *FlavorStorage) SaveAll(flavors []models.Flavor) error {
 	data, err := json.MarshalIndent(flavors, "", "  ")
 	if err != nil {
 		return err

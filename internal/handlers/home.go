@@ -31,6 +31,7 @@ func (a *App) Home(w http.ResponseWriter, r *http.Request) {
 	promosJson, _ := json.Marshal(promosList)
 
 	// Renderizamos la plantilla home.html inyectando los datos
+	// Pasamos tanto los objetos para Go template como el JSON para el JS del frontend
 	a.render(w, r, "home.html", map[string]any{
 		"Title":          "Vape Store - Last Hour",
 		"Models":         modelsList,

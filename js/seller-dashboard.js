@@ -124,16 +124,34 @@ document.addEventListener('DOMContentLoaded', () => {
       clone.querySelector('.model-description small').textContent = m.description;
       clone.querySelector('.model-price').textContent = m.price.toFixed(2) + ' €';
       
-      // Asignación de evento al botón de eliminar
+      // Asignación de eventos
+      clone.querySelector('.btn-edit').addEventListener('click', () => editModel(m));
       clone.querySelector('.btn-delete').addEventListener('click', () => deleteModel(m.id));
 
       modelTbody.appendChild(clone);
     });
   }
 
+  function editModel(m) {
+    document.getElementById('model-id').value = m.id;
+    document.getElementById('model-name').value = m.name;
+    document.getElementById('model-subtitle').value = m.subtitle;
+    document.getElementById('model-description').value = m.description;
+    document.getElementById('model-price').value = m.price;
+    
+    const submitBtn = document.getElementById('btn-submit-model');
+    if (submitBtn) {
+      submitBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Actualizar Modelo';
+    }
+    
+    document.getElementById('model-form-title').textContent = 'Editar Modelo';
+    document.getElementById('tab-models').scrollIntoView({ behavior: 'smooth' });
+  }
+
   if (modelForm) {
     modelForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      const id = document.getElementById('model-id').value;
       const data = {
         name: document.getElementById('model-name').value,
         subtitle: document.getElementById('model-subtitle').value,
@@ -141,10 +159,17 @@ document.addEventListener('DOMContentLoaded', () => {
         price: parseFloat(document.getElementById('model-price').value)
       };
 
-      apiFetch(API_MODELS, { method: 'POST', body: JSON.stringify(data) })
+      const method = id ? 'PUT' : 'POST';
+      const url = id ? `${API_MODELS}/${id}` : API_MODELS;
+
+      apiFetch(url, { method: method, body: JSON.stringify(data) })
         .then(() => {
-          showNotification('success', 'Modelo guardado correctamente');
+          showNotification('success', id ? 'Modelo actualizado' : 'Modelo guardado');
           modelForm.reset();
+          document.getElementById('model-id').value = '';
+          document.getElementById('model-form-title').textContent = 'Nuevo Modelo';
+          const submitBtn = document.getElementById('btn-submit-model');
+          if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-save"></i> Guardar Modelo';
           loadModels();
         })
         .catch(err => showNotification('error', err.message));
@@ -192,23 +217,39 @@ document.addEventListener('DOMContentLoaded', () => {
     flavors.forEach(f => {
       const clone = template.content.cloneNode(true);
       
-      clone.querySelector('.flavor-model-id').textContent = f.model_id;
+      clone.querySelector('.flavor-model-id').textContent = f.model_name;
       clone.querySelector('.flavor-name strong').textContent = f.name;
       
       const img = clone.querySelector('.flavor-image');
       img.src = f.image || '/assets/images/placeholder.png';
       img.alt = f.name;
       
+      // Asignación de eventos
+      clone.querySelector('.btn-edit').addEventListener('click', () => editFlavor(f));
       clone.querySelector('.btn-delete').addEventListener('click', () => deleteFlavor(f.id));
 
       flavorTbody.appendChild(clone);
     });
   }
 
+  function editFlavor(f) {
+    document.getElementById('flavor-id').value = f.id;
+    document.getElementById('flavor-model-id').value = f.model_id;
+    document.getElementById('flavor-name').value = f.name;
+    
+    const submitBtn = flavorForm.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Actualizar Sabor';
+    }
+    
+    document.getElementById('tab-flavors').scrollIntoView({ behavior: 'smooth' });
+  }
+
   if (flavorForm) {
     // PEC 3: Eliminado async/await en favor de cadenas .then()
     flavorForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      const id = document.getElementById('flavor-id').value;
       const modelOpt = flavorModelSelect.options[flavorModelSelect.selectedIndex];
       if (!modelOpt || !modelOpt.value) {
         showNotification('error', 'Selecciona un modelo');
@@ -225,11 +266,18 @@ document.addEventListener('DOMContentLoaded', () => {
             name: document.getElementById('flavor-name').value,
             image: imageBase64
           };
-          return apiFetch(API_FLAVORS, { method: 'POST', body: JSON.stringify(data) });
+          
+          const method = id ? 'PUT' : 'POST';
+          const url = id ? `${API_FLAVORS}/${id}` : API_FLAVORS;
+          
+          return apiFetch(url, { method: method, body: JSON.stringify(data) });
         })
         .then(() => {
-          showNotification('success', 'Sabor añadido');
+          showNotification('success', id ? 'Sabor actualizado' : 'Sabor añadido');
           flavorForm.reset();
+          document.getElementById('flavor-id').value = '';
+          const submitBtn = flavorForm.querySelector('button[type="submit"]');
+          if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Añadir Sabor';
           loadFlavors();
         })
         .catch(err => showNotification('error', err.message));

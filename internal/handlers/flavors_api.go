@@ -28,9 +28,12 @@ func (a *App) ApiFlavorByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.Method == http.MethodDelete {
+	switch r.Method {
+	case http.MethodPut:
+		a.ApiUpdateFlavor(w, r, id)
+	case http.MethodDelete:
 		a.ApiDeleteFlavor(w, r, id)
-	} else {
+	default:
 		writeError(w, http.StatusMethodNotAllowed, "método no permitido")
 	}
 }
@@ -113,4 +116,29 @@ func (a *App) ApiDeleteFlavor(w http.ResponseWriter, r *http.Request, id string)
 	}
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+// ApiUpdateFlavor actualiza un sabor existente.
+func (a *App) ApiUpdateFlavor(w http.ResponseWriter, r *http.Request, id string) {
+	if _, ok := a.requireSellerAPI(w, r); !ok {
+		return
+	}
+
+	var input struct {
+		Name  string `json:"name"`
+		Image string `json:"image"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		writeError(w, http.StatusBadRequest, "JSON inválido")
+		return
+	}
+
+	if err := a.flavors.UpdateFlavor(id, input.Name, input.Image); err != nil {
+		writeError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	updated, _ := a.flavors.FindFlavorByID(id)
+	writeJSON(w, http.StatusOK, updated)
 }

@@ -2,85 +2,99 @@
   {
     "id": "hqd-glaze-peach-ice",
     "model_id": "hqd-glaze",
+    "model_name": "HQD GLAZE",
     "name": "Peach Ice",
     "image": ""
   },
   {
     "id": "hqd-glaze-grapey",
     "model_id": "hqd-glaze",
+    "model_name": "HQD GLAZE",
     "name": "Grapey",
     "image": ""
   },
   {
     "id": "hqd-glaze-black-ice",
     "model_id": "hqd-glaze",
+    "model_name": "HQD GLAZE",
     "name": "Black Ice",
     "image": ""
   },
   {
     "id": "hqd-glaze-lush-ice",
     "model_id": "hqd-glaze",
+    "model_name": "HQD GLAZE",
     "name": "Lush Ice",
     "image": ""
   },
   {
     "id": "hqd-glaze-mint-ice",
     "model_id": "hqd-glaze",
+    "model_name": "HQD GLAZE",
     "name": "Mint Ice",
     "image": ""
   },
   {
     "id": "hqd-glaze-strawberry-watermelon",
     "model_id": "hqd-glaze",
+    "model_name": "HQD GLAZE",
     "name": "Strawberry Watermelon",
     "image": ""
   },
   {
     "id": "hqd-glaze-blueberry",
     "model_id": "hqd-glaze",
+    "model_name": "HQD GLAZE",
     "name": "Blueberry",
     "image": ""
   },
   {
     "id": "hqd-air-peach-ice",
     "model_id": "hqd-air",
+    "model_name": "HQD AIR",
     "name": "Peach Ice",
     "image": ""
   },
   {
     "id": "hqd-air-black-ice",
     "model_id": "hqd-air",
+    "model_name": "HQD AIR",
     "name": "Black Ice",
     "image": ""
   },
   {
     "id": "hqd-air-lush-ice",
     "model_id": "hqd-air",
+    "model_name": "HQD AIR",
     "name": "Lush ice",
     "image": ""
   },
   {
     "id": "hqd-air-sky-mint",
     "model_id": "hqd-air",
+    "model_name": "HQD AIR",
     "name": "Sky Mint",
     "image": ""
   },
   {
     "id": "hqd-air-strawberry-watermelom",
     "model_id": "hqd-air",
+    "model_name": "HQD AIR",
     "name": "Strawberry Watermelom",
     "image": ""
   },
   {
     "id": "hqd-air-grapey",
     "model_id": "hqd-air",
+    "model_name": "HQD AIR",
     "name": "Grapey",
     "image": ""
   },
   {
     "id": "tes1-test1",
     "model_id": "tes1",
-    "name": "test1",
+    "model_name": "tes3333",
+    "name": "test11111",
     "image": ""
   }
 ]

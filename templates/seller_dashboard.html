@@ -102,6 +102,7 @@
             <h2 class="app-panel__title">Nuevo Sabor</h2>
           </div>
           <form id="flavor-form" class="form dashboard__form" novalidate>
+            <input type="hidden" id="flavor-id" name="id" value="">
             <div class="dashboard__form-grid">
               <div class="form-group">
                 <label for="flavor-model-id" class="form-label">Modelo Padre *</label>
@@ -230,9 +231,14 @@
     <td class="model-description"><small></small></td>
     <td class="model-price dashboard__product-price"></td>
     <td>
-      <button class="btn btn-modern btn-sm btn-delete">
-        <i class="fa-solid fa-trash"></i> Eliminar
-      </button>
+      <div class="dashboard__cell--actions">
+        <button class="btn btn-secondary btn-sm btn-edit">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button class="btn btn-modern btn-sm btn-delete">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
     </td>
   </tr>
 </template>
@@ -244,9 +250,14 @@
     <td class="flavor-name"><strong></strong></td>
     <td><img src="" class="flavor-image dashboard__product-thumb"></td>
     <td>
-      <button class="btn btn-modern btn-sm btn-delete">
-        <i class="fa-solid fa-trash"></i> Eliminar
-      </button>
+      <div class="dashboard__cell--actions">
+        <button class="btn btn-secondary btn-sm btn-edit">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button class="btn btn-modern btn-sm btn-delete">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
     </td>
   </tr>
 </template>

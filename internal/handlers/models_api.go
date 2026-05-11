@@ -61,7 +61,7 @@ func (a *App) ApiCreateModel(w http.ResponseWriter, r *http.Request) {
 		Name        string `json:"name"`
 		Subtitle    string `json:"subtitle"`
 		Description string `json:"description"`
-		Price       string `json:"price"`
+		Price       float64 `json:"price"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
@@ -96,7 +96,7 @@ func (a *App) ApiUpdateModel(w http.ResponseWriter, r *http.Request, id string) 
 		Name        string `json:"name"`
 		Subtitle    string `json:"subtitle"`
 		Description string `json:"description"`
-		Price       string `json:"price"`
+		Price       float64 `json:"price"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
@@ -104,13 +104,8 @@ func (a *App) ApiUpdateModel(w http.ResponseWriter, r *http.Request, id string) 
 		return
 	}
 
-	// En el servicio no tenemos UpdateModel como tal sino que usamos CreateModel que hace Save (que hace update si el ID coincide)
-	// Pero el usuario pidió CreateModel con parámetros específicos.
-	// Voy a usar CreateModel del servicio ya que llama a storage.Save(model) que gestiona el update si el ID coincide.
-	// Sin embargo, si el ID cambia (por el nombre), sería un nuevo modelo.
-	// Para simplificar y seguir el patrón pedido:
-	err := a.vapeModels.CreateModel(input.Name, input.Subtitle, input.Description, input.Price)
-	if err != nil {
+	// Usamos UpdateModel del servicio para activar la actualización en cascada de sabores
+	if err := a.vapeModels.UpdateModel(id, input.Name, input.Subtitle, input.Description, input.Price); err != nil {
 		writeError(w, http.StatusBadRequest, err.Error())
 		return
 	}

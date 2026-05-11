@@ -46,10 +46,31 @@ func (s *FlavorService) CreateFlavor(modelID, modelName, name, image string) err
 	id = strings.ReplaceAll(id, " ", "-")
 
 	flavor := models.Flavor{
-		ID:      id,
-		ModelID: modelID,
-		Name:    name,
-		Image:   image,
+		ID:        id,
+		ModelID:   modelID,
+		ModelName: modelName,
+		Name:      name,
+		Image:     image,
+	}
+
+	return s.storage.Save(flavor)
+}
+
+// UpdateFlavor actualiza los datos de un sabor existente.
+func (s *FlavorService) UpdateFlavor(id, name, image string) error {
+	flavor, err := s.storage.GetByID(id)
+	if err != nil {
+		return err
+	}
+
+	name = strings.TrimSpace(name)
+	if name != "" {
+		flavor.Name = name
+	}
+	
+	// Solo actualizamos la imagen si se proporciona una nueva (base64)
+	if image != "" {
+		flavor.Image = image
 	}
 
 	return s.storage.Save(flavor)

@@ -26,10 +26,13 @@ func main() {
 	contactService := services.NewContactService(contactStorage)
 	authService := services.NewAuthService(userStorage)
 	cartService := services.NewCartService(cartStorage, productService)
-	modelService := services.NewModelService(modelStorage)
+	modelService := services.NewModelService(modelStorage, flavorStorage)
 	flavorService := services.NewFlavorService(flavorStorage)
 	promotionService := services.NewPromotionService(promotionStorage)
 	sessionService := services.NewSessionService()
+
+	// PEC 3: Migración automática de nombres de modelos en sabores al arrancar
+	migrateFlavorModelNames(modelService, flavorService, flavorStorage)
 
 	// 3. Inicialización de la capa de Orquestación (Handlers)
 	// NewApp también carga y cachea todas las plantillas HTML al arrancar
@@ -126,5 +129,45 @@ func main() {
 	log.Println("Servidor web iniciado en http://localhost:8080")
 	if err := http.ListenAndServe(":8080", mux); err != nil {
 		log.Fatal(err)
+	}
+}
+
+// migrateFlavorModelNames sincroniza los nombres de modelos en los sabores si están vacíos.
+func migrateFlavorModelNames(ms *services.ModelService, fs *services.FlavorService, fst *storage.FlavorStorage) {
+	flavors, err := fs.ListFlavors()
+	if err != nil {
+		log.Printf("Error migración sabores: %v", err)
+		return
+	}
+
+	models, err := ms.ListModels()
+	if err != nil {
+		log.Printf("Error migración modelos: %v", err)
+		return
+	}
+
+	// Mapa de ID -> Nombre para búsqueda rápida
+	modelMap := make(map[string]string)
+	for _, m := range models {
+		modelMap[m.ID] = m.Name
+	}
+
+	updated := false
+	for i := range flavors {
+		// Si el nombre del modelo está vacío, intentamos recuperarlo del mapa
+		if flavors[i].ModelName == "" {
+			if name, ok := modelMap[flavors[i].ModelID]; ok {
+				flavors[i].ModelName = name
+				updated = true
+			}
+		}
+	}
+
+	if updated {
+		if err := fst.SaveAll(flavors); err != nil {
+			log.Printf("Error guardando sabores migrados: %v", err)
+		} else {
+			log.Println("Migración exitosa: ModelName actualizado en sabores.")
+		}
 	}
 }
